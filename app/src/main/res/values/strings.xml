@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">loginPage</string>
+    <string name="title_activity_register_page">RegisterPage</string>
+    <string name="title_activity_register_page_second_part">RegisterPageSecondPart</string>
+
+    <string name="login_name">Login</string>
+
+    <string name="email_name">E-mail</string>
+    <string name="name">Nome</string>
+    <string name="user_name">User</string>
+    <string name="password_name">Senha</string>
+    <string name="password_name_confirm">Confirmar a senha</string>
+
+    <string name="does_have_account">Não tem uma conta?</string>
+    <string name="sign_up_now">Cadastre-se agora!</string>
+
+    <string name="date_of_birth">Data de nascimento</string>
+    <string name="your_data">SEUS DADOS</string>
+
+    <string name="finish">Finalizar</string>
+    <string name="advance">Avançar</string>
+
+    <string name="erro_message_input_required">Todos os campos são obrigatórios.</string>
+    <string name="erro_message_confirm_password_incorrect">Por favor, insira senhas iguais.</string>
+    <string name="erro_message_invalid_email">Insira um e-mail válido, por favor.</string>
+    <string name="erro_message_invalid_user">Não são permitidos espaços. Insira um username válido, por favor.</string>
+
+    <string name="description_third_page_pt1">Escolha</string>
+    <string name="description_third_page_pt2">até três gêneros</string>
+    <string name="description_third_page_pt3">que você</string>
+    <string name="description_third_page_pt4"> lê e/ou escreve</string>
+    <string name="description_third_page_pt5">para nos ajudar a lhe proporcionar uma experiência melhor.</string>
+
+    <string name="Refinish">refinish</string>
+    <string name="escolha_data">seleciona a data</string>
+    <string name="title_activity_register_page_third_parte">RegisterPageThirdParte</string>
+    <string name="title_activity_register_page_third_part">RegisterPageThirdPart</string>
+
+</resources>
