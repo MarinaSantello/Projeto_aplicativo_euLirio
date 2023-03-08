@@ -36,4 +36,10 @@
     <string name="title_activity_register_page_third_parte">RegisterPageThirdParte</string>
     <string name="title_activity_register_page_third_part">RegisterPageThirdPart</string>
 
+
+    <string name="tag_1_name">Escritor</string>
+    <string name="tag_2_name">Editor</string>
+
+
+
 </resources>
