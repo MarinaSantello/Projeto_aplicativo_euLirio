@@ -5,11 +5,11 @@ import com.example.loginpage.model.user.User
 import retrofit2.Call
 import retrofit2.http.*
 
-//const val contentType = Constant.CONTENT_TYPE
+const val contentType = Constant.CONTENT_TYPE
 
 interface UserCall {
 
-    @Headers("Content-Type: application/json")
+    @Headers("Content-Type:$contentType")
 
     @GET("")
     fun getAll(): Call<List<User>>
