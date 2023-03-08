@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,6 +42,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.API.user.UserCall
+import com.example.loginpage.model.user.Genero
+import com.example.loginpage.model.user.Tag
+import com.example.loginpage.model.user.User
 
 class RegisterPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -469,6 +476,19 @@ fun registerPage() {
 
                                         invalidEmail = false
                                         invalidUser = false
+
+                                        val idTag = Tag(1)
+                                        val idGenero = Genero(2)
+
+                                        val user = User (
+                                            userName = userValue,
+                                            email = emailValue,
+                                            senha = passwordValue,
+                                            tags = listOf<Tag>(idTag),
+                                            generos = listOf<Genero>(idGenero)
+                                        )
+
+                                        Log.i("respon post", CallAPI.callPost(user).toString())
                                     }
 
 
