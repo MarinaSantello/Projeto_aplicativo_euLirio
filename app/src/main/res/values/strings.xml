@@ -39,7 +39,7 @@
 
     <string name="tag_1_name">Escritor</string>
     <string name="tag_2_name">Editor</string>
-
+    <string name="title_activity_update_page">UpdatePage</string>
 
 
 </resources>
