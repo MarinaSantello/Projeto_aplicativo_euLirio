@@ -11,6 +11,5 @@
     <color name="eulirio_purple_text_color">#3C1C72</color>
     <color name="eulirio_purple_text_color_border">#381871</color>
     <color name="eulirio_grey_background">#F2F2F2</color>
-
-
+    <color name="eulirio_yellow_card_background">#FBDB5A</color>
 </resources>
