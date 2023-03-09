@@ -30,7 +30,7 @@ class CallAPI() {
 //                        response.message()!!.toString(),
 //                        response.code()!!.toString()
 //                    )
-                    Log.i("respon post", response.code()!!.toString())
+                    Log.i("respon post", response.message()!!.toString())
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
@@ -38,7 +38,7 @@ class CallAPI() {
 //                        t.message.toString()
 //                    )
 
-                    Log.i("respon post", t.message.toString())
+                    Log.i("failure post", t.message.toString())
                 }
             }
             )

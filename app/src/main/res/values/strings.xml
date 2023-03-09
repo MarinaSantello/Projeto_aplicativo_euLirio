@@ -37,8 +37,9 @@
     <string name="title_activity_register_page_third_part">RegisterPageThirdPart</string>
 
 
-    <string name="tag_1_name">Escritor</string>
-    <string name="tag_2_name">Editor</string>
+    <string name="tag_1_name">Autor</string>
+    <string name="tag_2_name">Leitor</string>
+
     <string name="title_activity_user_page">UserPage</string>
     <string name="title_activity_update_page">UpdatePage</string>
 

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -72,6 +73,8 @@ fun registerPageSecondPart() {
         mutableStateOf("")
     }
 
+    val dateDialogState = rememberMaterialDialogState()
+
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -91,7 +94,7 @@ fun registerPageSecondPart() {
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("yyyy MMM dd")
+                .ofPattern("yyyy-MMM-dd")
                 .format(pickedDate)
         }
 
@@ -105,6 +108,10 @@ fun registerPageSecondPart() {
     }
 
     var userErrorRequiredInput by remember {
+        mutableStateOf(false)
+    }
+
+    var tagsErrorRequired by remember {
         mutableStateOf(false)
     }
 
@@ -181,8 +188,6 @@ fun registerPageSecondPart() {
                         )
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        val dateDialogState = rememberMaterialDialogState()
-
                         Column(
                             modifier = Modifier
                                 .fillMaxSize(),
@@ -191,9 +196,9 @@ fun registerPageSecondPart() {
                             ) {
                             Text(
                                 color = colorResource(id = R.color.eulirio_purple_text_color),
-                                text = stringResource(id = R.string.date_of_birth),
+                                text = stringResource(id = R.string.date_of_birth).uppercase(),
                                 fontWeight = FontWeight.SemiBold,
-                                fontSize = 15.sp
+                                fontSize = 18.sp
                             )
 
                             Spacer(modifier = Modifier.height(10.dp))
@@ -223,28 +228,27 @@ fun registerPageSecondPart() {
 
                             }
 
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
 
                             if(pickedDate == LocalDate.now()){
                                 Text(
                                     text = "Selecione sua data de nascimento",
                                     color = dateColor,
-                                    fontSize = 18.sp,
-
+                                    fontSize = 15.sp,
                                     )
                             }
                             else{
                                 Text(
                                     text = "$formattedDate",
                                     color = colorResource(id = R.color.eulirio_purple_text_color),
-                                    fontSize = 18.sp,
+                                    fontSize = 15.sp,
 
                                     )
                             }
 
 
 
-                            Spacer(modifier = Modifier.height(0.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
 
                             Row(
                                 horizontalArrangement = Arrangement.Center,
@@ -298,6 +302,12 @@ fun registerPageSecondPart() {
 
                             }
 
+                            if(tagsErrorRequired) Text(
+                                    text = "Esta informação é obrigatória",
+                                    color = Color(0xFFB00020),
+                                    fontSize = 15.sp,
+                            )
+
                             Spacer(modifier = Modifier.height(20.dp))
 
                             val context = LocalContext.current
@@ -320,8 +330,27 @@ fun registerPageSecondPart() {
                                     }
                                     else dateErrorRequiredInput = false
 
-                                    if(!userErrorRequiredInput && !dateErrorRequiredInput)
+                                    val tags = ArrayList<Int>()
+
+                                    if(checkStateTag1)
+                                        tags.add(1)
+
+                                    if(checkStateTag2)
+                                        tags.add(2)
+
+                                    tagsErrorRequired = tags.size <= 0
+
+                                    if(!userErrorRequiredInput && !dateErrorRequiredInput && !tagsErrorRequired) {
+
+                                        intent.putExtra("nome", userName)
+                                        intent.putExtra("data_nascimento", pickedDate)
+                                        
+                                        intent.putIntegerArrayListExtra("tags", tags)
+
+                                        Log.i("user tag", "$tags")
+
                                         context.startActivity(intent)
+                                    }
                                 },
                                 modifier = Modifier
                                     .width(160.dp)

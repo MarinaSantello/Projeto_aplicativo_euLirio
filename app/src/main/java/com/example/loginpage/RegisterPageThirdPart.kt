@@ -1,5 +1,6 @@
 package com.example.loginpage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -66,6 +67,15 @@ fun getClickState(): () -> MutableState<Boolean> {
 fun registerPageThirdPart(getCLickState: () -> MutableState<Boolean>) {
 
     val context = LocalContext.current
+    //val activity = context.findActivity()
+    //val intent = activity?.intent
+    val intent = Intent(context, RegisterPageSecondPart::class.java)
+
+    val tags = intent.getIntegerArrayListExtra("tags").toString()
+
+    val nome = intent.getStringExtra("nome")
+
+    Log.i("user tags", nome.toString())
 
     val focusManager = LocalFocusManager.current
 

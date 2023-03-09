@@ -474,21 +474,12 @@ fun registerPage() {
                                         val intent = Intent(context, RegisterPageSecondPart::class.java)
                                         context.startActivity(intent)
 
+                                        intent.putExtra("user_name", userValue)
+                                        intent.putExtra("email", emailValue)
+                                        intent.putExtra("senha", confirmPasswordValue)
+
                                         invalidEmail = false
                                         invalidUser = false
-
-                                        val idTag = Tag(1)
-                                        val idGenero = Genero(2)
-
-                                        val user = User (
-                                            userName = userValue,
-                                            email = emailValue,
-                                            senha = passwordValue,
-                                            tags = listOf<Tag>(idTag),
-                                            generos = listOf<Genero>(idGenero)
-                                        )
-
-                                        Log.i("respon post", CallAPI.callPost(user).toString())
                                     }
 
 
