@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.LoginPage" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">@color/eulirio_purple_text_color_border</item>
     </style>
 </resources>
