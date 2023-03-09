@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
-                    loginPage()
+                    LoginPage()
                 }
             }
         }
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun loginPage() {
+fun LoginPage() {
 
     val context = LocalContext.current
 
@@ -351,6 +351,6 @@ fun Text(text: String, Color: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun loginPagePreview() {
-    loginPagePreview()
+fun LoginPagePreview() {
+    LoginPagePreview()
 }
