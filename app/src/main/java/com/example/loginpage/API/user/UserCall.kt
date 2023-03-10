@@ -8,7 +8,6 @@ import retrofit2.http.*
 const val contentType = Constant.CONTENT_TYPE
 
 interface UserCall {
-
     @Headers("Content-Type:$contentType")
 
     @GET("")

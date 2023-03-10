@@ -468,23 +468,15 @@ fun registerPage() {
                                     if (!userErrorRequiredInput && !emailErrorRequiredInput && !passwordErrorRequiredInput && !confirmPasswordErrorRequiredInput) {
 
                                         val intent = Intent(context, RegisterPageSecondPart::class.java)
+
+                                        intent.putExtra("user", userValue)
+                                        intent.putExtra("email", emailValue)
+                                        intent.putExtra("senha", confirmPasswordValue)
+
                                         context.startActivity(intent)
 
                                         invalidEmail = false
                                         invalidUser = false
-
-                                        val idTag = Tag(1)
-                                        val idGenero = Genero(2)
-
-                                        val user = User (
-                                            userName = userValue,
-                                            email = emailValue,
-                                            senha = passwordValue,
-                                            tags = listOf<Tag>(idTag),
-                                            generos = listOf<Genero>(idGenero)
-                                        )
-
-                                        Log.i("respon post", CallAPI.callPost(user).toString())
                                     }
 
 

@@ -184,7 +184,9 @@ fun registerPageSecondPart() {
                                 )
                             },
 
-                            isError = userErrorRequiredInput
+                            isError = userErrorRequiredInput,
+
+                            singleLine = true
                         )
                         Spacer(modifier = Modifier.height(20.dp))
 
@@ -343,11 +345,9 @@ fun registerPageSecondPart() {
                                     if(!userErrorRequiredInput && !dateErrorRequiredInput && !tagsErrorRequired) {
 
                                         intent.putExtra("nome", userName)
-                                        intent.putExtra("data_nascimento", pickedDate)
+                                        intent.putExtra("data_nascimento", pickedDate.toString())
                                         
                                         intent.putIntegerArrayListExtra("tags", tags)
-
-                                        Log.i("user tag", "$tags")
 
                                         context.startActivity(intent)
                                     }

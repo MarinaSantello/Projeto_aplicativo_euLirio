@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.sp
 import com.example.loginpage.R
 
 @Composable
-fun GenreCard(genre: Int, getCLickState: () -> MutableState<Boolean>) {
+fun GenreCard(genre: Int) {
 
     var checkState by rememberSaveable() {
-        getCLickState()
+        mutableStateOf(false)
     }
 
     Card(
@@ -36,7 +36,11 @@ fun GenreCard(genre: Int, getCLickState: () -> MutableState<Boolean>) {
                 RoundedCornerShape(30.dp)
             )
             .clickable {
-                checkState = !checkState
+//                contacts = contacts.mapIndexed { j, item ->
+//                    if (i == j){
+//                        item.copy(active = !item.active)
+//                    } else item
+//                }
             },
         shape = RoundedCornerShape(30.dp),
     ) {
