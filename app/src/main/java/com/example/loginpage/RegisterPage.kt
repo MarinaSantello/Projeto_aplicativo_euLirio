@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.runtime.*
@@ -41,13 +40,10 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.loginpage.API.user.CallAPI
-import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.API.user.UserCall
-import com.example.loginpage.model.user.Genero
-import com.example.loginpage.model.user.Tag
-import com.example.loginpage.model.user.User
+import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Tag
+import com.example.loginpage.models.User
 
 class RegisterPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -474,12 +470,21 @@ fun registerPage() {
                                         val intent = Intent(context, RegisterPageSecondPart::class.java)
                                         context.startActivity(intent)
 
-                                        intent.putExtra("user_name", userValue)
-                                        intent.putExtra("email", emailValue)
-                                        intent.putExtra("senha", confirmPasswordValue)
-
                                         invalidEmail = false
                                         invalidUser = false
+
+                                        val idTag = Tag(1)
+                                        val idGenero = Genero(2)
+
+                                        val user = User (
+                                            userName = userValue,
+                                            email = emailValue,
+                                            senha = passwordValue,
+                                            tags = listOf<Tag>(idTag),
+                                            generos = listOf<Genero>(idGenero)
+                                        )
+
+                                        Log.i("respon post", CallAPI.callPost(user).toString())
                                     }
 
 

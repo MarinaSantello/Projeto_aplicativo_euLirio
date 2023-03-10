@@ -1,4 +1,4 @@
-package com.example.loginpage.model.user
+package com.example.loginpage.models
 
 import com.google.gson.annotations.SerializedName
 import java.util.*

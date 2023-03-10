@@ -1,7 +1,7 @@
 package com.example.loginpage.API.user
 
 import android.util.Log
-import com.example.loginpage.model.user.User
+import com.example.loginpage.models.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +30,7 @@ class CallAPI() {
 //                        response.message()!!.toString(),
 //                        response.code()!!.toString()
 //                    )
-                    Log.i("respon post", response.message()!!.toString())
+                    Log.i("respon post", response.code()!!.toString())
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
@@ -38,7 +38,7 @@ class CallAPI() {
 //                        t.message.toString()
 //                    )
 
-                    Log.i("failure post", t.message.toString())
+                    Log.i("respon post", t.message.toString())
                 }
             }
             )
