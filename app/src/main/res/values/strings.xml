@@ -44,6 +44,7 @@
     <string name="title_activity_update_page">UpdatePage</string>
 
     <string name="text_delete_account">Excluir conta</string>
+    <string name="biography">Biografia</string>
 
 
 </resources>
