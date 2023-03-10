@@ -70,7 +70,7 @@ fun registerPageThirdPart(getCLickState: () -> MutableState<Boolean>) {
     //val activity = context.findActivity()
     //val intent = activity?.intent
     val intent = Intent(context, RegisterPageSecondPart::class.java)
-
+    
     val tags = intent.getIntegerArrayListExtra("tags").toString()
 
     val nome = intent.getStringExtra("nome")
