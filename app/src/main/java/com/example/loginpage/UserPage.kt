@@ -1,9 +1,10 @@
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -45,7 +46,7 @@ class UserPage : ComponentActivity() {
 
 @Composable
 fun UserHomePage() {
-    
+
     Card(
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
         modifier = Modifier
@@ -113,7 +114,9 @@ fun UserHomePage() {
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Noah Sebastian", fontSize = 18.sp, fontWeight = FontWeight.SemiBold
+                            text = "Noah Sebastian",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
 
                         )
 
@@ -138,9 +141,8 @@ fun UserHomePage() {
                                 fontSize = 8.sp,
                                 fontWeight = FontWeight.Light,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier
 
-                            )
+                                )
                         }
 
 
@@ -247,27 +249,57 @@ fun UserHomePage() {
                 modifier = Modifier
 
 
-            ){
+            ) {
                 Text(
                     text = "The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.W400,
                     modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, top = 12.dp)
+                        .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 9.dp)
                 )
+
+
+                //Cards da tag de ESCRITOR e LEITOR
+                val tags = listOf<String>("ESCRITOR", "AUTOR")
+
+                LazyRow(){
+                    items(tags) {
+                        //Card button com o nome do escritor
+                        Card(
+                            modifier = Modifier
+//                            .padding(end = 6.dp)
+                                .height(16.dp)
+                                .padding(start = 5.dp,end = 5.dp)
+                                .width(90.dp),
+                            backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                            shape = RoundedCornerShape(100.dp),
+                        ) {
+                            Text(
+                                text = it,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textAlign = TextAlign.Center,
+                                color = Color.White
+
+
+                            )
+
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Card(
                     modifier = Modifier
-                        .height(16.dp)
-                        .width(90.dp),
-                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                    shape = RoundedCornerShape(100.dp),
-                    ) {
+                        .height(1.dp)
+                        .width(280.dp),
+                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
+                ){}
 
 
-                }
 
-
+                //Cards para mostrar o Genero selecionado de cada usuario
 
             }
 
@@ -275,10 +307,7 @@ fun UserHomePage() {
         }
 
     }
-    }
-        
-
-
+}
 
 
 @Composable
