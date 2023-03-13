@@ -17,9 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.loginpage.R
+import com.example.loginpage.models.Genre
+import com.example.loginpage.models.Genres
 
 @Composable
-fun GenreCard(genre: Int) {
+fun GenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
 
     var checkState by rememberSaveable() {
         mutableStateOf(false)
@@ -36,11 +38,14 @@ fun GenreCard(genre: Int) {
                 RoundedCornerShape(30.dp)
             )
             .clickable {
-//                contacts = contacts.mapIndexed { j, item ->
+//                genres = genres.mapIndexed { j, item ->
 //                    if (i == j){
 //                        item.copy(active = !item.active)
 //                    } else item
 //                }
+                checkState = !checkState
+
+                onChecked.invoke(checkState)
             },
         shape = RoundedCornerShape(30.dp),
     ) {
@@ -49,7 +54,7 @@ fun GenreCard(genre: Int) {
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = "Genero $genre",
+                text = genre.nome,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.eulirio_purple)

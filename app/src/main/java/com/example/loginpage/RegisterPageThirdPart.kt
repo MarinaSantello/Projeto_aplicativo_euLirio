@@ -17,9 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,8 +35,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.loginpage.API.genre.CallGenreAPI
+import com.example.loginpage.API.genre.GenreCall
+import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.API.user.UserCall
+import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Genre
+import com.example.loginpage.models.Tag
+import com.example.loginpage.models.User
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RegisterPageThirdPart : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +60,7 @@ class RegisterPageThirdPart : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    registerPageThirdPart(getClickState())
+                    registerPageThirdPart()
                 }
             }
         }
@@ -58,26 +68,22 @@ class RegisterPageThirdPart : ComponentActivity() {
 }
 
 @Composable
-fun getClickState(): () -> MutableState<Boolean> {
-    var checkState = rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    return { checkState }
-}
-
-@Composable
-fun registerPageThirdPart(getCLickState: () -> MutableState<Boolean>) {
+fun registerPageThirdPart() {
 
     val context = LocalContext.current
 
-    val intentThidPart = (context as RegisterPageThirdPart).intent //Intent(context, RegisterPageSecondPart::class.java)
+    val intentThirdPart = (context as RegisterPageThirdPart).intent //Intent(context, RegisterPageSecondPart::class.java)
 
-    val nome = intentThidPart.getStringExtra("nome")
-    val dataNascimento = intentThidPart.getStringExtra("data_nascimento")
-    val tags = intentThidPart.getIntegerArrayListExtra("tags").toString()
+    val userName = intentThirdPart.getStringExtra("user")
+    val email = intentThirdPart.getStringExtra("email")
+    val senha = intentThirdPart.getStringExtra("senha")
+    val nome = intentThirdPart.getStringExtra("nome")
+    val dataNascimento = intentThirdPart.getStringExtra("data_nascimento")
+    val tagsExtra = intentThirdPart.getIntegerArrayListExtra("tags")
 
-    Log.i("user tags", dataNascimento.toString())
+    var generos by remember {
+        mutableStateOf(listOf<Genero>())
+    }
 
     val focusManager = LocalFocusManager.current
 
@@ -172,8 +178,25 @@ fun registerPageThirdPart(getCLickState: () -> MutableState<Boolean>) {
 
                             }
 
-                            val id = listOf(1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21, 32, 54, 77, 23, 25)
-                            val idKey = listOf(1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21, 32, 54, 77, 23, 25)
+                            var genres by remember {
+                                mutableStateOf(listOf<Genre>())
+                            }
+
+                            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                            val genreCall = retrofit.create(GenreCall::class.java) // instância do objeto contact
+                            val callGetGenres01 = genreCall.getAll()
+
+                            // Excutar a chamada para o End-point
+                            callGetGenres01.enqueue(object :
+                                Callback<List<Genre>> { // enqueue: usado somente quando o objeto retorna um valor
+                                override fun onResponse(call: Call<List<Genre>>, response: Response<List<Genre>>) {
+                                    genres = response.body()!!
+                                }
+
+                                override fun onFailure(call: Call<List<Genre>>, t: Throwable) {
+
+                                }
+                            })
 
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(2),
@@ -187,9 +210,15 @@ fun registerPageThirdPart(getCLickState: () -> MutableState<Boolean>) {
                                 )
                             ) {
                                 items(
-                                    items = id
+                                    items = genres
                                 ) {
-                                    GenreCard(it, getCLickState)
+                                    GenreCard(it){ state ->
+                                        //if(state) generos += it
+
+                                        if (state) generos += Genero(it.id)
+
+                                        Log.i("id genero", "$state")
+                                    }
                                 }
                             }
                         }
@@ -203,8 +232,48 @@ fun registerPageThirdPart(getCLickState: () -> MutableState<Boolean>) {
                             contentAlignment = Alignment.Center
                         ) {
                             Button(onClick = {
-                                var teste = getCLickState()
-                                Log.i("teste-state", teste.toString())
+                                //var teste = getCLickState()
+                                //Log.i("teste-state", teste.toString())
+
+                                val tags = listOf<Tag>()
+
+                                val user = User (
+                                    userName = userName,
+                                    dataNascimento = dataNascimento,
+                                    nome = nome,
+                                    email = email,
+                                    senha = senha,
+                                    tags = tags,
+                                    generos = generos
+                                )
+
+                                val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+                                val callInsertUser = userCall.save(user)
+
+                                // Excutar a chamada para o End-point
+                                callInsertUser.enqueue(object :
+                                    Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+                                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                                        var retorno = listOf<String>(
+                                            response.message()!!.toString(),
+                                            response.code()!!.toString()
+                                        )
+
+                                        Log.i("respon post", response.message()!!.toString())
+                                    }
+
+                                    override fun onFailure(call: Call<String>, t: Throwable) {
+                                        var errorRetorno = listOf<String>(
+                                            t.message.toString()
+                                        )
+
+                                        Log.i("respon post err", t.message.toString())
+                                    }
+                                }
+                                )
+
+                                Log.i("id genero", "${generos}")
 
                             },
                                 modifier = Modifier

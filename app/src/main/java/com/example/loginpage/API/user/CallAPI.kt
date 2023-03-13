@@ -26,17 +26,18 @@ class CallAPI() {
             callInsertUser.enqueue(object :
                 Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-//                    retorno = listOf<String>(
-//                        response.message()!!.toString(),
-//                        response.code()!!.toString()
-//                    )
+                    retorno = listOf<String>(
+                        response.message()!!.toString(),
+                        response.code()!!.toString()
+                    )
+
                     Log.i("respon post", response.code()!!.toString())
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-//                    retorno = listOf<String>(
-//                        t.message.toString()
-//                    )
+                    retorno = listOf<String>(
+                        t.message.toString()
+                    )
 
                     Log.i("respon post", t.message.toString())
                 }

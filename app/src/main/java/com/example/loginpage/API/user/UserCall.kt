@@ -8,7 +8,7 @@ import retrofit2.http.*
 const val contentType = Constant.CONTENT_TYPE
 
 interface UserCall {
-    @Headers("Content-Type:$contentType")
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
 
     @GET("")
     fun getAll(): Call<List<User>>

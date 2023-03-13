@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
@@ -37,6 +38,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.loginpage.API.genre.CallGenreAPI
+import com.example.loginpage.API.genre.GenreCall
+import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.models.Genre
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : ComponentActivity() {
@@ -284,6 +292,9 @@ fun LoginPage() {
 //
 //                                    val intent = Intent(context, RegisterPageThirdPart01::class.java)
 //                                    context.startActivity(intent)
+//                                    var genres by remember {
+//                                        mutableStateOf(listOf<Genre>())
+//                                    }
                                 },
                                 modifier = Modifier
                                     .width(160.dp),

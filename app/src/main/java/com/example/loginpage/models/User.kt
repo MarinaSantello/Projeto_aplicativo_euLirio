@@ -5,16 +5,16 @@ import java.util.*
 
 data class User(
     @SerializedName("user_name") // indica para o gson qual a chave equivalente desse atributo
-    var userName: String,
+    var userName: String?,
     @SerializedName("data_nascimento")
-    var dataNascimento: String = "",
+    var dataNascimento: String?,
 
     var id: Int = 0,
-    var nome: String = "",
+    var nome: String?,
     var foto: String = "",
     var biografia: String = "",
-    var email: String,
-    var senha: String,
+    var email: String?,
+    var senha: String?,
 
     var tags: List<Tag>,
     var generos: List<Genero>
