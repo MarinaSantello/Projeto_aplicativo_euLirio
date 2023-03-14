@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">loginPage</string>
+    <string name="app_name">euLírio</string>
+
     <string name="title_activity_register_page">RegisterPage</string>
     <string name="title_activity_register_page_second_part">RegisterPageSecondPart</string>
 
@@ -46,5 +47,22 @@
     <string name="text_delete_account">Excluir conta</string>
     <string name="biography">Biografia</string>
 
+    <string name="text1"> Compre e leia as obras que te interessam e conheça os mundos escondidos da literatura independente, dando visibilidade aos autores que o mundo não conhece, com as suas resenhas!  </string>
+    <string name="tittle1"> UM LUGAR DE BOAS HISTÓRIAS </string>
+    <string name="subtitle1"> Pessoas, lugares, histórias e mundos estão a sua espera! </string>
+
+    <string name="free"> É grátis e fácil de usar! </string>
+    <string name="title2"> NOS CONTE A SUA HISTÓRIA </string>
+    <string name="text2"> Mostre seu talento para o mundo, construa sua base de fãs e se junte a uma comunidade de escritores e leitoras. Aqui você publica suas histórias e recebe o feedback direto dos usuários!  </string>
+    <string name="subtitle2"> Aqui as suas histórias podem ganhar o mundo! </string>
+
+    <string name="title3"> COMPARTILHE SUAS AVALIAÇÕES </string>
+    <string name="subtitle3">Seja o crítico literário que você sempre quis ser! </string>
+    <string name="text3"> Ajude os escritores a melhorar suas obras e construir sua base de fãs, através de resenhas. Assim, você escubre novos talentos e obras incríveis, além de mostrar o seu amor pela leitura! </string>
+    <string name="title_activity_intro_pt1">IntroPt1</string>
+    <string name="title_activity_intro_pt2">IntroPt2</string>
+    <string name="title_activity_intro_pt3">IntroPt3</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_login_page">LoginPage</string>
 
 </resources>
