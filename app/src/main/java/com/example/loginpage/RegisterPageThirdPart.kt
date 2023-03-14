@@ -52,7 +52,7 @@ class RegisterPageThirdPart : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    registerPageThirdPart()
+                    RegisterPageThirdPart()
                 }
             }
         }
@@ -60,7 +60,7 @@ class RegisterPageThirdPart : ComponentActivity() {
 }
 
 @Composable
-fun registerPageThirdPart() {
+fun RegisterPageThirdPart() {
 
     val context = LocalContext.current
 
@@ -293,6 +293,6 @@ fun registerPageThirdPart() {
 
 @Preview(showBackground = true)
 @Composable
-fun registerPageThirdPartPreview() {
-    registerPageThirdPartPreview()
+fun RegisterPageThirdPartPreview() {
+    RegisterPageThirdPartPreview()
 }
