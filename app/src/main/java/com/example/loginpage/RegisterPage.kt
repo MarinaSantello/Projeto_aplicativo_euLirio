@@ -2,7 +2,6 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,10 +39,6 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import com.example.loginpage.API.user.CallAPI
-import com.example.loginpage.models.Genero
-import com.example.loginpage.models.Tag
-import com.example.loginpage.models.User
 
 class RegisterPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

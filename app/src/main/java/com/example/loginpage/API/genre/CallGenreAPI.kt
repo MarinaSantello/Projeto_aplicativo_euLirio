@@ -1,11 +1,7 @@
 package com.example.loginpage.API.genre
 
-import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.models.Genre
-import com.example.loginpage.models.Genres
-import com.example.loginpage.models.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

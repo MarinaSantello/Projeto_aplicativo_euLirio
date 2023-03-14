@@ -1,6 +1,5 @@
 package com.example.loginpage.ui.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,9 +15,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.loginpage.R
+//import com.example.euLirio.R
 import com.example.loginpage.models.Genre
-import com.example.loginpage.models.Genres
+import com.example.loginpage.R
 
 @Composable
 fun GenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
