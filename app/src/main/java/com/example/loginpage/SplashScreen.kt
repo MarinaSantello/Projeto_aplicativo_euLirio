@@ -6,15 +6,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.loginpage.constants.Routes
@@ -22,9 +32,10 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun Splash(navController: NavController, i: Int) = Box(modifier = Modifier.fillMaxSize())
+fun Splash(navController: NavController, i: Int) = Box(modifier = Modifier.fillMaxSize().background(
+    Color(242, 242, 242, 255)
+))
 {
-    Text(text = "Teste")
 
     val scale = remember {
         Animatable(0.0f)
@@ -50,5 +61,15 @@ fun Splash(navController: NavController, i: Int) = Box(modifier = Modifier.fillM
             }
         }
     }
-    Text(text = "Teste")
+
+    Icon(Icons.Default.Circle, contentDescription = "",
+        modifier = Modifier.align(Alignment.Center).fillMaxSize(.5f),
+        tint = colorResource(id = R.color.eulirio_purple_text_color))
+    Image(
+        painter = painterResource(id = R.drawable.logo_icone_eulirio),
+        contentDescription = "Logo do app",
+        modifier = Modifier
+            .align(Alignment.Center)
+            .fillMaxSize(.35f)
+    )
 }
