@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
@@ -55,7 +56,6 @@ class RegisterPageSecondPart : ComponentActivity() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun registerPageSecondPart() {
-
 
     var userName by rememberSaveable {
         mutableStateOf("")
@@ -332,7 +332,16 @@ fun registerPageSecondPart() {
 
                                     if(!userErrorRequiredInput && !dateErrorRequiredInput && !tagsErrorRequired) {
 
+                                        val intentFirstPart = (context as RegisterPageSecondPart).intent //Intent(context, RegisterPageSecondPart::class.java)
+
+                                        val userNameIntent = intentFirstPart.getStringExtra("user1")
+                                        val email = intentFirstPart.getStringExtra("email1")
+                                        val senha = intentFirstPart.getStringExtra("senha1")
+
                                         intent.putExtra("nome", userName)
+                                        intent.putExtra("user", userNameIntent)
+                                        intent.putExtra("email", email)
+                                        intent.putExtra("senha", senha)
                                         intent.putExtra("data_nascimento", pickedDate.toString())
                                         
                                         intent.putIntegerArrayListExtra("tags", tags)

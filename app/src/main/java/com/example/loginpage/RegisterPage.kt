@@ -465,10 +465,9 @@ fun registerPage() {
 
                                         val intent = Intent(context, RegisterPageSecondPart::class.java)
 
-                                        val intentThird = Intent(context, RegisterPageThirdPart::class.java)
-                                        intentThird.putExtra("user", userValue)
-                                        intentThird.putExtra("email", emailValue)
-                                        intentThird.putExtra("senha", confirmPasswordValue)
+                                        intent.putExtra("user1", userValue)
+                                        intent.putExtra("email1", emailValue)
+                                        intent.putExtra("senha1", confirmPasswordValue)
 
                                         Log.i("teste email", emailValue)
 

@@ -74,6 +74,7 @@ fun RegisterPageThirdPartFun() {
     val tagsExtra = intentThirdPart.getIntegerArrayListExtra("tags")
 
     Log.i("teste email", email.toString())
+
     var generos by remember {
         mutableStateOf(listOf<Genero>())
     }
