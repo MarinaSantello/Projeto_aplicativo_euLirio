@@ -12,11 +12,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +54,8 @@ fun IntroductionPt1() {
     //Content
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         //Header
@@ -69,13 +72,14 @@ fun IntroductionPt1() {
 
         //IMAGE
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxHeight(.45f),
+            verticalArrangement = Arrangement.Center,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.intro_img_01),
                 contentDescription = "",
-                modifier = Modifier.size(300.dp)
+                modifier = Modifier.size(300.dp),
+                alignment = Alignment.Center
             )
         }
 
@@ -93,26 +97,28 @@ fun IntroductionPt1() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(id = R.string.tittle1),
+                    text = stringResource(id = R.string.tittle1).uppercase(),
+                    modifier = Modifier.padding(top = 20.dp, start = 24.dp, end = 24.dp),
                     color = Color(75, 14, 101, 255),
                     fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h2
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = stringResource(id = R.string.subtitle1),
-                    fontSize = 10.sp,
                     textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.subtitle1
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = stringResource(id = R.string.text1),
-                    textAlign = TextAlign.Justify
+                    textAlign = TextAlign.Justify,
+                    style = MaterialTheme.typography.h3
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -123,6 +129,7 @@ fun IntroductionPt1() {
                         context.startActivity(intentIntroPt2)
 //                              navController.navigate(Routes.Login.name)
                     },
+                    modifier = Modifier.padding(bottom = 20.dp),
                     shape = CircleShape,
                     //   colors = ButtonColors(R.color.darkpurple)
 
@@ -132,13 +139,15 @@ fun IntroductionPt1() {
                     Icon(
                         Icons.Default.ChevronRight,
                         contentDescription = "icon",
-                        modifier = Modifier.size(16.dp),
-                        tint = Color.White)
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.White
+                    )
                 }
             }
         }
     }
 }
+
 
 //@Preview(showBackground = true)
 //@Composable

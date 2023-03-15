@@ -18,8 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +54,8 @@ fun IntroductionPt3() {
     //Content
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         //Header
@@ -62,20 +65,23 @@ fun IntroductionPt3() {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_eu_lirio),
-                contentDescription = "",
+                contentDescription = "Logo euLirio",
                 modifier = Modifier.size(150.dp)
             )
         }
 
         //IMAGE
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxHeight(.45f)
+                .padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.intro_img_03),
                 contentDescription = "",
-                modifier = Modifier.size(300.dp)
+                modifier = Modifier.size(300.dp),
+                alignment = Alignment.Center
             )
         }
 
@@ -94,33 +100,36 @@ fun IntroductionPt3() {
             ) {
                 Text(
                     text = stringResource(id = R.string.title3),
+                    modifier = Modifier.padding(top = 20.dp, start = 24.dp, end = 24.dp),
                     color = Color(75, 14, 101, 255),
                     fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h2
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = stringResource(id = R.string.subtitle3),
-                    fontSize = 16.sp,
                     textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.subtitle1
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = stringResource(id = R.string.text3),
-                    textAlign = TextAlign.Justify
+                    textAlign = TextAlign.Justify,
+                    style = MaterialTheme.typography.h3
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
-
+                Spacer(modifier = Modifier.height(8.dp))
 
                 //row button
                 Row(modifier =
-                Modifier.fillMaxSize(),
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 20.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
 
@@ -130,14 +139,12 @@ fun IntroductionPt3() {
                             context.startActivity(intent)
                         },
                         shape = CircleShape,
-                        colors = ButtonDefaults.buttonColors(
-                            Color(56, 24, 133, 255)
-                        )
+                        colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_purple_text_color_border))
                     ) {
                         Icon(
                             Icons.Default.ChevronLeft,
                             contentDescription = "seta para a esquerda",
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier.size(20.dp),
                             tint = Color.White
                         )
                     }
@@ -151,14 +158,12 @@ fun IntroductionPt3() {
                             context.startActivity(intent)
                         },
                         shape = CircleShape,
-                        colors = ButtonDefaults.buttonColors(
-                            Color(56, 24, 133, 255)
-                        )
+                        colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_purple_text_color_border))
                     ) {
                         Icon(
                             Icons.Default.ChevronRight,
                             contentDescription = "seta para a direita",
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier.size(20.dp),
                             tint = Color.White
                         )
                     }

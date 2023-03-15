@@ -123,7 +123,7 @@ fun RegisterPageThirdPartFun() {
                                     .padding(bottom = 16.dp)
                             ) {
                                 Text(
-                                    text = "olá, [nome]".uppercase(),
+                                    text = "olá, $nome".uppercase(),
                                     modifier = Modifier
                                         .padding(top = 32.dp)
                                         .fillMaxWidth(),
@@ -229,7 +229,9 @@ fun RegisterPageThirdPartFun() {
                                 //var teste = getCLickState()
                                 //Log.i("teste-state", teste.toString())
 
-                                val tags = listOf<Tag>(Tag(idTag = 1))
+                                var tags = listOf<Tag>()
+                                for(i in 0 until tagsExtra!!.size)
+                                    tags += listOf<Tag>(Tag(tagsExtra[i]))
 
                                 val user = User (
                                     userName = userName,
@@ -241,7 +243,7 @@ fun RegisterPageThirdPartFun() {
                                     generos = generos
                                 )
 
-                                Log.i("api", tags.toString())
+                                Log.i("api tag", tags.toString())
 
                                 val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
                                 val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact

@@ -14,9 +14,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -149,6 +152,7 @@ fun loginPage() {
                             color = colorResource(id = R.color.eulirio_purple_text_color),
                             text = stringResource(id = R.string.login_name),
                             fontSize = 42.sp,
+                            fontWeight = FontWeight.Black,
                             style = MaterialTheme.typography.h1
                         )
 
@@ -175,7 +179,7 @@ fun loginPage() {
 
                             leadingIcon = {
                                 Icon(
-                                    Icons.Outlined.Email,
+                                    Icons.Default.Email,
                                     contentDescription = "Icone de e-mail",
                                     modifier = Modifier.height(24.dp),
                                     tint = colorIconEmail
@@ -215,7 +219,7 @@ fun loginPage() {
 
                             leadingIcon = {
                                 Icon(
-                                    Icons.Outlined.Lock,
+                                    Icons.Default.Key,
                                     contentDescription = "Icone de cadeado",
                                     modifier = Modifier.height(24.dp),
                                     tint = colorIconPassword

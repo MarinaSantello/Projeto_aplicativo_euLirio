@@ -1,6 +1,7 @@
 package com.example.loginpage.ui.theme
 
 import androidx.compose.material.Typography
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -16,10 +17,19 @@ val Spartan = FontFamily(
 )
 
 val Montserrat = FontFamily(
-    Font(R.font.montserrat_bold)
+    Font(R.font.montserrat_extrabold)
+)
+
+val Montserrat2 = FontFamily(
+    Font(R.font.montserrat_regular)
+)
+
+val Josesans = FontFamily(
+    Font(R.font.josefinsans_light)
 )
 
 // Set of Material typography styles to start with
+@OptIn(ExperimentalTextApi::class)
 val Typography = Typography(
     body1 = TextStyle(
         fontFamily = FontFamily.Default,
@@ -37,8 +47,29 @@ val Typography = Typography(
     ),
     h2 = TextStyle(
         fontFamily = Montserrat,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 24.sp,
+        letterSpacing = 2.sp
+    ),
+    h3 = TextStyle(
+        fontFamily = Josesans,
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp
+        fontSize = 16.sp,
+        letterSpacing = 1.sp
+    ),
+    subtitle1 = TextStyle(
+        fontFamily = Montserrat2,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        letterSpacing = 1.sp,
+//        lineHeight = 270.em,
+//        platformStyle = PlatformTextStyle(
+//            includeFontPadding = false
+//        ),
+//        lineHeightStyle = LineHeightStyle(
+//            alignment = LineHeightStyle.Alignment.Center,
+//            trim = LineHeightStyle.Trim.FirstLineTop
+//        )
     )
     /* Other default text styles to override
     button = TextStyle(

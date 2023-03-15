@@ -40,6 +40,7 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.AccountCircle
 
 class RegisterPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -208,7 +209,7 @@ fun registerPage() {
 
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Outlined.Email,
+                                        Icons.Outlined.AccountCircle,
                                         contentDescription = "Icone de e-mail",
                                         modifier = Modifier.height(24.dp),
                                         tint = colorIconUser
@@ -379,6 +380,8 @@ fun registerPage() {
 
                                 isError = confirmPasswordErrorRequiredInput,
 
+                                singleLine = true,
+
                                 visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
 
                                 keyboardOptions =  KeyboardOptions(
@@ -389,8 +392,6 @@ fun registerPage() {
                                         focusManager.clearFocus()
                                     }
                                 ),
-
-                                singleLine = true
                             )
 
                             if (clickButton && (userValue.isEmpty() || emailValue.isEmpty() || passwordValue.isEmpty() || confirmPasswordValue.isEmpty())) Text(
