@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -37,7 +38,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.API.user.UserCall
+import com.example.loginpage.API.userLogin.UserLoginCall
+import com.example.loginpage.models.RetornoApi
+import com.example.loginpage.models.UserLogin
 import com.example.loginpage.ui.theme.LoginPageTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginPage : ComponentActivity() {
@@ -159,7 +168,7 @@ fun loginPage() {
 
                             label = {
                                 Text(
-                                    text = stringResource(id = R.string.email_name),
+                                    text = stringResource(id = R.string.login_user_name),
                                     style = TextStyle (fontWeight = FontWeight.Light)
                                 )
                             },
@@ -277,9 +286,41 @@ fun loginPage() {
                                         passwordFocusRequester.requestFocus()
                                     }
                                     else passwordErrorRequiredInput = false
-//
-//                                    val intent = Intent(context, RegisterPageThirdPart01::class.java)
-//                                    context.startActivity(intent)
+
+                                    val userLogin = UserLogin(
+                                        login = emailValue,
+                                        senha = passwordValue
+                                    )
+
+                                    val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                    val userLoginCall = retrofit.create(UserLoginCall::class.java) // instância do objeto contact
+                                    val callValidateUser = userLoginCall.validate(userLogin)
+
+                                    var responseValidate = 0
+                                    // Excutar a chamada para o End-point
+                                    callValidateUser.enqueue(object :
+                                        Callback<RetornoApi> { // enqueue: usado somente quando o objeto retorna um valor
+                                        override fun onResponse(
+                                            call: Call<RetornoApi>,
+                                            response: Response<RetornoApi>
+                                        ) {
+                                            responseValidate = response.code()
+
+                                            if (responseValidate == 200){
+                                                val intent = Intent(context, UserPage::class.java)
+                                                context.startActivity(intent)
+                                            }
+                                        }
+
+                                        override fun onFailure(
+                                            call: Call<RetornoApi>,
+                                            t: Throwable
+                                        ) {
+                                            val err = t.message
+                                            Log.i("teste login", err.toString())
+                                        }
+                                    }
+                                    )
 //                                    var genres by remember {
 //                                        mutableStateOf(listOf<Genre>())
 //                                    }

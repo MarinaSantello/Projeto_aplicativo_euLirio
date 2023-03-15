@@ -10,8 +10,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.FormatAlignCenter
+import androidx.compose.material.icons.outlined.LocalLibrary
+import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material.icons.rounded.ArrowBackIos
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +48,23 @@ class UserPage : ComponentActivity() {
 }
 
 @Preview(showBackground = true, showSystemUi = true)
-
 @Composable
 fun UserHomePage() {
+
+
+    var BooksOnClickState by remember {
+        mutableStateOf(false)
+    }
+
+    var CurtasOnClickState by remember {
+        mutableStateOf(false)
+    }
+
+    var RecomendationOnClickState by remember {
+        mutableStateOf(false)
+    }
+
+
 
     Card(
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
@@ -263,14 +281,14 @@ fun UserHomePage() {
                 //Cards da tag de ESCRITOR e LEITOR
                 val tags = listOf<String>("ESCRITOR", "AUTOR")
 
-                LazyRow(){
+                LazyRow() {
                     items(tags) {
                         //Card button com o nome do escritor
                         Card(
                             modifier = Modifier
 //                            .padding(end = 6.dp)
                                 .height(16.dp)
-                                .padding(start = 5.dp,end = 5.dp)
+                                .padding(start = 5.dp, end = 5.dp)
                                 .width(90.dp),
                             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
                             shape = RoundedCornerShape(100.dp),
@@ -295,17 +313,221 @@ fun UserHomePage() {
                     modifier = Modifier
                         .height(1.dp)
                         .width(280.dp),
-                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
-                ){}
+                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                    elevation = 0.dp
+                ) {}
 
+                Spacer(modifier = Modifier.height(10.dp))
+
+                val generos = listOf<String>("TERROR", "DRAMA", "ROMANCE")
 
 
                 //Cards para mostrar o Genero selecionado de cada usuario
+                LazyRow() {
+                    items(generos) {
+                        //Card button com o nome do escritor
+                        Card(
+                            modifier = Modifier
+//                            .padding(end = 6.dp)
+                                .height(14.dp)
+                                .padding(start = 5.dp, end = 5.dp)
+                                .width(90.dp),
+                            backgroundColor = colorResource(id = R.color.white),
+                            border = BorderStroke(
+                                1.dp,
+                                colorResource(id = R.color.eulirio_yellow_card_background)
+                            ),
+                            shape = RoundedCornerShape(100.dp),
+                        ) {
+                            Text(
+                                text = it,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Light,
+                                textAlign = TextAlign.Center,
+                                color = colorResource(id = R.color.eulirio_yellow_card_background)
+
+
+                            )
+
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .height(25.dp)
+                        .padding(start = 50.dp, end = 50.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    //Card de Livros
+                    Card(
+                        modifier = Modifier
+                            .height(22.dp)
+                            .width(90.dp)
+                            .clickable {
+                                BooksOnClickState = true
+                                CurtasOnClickState = false
+                                RecomendationOnClickState = false
+                            },
+                        backgroundColor = Color.Transparent,
+                        elevation = 0.dp
+
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+
+                        ) {
+
+                            Icon(
+                                Icons.Outlined.MenuBook,
+                                contentDescription = "icone de livro",
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .padding(end = 8.dp),
+                                tint = if (BooksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                            )
+
+                            Text(
+                                text = "Livros",
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.W400
+                            )
+
+                        }
+
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        if (BooksOnClickState) {
+                            Card(
+                                modifier = Modifier
+                                    .height(3.dp)
+                                    .fillMaxWidth(),
+                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                                elevation = 0.dp,
+
+
+                                ) {}
+                        }
+
+                    }
+
+                    //Card de Curtas
+                    Card(
+                        modifier = Modifier
+                            .height(22.dp)
+                            .width(90.dp)
+                            .clickable {
+                                CurtasOnClickState = true
+                                BooksOnClickState = false
+                                RecomendationOnClickState = false
+                            },
+                        backgroundColor = Color.Transparent,
+                        elevation = 0.dp
+
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+
+                        ) {
+                            Icon(
+                                Icons.Outlined.FormatAlignCenter,
+                                contentDescription = "icone de livro",
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .padding(end = 8.dp),
+                                tint = if (CurtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                            )
+
+                            Text(
+                                text = "Curtas",
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.W400
+                            )
+
+                        }
+
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        if (CurtasOnClickState) {
+                            Card(
+                                modifier = Modifier
+                                    .height(3.dp)
+                                    .fillMaxWidth(),
+                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                                elevation = 0.dp,
+
+
+                                ) {}
+                        }
+
+                    }
+
+                    //Card de Recomendações
+                    Card(
+                        modifier = Modifier
+                            .height(22.dp)
+                            .width(90.dp)
+                            .clickable {
+                                RecomendationOnClickState = true
+                                BooksOnClickState = false
+                                CurtasOnClickState = false
+                                       },
+                        backgroundColor = Color.Transparent,
+                        elevation = 0.dp
+
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+
+                        ) {
+                            Icon(
+                                Icons.Outlined.LocalLibrary,
+                                contentDescription = "icone de livro",
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .padding(end = 8.dp),
+                                tint = if (RecomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                            )
+
+                            Text(
+                                text = "Recomendações",
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.W400
+                            )
+
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        if (RecomendationOnClickState) {
+                            Card(
+                                modifier = Modifier
+                                    .height(3.dp)
+                                    .fillMaxWidth(),
+                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                                elevation = 0.dp,
+
+
+                                ) {}
+                        }
+
+                    }
+
+
+                }
+
 
             }
 
 
         }
+
 
     }
 }

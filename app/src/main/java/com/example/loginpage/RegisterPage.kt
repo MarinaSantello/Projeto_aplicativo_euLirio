@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -464,9 +465,12 @@ fun registerPage() {
 
                                         val intent = Intent(context, RegisterPageSecondPart::class.java)
 
-                                        intent.putExtra("user", userValue)
-                                        intent.putExtra("email", emailValue)
-                                        intent.putExtra("senha", confirmPasswordValue)
+                                        val intentThird = Intent(context, RegisterPageThirdPart::class.java)
+                                        intentThird.putExtra("user", userValue)
+                                        intentThird.putExtra("email", emailValue)
+                                        intentThird.putExtra("senha", confirmPasswordValue)
+
+                                        Log.i("teste email", emailValue)
 
                                         context.startActivity(intent)
 

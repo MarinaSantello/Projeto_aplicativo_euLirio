@@ -73,6 +73,7 @@ fun RegisterPageThirdPartFun() {
     val dataNascimento = intentThirdPart.getStringExtra("data_nascimento")
     val tagsExtra = intentThirdPart.getIntegerArrayListExtra("tags")
 
+    Log.i("teste email", email.toString())
     var generos by remember {
         mutableStateOf(listOf<Genero>())
     }
@@ -227,7 +228,7 @@ fun RegisterPageThirdPartFun() {
                                 //var teste = getCLickState()
                                 //Log.i("teste-state", teste.toString())
 
-                                val tags = listOf<Tag>()
+                                val tags = listOf<Tag>(Tag(idTag = 1))
 
                                 val user = User (
                                     userName = userName,
@@ -238,6 +239,8 @@ fun RegisterPageThirdPartFun() {
                                     tags = tags,
                                     generos = generos
                                 )
+
+                                Log.i("api", tags.toString())
 
                                 val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
                                 val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
