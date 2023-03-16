@@ -100,7 +100,7 @@ fun IntroductionPt3() {
             ) {
                 Text(
                     text = stringResource(id = R.string.title3),
-                    modifier = Modifier.padding(top = 20.dp, start = 24.dp, end = 24.dp),
+                    modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp),
                     color = Color(75, 14, 101, 255),
                     fontSize = 26.sp,
                     textAlign = TextAlign.Center,
@@ -123,7 +123,7 @@ fun IntroductionPt3() {
                     style = MaterialTheme.typography.h3
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
                 //row button
                 Row(modifier =
@@ -150,7 +150,6 @@ fun IntroductionPt3() {
                     }
 
                     Spacer(modifier = Modifier.padding(horizontal = 24.dp))
-
 
                     Button(
                         onClick = {

@@ -253,19 +253,15 @@ fun RegisterPageThirdPartFun() {
                                 callInsertUser.enqueue(object :
                                     Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
                                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                                        var retorno = listOf<String>(
-                                            response.message()!!.toString(),
-                                            response.code()!!.toString()
-                                        )
+//                                        var retorno = listOf<String>(
+//                                            response.message()!!.toString(),
+//                                            response.code()!!.toString()
+//                                        )
 
                                         Log.i("respon post", response.message()!!.toString())
                                     }
 
                                     override fun onFailure(call: Call<String>, t: Throwable) {
-                                        var errorRetorno = listOf<String>(
-                                            t.message.toString()
-                                        )
-
                                         Log.i("respon post err", t.message.toString())
                                     }
                                 }
