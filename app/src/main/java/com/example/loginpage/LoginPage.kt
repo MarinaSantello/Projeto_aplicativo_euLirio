@@ -72,6 +72,7 @@ class LoginPage : ComponentActivity() {
 @Composable
 fun loginPage() {
 
+    //passar o contexto
     val context = LocalContext.current
 
     var emailValue by rememberSaveable {
