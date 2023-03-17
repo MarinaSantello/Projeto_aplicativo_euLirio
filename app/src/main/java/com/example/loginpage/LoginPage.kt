@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -312,7 +313,7 @@ fun loginPage() {
                                             responseValidate = response.code()
 
                                             if (responseValidate == 200){
-                                                val intent = Intent(context, UserPage::class.java)
+                                                val intent = Intent(context, Home::class.java)
                                                 context.startActivity(intent)
                                             }
                                         }

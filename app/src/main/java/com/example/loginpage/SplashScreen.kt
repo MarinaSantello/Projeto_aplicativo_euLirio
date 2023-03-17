@@ -49,8 +49,8 @@ fun Splash(navController: NavController, i: Int) = Box(modifier = Modifier.fillM
             })
         )
         delay(1000)
-        if (i == 0) navController.navigate(Routes.Login.name) {
-            popUpTo(Routes.Login.name) {
+        if (i == 1) navController.navigate(Routes.Home.name) {
+            popUpTo(Routes.Home.name) {
                 inclusive = true
             }
         }

@@ -47,6 +47,10 @@ fun Greeting() {
         composable(Routes.Login.name) {
             loginPage()
         }
+
+        composable(Routes.Home.name) {
+            homeBooks()
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.loginpage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -249,16 +250,18 @@ fun RegisterPageThirdPartFun() {
                                 val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
                                 val callInsertUser = userCall.save(user)
 
+                                var responseValidate = 0
+
                                 // Excutar a chamada para o End-point
                                 callInsertUser.enqueue(object :
                                     Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
                                     override fun onResponse(call: Call<String>, response: Response<String>) {
-//                                        var retorno = listOf<String>(
-//                                            response.message()!!.toString(),
-//                                            response.code()!!.toString()
-//                                        )
+                                        responseValidate = response.code()
 
-                                        Log.i("respon post", response.message()!!.toString())
+                                        if (responseValidate == 201){
+                                            val intent = Intent(context, Home::class.java)
+                                            context.startActivity(intent)
+                                        }
                                     }
 
                                     override fun onFailure(call: Call<String>, t: Throwable) {

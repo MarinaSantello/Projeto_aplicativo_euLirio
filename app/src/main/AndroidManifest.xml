@@ -15,6 +15,11 @@
         android:theme="@style/Theme.LoginPage"
         tools:targetApi="31">
         <activity
+            android:name=".HomeBooks"
+            android:exported="false"
+            android:label="@string/title_activity_home_books"
+            android:theme="@style/Theme.LoginPage" />
+        <activity
             android:name=".UserPage"
             android:exported="false"
             android:label="@string/title_activity_user_page"
