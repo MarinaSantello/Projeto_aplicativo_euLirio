@@ -9,13 +9,15 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -68,18 +70,8 @@ fun homeBooks() {
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value) {
-                FloatingActionButton(scaffoldState) {
+                FloatingActionButton() {
                     fabState.value = it
-                }
-            }
-            else {
-                Column() {
-                    Button(onClick = { /* do something */ }) {
-                        Text(text = "Button 1")
-                    }
-                    Button(onClick = { /* do something */ }) {
-                        Text(text = "Button 2")
-                    }
                 }
             }
         },
@@ -89,6 +81,72 @@ fun homeBooks() {
         drawerGesturesEnabled = true,
     ) {
         Text(text = "teste $it")
+    }
+
+    if(!fabState.value) Box (
+        Modifier
+            .fillMaxSize()
+            .background(Color(0x80000000))
+    ){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(end = 16.dp, bottom = 72.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.End
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Card(
+                    modifier = Modifier.padding(end = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = Color(0x80000000),
+                    elevation = 0.dp
+                ) {
+                    Text(
+                        text = "Recomendação",
+                        modifier = Modifier.padding(8.dp),
+                        color = Color.White
+                    )
+                }
+                FloatingActionButton(onClick = { /* do something */ }) {
+                    Icon(Icons.Default.Edit, contentDescription = "plus")
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Card(
+                    modifier = Modifier.padding(end = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = Color(0x80000000),
+                    elevation = 0.dp
+                ) {
+                    Text(
+                        text = "Pequena história",
+                        modifier = Modifier.padding(8.dp),
+                        color = Color.White
+                    )
+                }
+                FloatingActionButton(onClick = { /* do something */ }, modifier = Modifier.padding(top = 8.dp)) {
+                    Icon(Icons.Default.Add, contentDescription = "plus")
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Card(
+                    modifier = Modifier.padding(end = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    backgroundColor = Color(0x80000000),
+                    elevation = 0.dp
+                ) {
+                    Text(
+                        text = "E-book",
+                        modifier = Modifier.padding(8.dp),
+                        color = Color.White
+                    )
+                }
+                FloatingActionButton(onClick = { /* do something */ }, modifier = Modifier.padding(top = 8.dp)) {
+                    Icon(Icons.Default.Add, contentDescription = "plus")
+                }
+            }
+        }
     }
 }
 
@@ -138,25 +196,18 @@ fun BottomBar(state: MutableState<Boolean>) {
 }
 
 @Composable
-fun FloatingActionButton(
-    scaffoldState: ScaffoldState,
-    onChecked: (Boolean) -> Unit
-) {
+fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 
     var showAdditionalButtons by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
     androidx.compose.material.FloatingActionButton(
         onClick = {
             onChecked.invoke(showAdditionalButtons)
 
             showAdditionalButtons = !showAdditionalButtons
-//            coroutineScope.launch {
-//                //.snackbarHostState.showSnackbar("FAB Action Button Clicked")
-//            }
         }
     ) {
-        Text("FAB")
+        Icon(Icons.Default.Add, contentDescription = "plus")
     }
 }
 

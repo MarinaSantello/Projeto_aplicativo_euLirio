@@ -262,8 +262,7 @@ fun RegisterPageThirdPartFun() {
                                         responseValidate = response.code()
 
                                         if (responseValidate == 201){
-                                            val intent = Intent(context, Home::class.java)
-                                            context.startActivity(intent)
+                                            accountCreate(email.toString(), senha.toString(), context)
                                         }
                                         Log.i("respon post err", response.message().toString())
                                     }
@@ -298,6 +297,28 @@ fun RegisterPageThirdPartFun() {
             }
         }
     }
+}
+
+
+fun accountCreate(email: String, password: String, context: Context) {
+
+    // obtendo uma instancia do firebase auth
+    val auth = FirebaseAuth.getInstance()
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnSuccessListener { it -> // retorna o resultado da autenticacao, quando completada com sucesso
+            val intent = Intent(context, Home::class.java)
+            context.startActivity(intent)
+
+        }
+        .addOnFailureListener { // retorna o resultado da autenticacao, quando ela falha
+            try {
+                throw it
+            }
+            catch (error: FirebaseAuthException) { // erro generico
+                Toast.makeText(context, R.string.FirebaseAuthException, Toast.LENGTH_SHORT).show()
+            }
+        }
 }
 
 @Preview(showBackground = true)

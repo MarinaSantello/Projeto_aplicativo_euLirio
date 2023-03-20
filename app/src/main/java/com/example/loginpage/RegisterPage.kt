@@ -43,6 +43,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.AccountCircle
 import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
 
 class RegisterPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -510,16 +511,14 @@ fun registerPage() {
 
                                         intent.putExtra("user1", userValue)
                                         intent.putExtra("email1", emailValue)
-                                        // intent.putExtra("senha1", confirmPasswordValue)
+                                        intent.putExtra("senha1", confirmPasswordValue)
 
-                                        accountCreate(emailValue, confirmPasswordValue, context)
+                                        accounValidate(emailValue, confirmPasswordValue, context)
                                         //else context.startActivity(intent)
 
                                         invalidEmail = false
                                         invalidUser = false
                                     }
-
-
                                 },
                                 modifier = Modifier
                                     .width(200.dp)
@@ -574,7 +573,7 @@ fun registerPage() {
 
 
 
-fun accountCreate(email: String, password: String, context: Context) {
+fun accounValidate(email: String, password: String, context: Context) {
 
     // obtendo uma instancia do firebase auth
     val auth = FirebaseAuth.getInstance()
