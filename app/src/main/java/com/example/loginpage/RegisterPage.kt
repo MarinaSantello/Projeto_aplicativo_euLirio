@@ -1,5 +1,6 @@
 package com.example.loginpage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -98,6 +99,12 @@ fun registerPage() {
     var passwordErrorRequiredInput by remember {
         mutableStateOf(false)
     }
+    var passwordErrorMinCharacter by remember {
+        mutableStateOf(false)
+    }
+    var confirmPasswordErrorMinCharacter by remember {
+        mutableStateOf(false)
+    }
     var confirmPasswordErrorRequiredInput by remember {
         mutableStateOf(false)
     }
@@ -130,6 +137,8 @@ fun registerPage() {
     val confirmPasswordFocusRequester = remember {
         FocusRequester()
     }
+
+    //userFocusRequester.requestFocus()
 
     val emailVerify = emailValue.split('@')
 
@@ -337,6 +346,14 @@ fun registerPage() {
                                 singleLine = true
                             )
 
+                            if (clickButton && passwordErrorMinCharacter) Text(
+                                modifier = Modifier
+                                    .padding(top = 3.dp),
+                                text = stringResource(id = R.string.FirebaseAuthWeakPasswordException),
+                                color = Color(0xFFB00020),
+                                fontSize = 12.sp,
+                            )
+
                             Spacer(modifier = Modifier.height(8.dp))
 
                             OutlinedTextField(
@@ -395,12 +412,20 @@ fun registerPage() {
                                 ),
                             )
 
+                            if (clickButton && confirmPasswordErrorMinCharacter) Text(
+                                modifier = Modifier
+                                    .padding(top = 3.dp),
+                                text = stringResource(id = R.string.FirebaseAuthWeakPasswordException),
+                                color = Color(0xFFB00020),
+                                fontSize = 12.sp,
+                            )
+
                             if (clickButton && (userValue.isEmpty() || emailValue.isEmpty() || passwordValue.isEmpty() || confirmPasswordValue.isEmpty())) Text(
                                     modifier = Modifier
-                                        .padding(top = 3.dp),
+                                        .padding(top = 5.dp),
                                     text = stringResource(id = R.string.erro_message_input_required),
                                     color = Color(0xFFB00020),
-                                    fontSize = 12.sp,
+                                    fontSize = 14.sp,
                                 )
 
                             Button(
@@ -428,8 +453,24 @@ fun registerPage() {
                                     }
                                     else passwordErrorRequiredInput = false
 
+                                    if(passwordValue.length < 6) {
+                                        passwordErrorRequiredInput = true
+                                        passwordErrorMinCharacter = true
+                                        colorIconPassword = Color(0xFFB00020)
+                                        passwordFocusRequester.requestFocus()
+                                    }
+                                    else passwordErrorRequiredInput = false
+
                                     if(confirmPasswordValue.isEmpty()) {
                                         confirmPasswordErrorRequiredInput = true
+                                        colorIconConfirmPassword = Color(0xFFB00020)
+                                        confirmPasswordFocusRequester.requestFocus()
+                                    }
+                                    else confirmPasswordErrorRequiredInput = false
+
+                                    if(confirmPasswordValue.length < 6) {
+                                        confirmPasswordErrorRequiredInput = true
+                                        confirmPasswordErrorMinCharacter = true
                                         colorIconConfirmPassword = Color(0xFFB00020)
                                         confirmPasswordFocusRequester.requestFocus()
                                     }
@@ -471,12 +512,8 @@ fun registerPage() {
                                         intent.putExtra("email1", emailValue)
                                         // intent.putExtra("senha1", confirmPasswordValue)
 
-                                        val retornoFirebase = accountCreate(emailValue, confirmPasswordValue)
-
-                                        Toast.makeText(context, retornoFirebase, Toast.LENGTH_SHORT)
-                                            .show()
-
-                                        context.startActivity(intent)
+                                        accountCreate(emailValue, confirmPasswordValue, context)
+                                        //else context.startActivity(intent)
 
                                         invalidEmail = false
                                         invalidUser = false
@@ -514,13 +551,15 @@ fun registerPage() {
                                 colorIconEmail = colorResource(id = R.color.eulirio_purple_text_color_border)
                             }
 
-                            if(passwordValue.isNotEmpty()) {
+                            if(passwordValue.isNotEmpty() && passwordValue.length >= 6) {
                                 passwordErrorRequiredInput = false
+                                passwordErrorMinCharacter = false
                                 colorIconPassword = colorResource(id = R.color.eulirio_purple_text_color_border)
                             }
 
-                            if(confirmPasswordValue.isNotEmpty() && passwordValue == confirmPasswordValue) {
+                            if(confirmPasswordValue.isNotEmpty() && passwordValue == confirmPasswordValue && confirmPasswordValue.length >= 6) {
                                 confirmPasswordErrorRequiredInput = false
+                                confirmPasswordErrorMinCharacter = false
                                 colorIconConfirmPassword = colorResource(id = R.color.eulirio_purple_text_color_border)
                             }
                         }
@@ -535,50 +574,35 @@ fun registerPage() {
 
 
 
-fun accountCreate(email: String, password: String): String {
+fun accountCreate(email: String, password: String, context: Context) {
 
     // obtendo uma instancia do firebase auth
     val auth = FirebaseAuth.getInstance()
-    var retorno = ""
 
     auth.createUserWithEmailAndPassword(email, password)
-        .addOnSuccessListener { // retorna o resultado da autenticacao, quando completada com sucesso
-            Log.i("resposta firebase", "${it.user}") // uid: indentificação do usuario
+        .addOnSuccessListener { it -> // retorna o resultado da autenticacao, quando completada com sucesso
+            val intent = Intent(context, RegisterPageSecondPart::class.java)
 
-            retorno = it.user!!.uid
+            context.startActivity(intent)
         }
         .addOnFailureListener { // retorna o resultado da autenticacao, quando ela falha
             try {
                 throw it
             }
             catch (error: FirebaseAuthUserCollisionException) { // caso o usuario tente cadastrar um login que já existe
-                Log.i("erro firebase", "esse cadastro já existe")
-                Log.i("erro firebase", error.message.toString())
-
-                retorno = R.string.FirebaseAuthUserCollisionException.toString()
+                Toast.makeText(context, R.string.FirebaseAuthUserCollisionException, Toast.LENGTH_SHORT).show()
             }
-            catch (error: FirebaseAuthWeakPasswordException) { // caso o usuario tente cadastrar um login que já existe
-                Log.i("erro firebase", "senha fraca, menor do que 6 caracteres")
-                Log.i("erro firebase", error.message.toString())
-
-                retorno = R.string.FirebaseAuthWeakPasswordException.toString()
+            catch (error: FirebaseAuthInvalidUserException) { // senha fraca
+                Toast.makeText(context, R.string.FirebaseAuthInvalidUserException, Toast.LENGTH_SHORT).show()
             }
-            catch (error: FirebaseAuthInvalidUserException) { // caso o usuario seja invalido
-                Log.i("erro firebase", "usuario invalido")
-                Log.i("erro firebase", error.message.toString())
+            catch (error: FirebaseAuthInvalidCredentialsException){ // usuario/email invalido
+                Toast.makeText(context, R.string.FirebaseAuthInvalidCredentialsException, Toast.LENGTH_SHORT).show()
 
-                retorno = R.string.FirebaseAuthInvalidUserException.toString()
             }
             catch (error: FirebaseAuthException) { // erro generico
-                Log.i("erro firebase", "ocorreu um erro")
-                Log.i("erro firebase", error.message.toString())
-
-                retorno = R.string.FirebaseAuthException.toString()
+                Toast.makeText(context, R.string.FirebaseAuthException, Toast.LENGTH_SHORT).show()
             }
-            //Log.i("resposta firebase", "${it.message}")
         }
-
-    return retorno
 }
 @Preview(showBackground = true)
 @Composable

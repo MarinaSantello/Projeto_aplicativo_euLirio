@@ -70,7 +70,8 @@
     <string name="title_activity_home_books">HomeBooks</string>
 
     <string name="FirebaseAuthUserCollisionException">Esse cadastro já existe.</string>
-    <string name="FirebaseAuthWeakPasswordException">Essa senha é fraca, menor do que 6 caracteres</string>
-    <string name="FirebaseAuthInvalidUserException">Esse usuário é invalido</string>
+    <string name="FirebaseAuthWeakPasswordException">Essa senha é fraca, menor do que 6 caracteres.</string>
+    <string name="FirebaseAuthInvalidUserException">Esse usuário é invalido.</string>
     <string name="FirebaseAuthException">Ocorreu um erro. Verifique se seus dados estão corretos.</string>
+    <string name="FirebaseAuthInvalidCredentialsException">E-mail invalido.</string>
 </resources>
