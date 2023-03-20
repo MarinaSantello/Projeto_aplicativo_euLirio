@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.LocalLibrary
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -165,7 +166,7 @@ fun registerPageSecondPart() {
 
                             leadingIcon = {
                                 Icon(
-                                    Icons.Outlined.VerifiedUser,
+                                    Icons.Outlined.Person,
                                     contentDescription = "Icone de confirmação",
                                     modifier = Modifier.height(24.dp),
                                     tint = colorIconUser
@@ -373,6 +374,10 @@ fun registerPageSecondPart() {
                             val context = LocalContext.current
                             val intent = Intent(context, RegisterPageThirdPart::class.java)
 
+                            val email = intent.getStringExtra("email1")
+                            val senha = intent.getStringExtra("senha1")
+                            val user = intent.getStringExtra("user1")
+
                             Button(
                                 onClick = {
                                     if (userName.isEmpty()) {
@@ -402,6 +407,9 @@ fun registerPageSecondPart() {
 
                                         intent.putExtra("nome", userName)
                                         intent.putExtra("data_nascimento", pickedDate.toString())
+                                        intent.putExtra("email", email)
+                                        intent.putExtra("senha", senha)
+                                        intent.putExtra("user", user)
 
                                         intent.putIntegerArrayListExtra("tags", tags)
 

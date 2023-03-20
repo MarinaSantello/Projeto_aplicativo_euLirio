@@ -14,7 +14,7 @@ data class User(
     var foto: String = "",
     var biografia: String = "",
     var email: String?,
-    var senha: String?,
+    var uid: String?,
 
     var tags: List<Tag>,
     var generos: List<Genero>

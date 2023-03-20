@@ -1,8 +1,10 @@
 package com.example.loginpage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -39,6 +41,7 @@ import com.example.loginpage.models.Tag
 import com.example.loginpage.models.User
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.google.firebase.auth.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,6 +65,9 @@ class RegisterPageThirdPart : ComponentActivity() {
 
 @Composable
 fun RegisterPageThirdPartFun() {
+
+    // obtendo a instancia do firebase
+    val auth = FirebaseAuth.getInstance()
 
     val context = LocalContext.current
 
@@ -189,7 +195,6 @@ fun RegisterPageThirdPartFun() {
                                 }
 
                                 override fun onFailure(call: Call<List<Genre>>, t: Throwable) {
-
                                 }
                             })
 
@@ -211,8 +216,6 @@ fun RegisterPageThirdPartFun() {
                                         //if(state) generos += it
 
                                         if (state) generos += Genero(it.id)
-
-                                        Log.i("id genero", "$state")
                                     }
                                 }
                             }
@@ -239,7 +242,7 @@ fun RegisterPageThirdPartFun() {
                                     dataNascimento = dataNascimento,
                                     nome = nome,
                                     email = email,
-                                    senha = senha,
+                                    uid = auth.uid,
                                     tags = tags,
                                     generos = generos
                                 )
@@ -262,6 +265,7 @@ fun RegisterPageThirdPartFun() {
                                             val intent = Intent(context, Home::class.java)
                                             context.startActivity(intent)
                                         }
+                                        Log.i("respon post err", response.message().toString())
                                     }
 
                                     override fun onFailure(call: Call<String>, t: Throwable) {

@@ -174,7 +174,7 @@ fun loginPage() {
 
                             label = {
                                 Text(
-                                    text = stringResource(id = R.string.login_user_name),
+                                    text = stringResource(id = R.string.email_name),
                                     style = TextStyle (fontWeight = FontWeight.Light)
                                 )
                             },
