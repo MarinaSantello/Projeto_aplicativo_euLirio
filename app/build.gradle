@@ -4,6 +4,8 @@ plugins {
 
     // plugin do kapt para uso do room
     id 'kotlin-kapt'
+    // plugin do firebase
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -82,4 +84,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.5.0"
     annotationProcessor "androidx.room:room-compiler:2.5.0"
     kapt "androidx.room:room-compiler:2.5.0"
+
+    // Firebase dependências
+    implementation platform('com.google.firebase:firebase-bom:31.2.3') // opcional, mas recomendado para atualizar as versões do firebase
+    implementation 'com.google.firebase:firebase-analytics-ktx' // manda os dados para o firebase
+    implementation 'com.google.firebase:firebase-auth:21.1.0' // autentica os dados
 }

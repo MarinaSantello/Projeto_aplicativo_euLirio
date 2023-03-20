@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "591621268285",
+    "project_id": "eu-lirio-a72ff",
+    "storage_bucket": "eu-lirio-a72ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591621268285:android:d9a43bcfbedb0ee7afdb54",
+        "android_client_info": {
+          "package_name": "com.example.loginpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591621268285-4fik66gplubo79ruq6dvv4hmb656uv46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmXDfqKnqkz-5gVph8yi0DSVJ4k5oqAQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591621268285-4fik66gplubo79ruq6dvv4hmb656uv46.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

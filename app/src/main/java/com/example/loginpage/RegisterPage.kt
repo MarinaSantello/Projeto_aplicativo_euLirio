@@ -41,6 +41,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.AccountCircle
+import com.google.firebase.auth.*
 
 class RegisterPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -446,7 +447,7 @@ fun registerPage() {
                                         ).show()
                                     }
 
-                                    if (' ' in emailValue || '@' !in emailValue || emailVerify[0].isEmpty() || emailVerify[1].isEmpty() || ".com" !in emailVerify[1]) {
+                                    if (' ' in emailValue || '@' !in emailValue || emailVerify[0].isEmpty() || emailVerify[1].isEmpty() || "." !in emailVerify[1]) {
                                         emailErrorRequiredInput = true
                                         colorIconEmail = Color(0xFFB00020)
                                         emailFocusRequester.requestFocus()
@@ -468,9 +469,12 @@ fun registerPage() {
 
                                         intent.putExtra("user1", userValue)
                                         intent.putExtra("email1", emailValue)
-                                        intent.putExtra("senha1", confirmPasswordValue)
+                                        // intent.putExtra("senha1", confirmPasswordValue)
 
-                                        Log.i("teste email", emailValue)
+                                        val retornoFirebase = accountCreate(emailValue, confirmPasswordValue)
+
+                                        Toast.makeText(context, retornoFirebase, Toast.LENGTH_SHORT)
+                                            .show()
 
                                         context.startActivity(intent)
 
@@ -530,6 +534,52 @@ fun registerPage() {
 }
 
 
+
+fun accountCreate(email: String, password: String): String {
+
+    // obtendo uma instancia do firebase auth
+    val auth = FirebaseAuth.getInstance()
+    var retorno = ""
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnSuccessListener { // retorna o resultado da autenticacao, quando completada com sucesso
+            Log.i("resposta firebase", "${it.user}") // uid: indentificação do usuario
+
+            retorno = it.user!!.uid
+        }
+        .addOnFailureListener { // retorna o resultado da autenticacao, quando ela falha
+            try {
+                throw it
+            }
+            catch (error: FirebaseAuthUserCollisionException) { // caso o usuario tente cadastrar um login que já existe
+                Log.i("erro firebase", "esse cadastro já existe")
+                Log.i("erro firebase", error.message.toString())
+
+                retorno = R.string.FirebaseAuthUserCollisionException.toString()
+            }
+            catch (error: FirebaseAuthWeakPasswordException) { // caso o usuario tente cadastrar um login que já existe
+                Log.i("erro firebase", "senha fraca, menor do que 6 caracteres")
+                Log.i("erro firebase", error.message.toString())
+
+                retorno = R.string.FirebaseAuthWeakPasswordException.toString()
+            }
+            catch (error: FirebaseAuthInvalidUserException) { // caso o usuario seja invalido
+                Log.i("erro firebase", "usuario invalido")
+                Log.i("erro firebase", error.message.toString())
+
+                retorno = R.string.FirebaseAuthInvalidUserException.toString()
+            }
+            catch (error: FirebaseAuthException) { // erro generico
+                Log.i("erro firebase", "ocorreu um erro")
+                Log.i("erro firebase", error.message.toString())
+
+                retorno = R.string.FirebaseAuthException.toString()
+            }
+            //Log.i("resposta firebase", "${it.message}")
+        }
+
+    return retorno
+}
 @Preview(showBackground = true)
 @Composable
 fun registerPagePreview() {
