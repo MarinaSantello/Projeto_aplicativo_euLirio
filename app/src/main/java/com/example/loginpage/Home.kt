@@ -89,14 +89,19 @@ fun HomeBooks() {
             }
         },
         drawerContent = {
-            ShowDesign()
+            DrawerDesign()
         },
         drawerGesturesEnabled = true,
     ) {
         Text(text = "teste $it")
     }
 
-    if(!fabState.value) Box (
+    if(!fabState.value) ButtonsPost()
+}
+
+@Composable
+fun ButtonsPost () {
+    Box (
         Modifier
             .fillMaxSize()
             .background(Color(0x80000000))
@@ -225,7 +230,7 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 }
 
 @Composable
-fun ShowDesign(){
+fun DrawerDesign(){
 
     val clickUserPage = remember { mutableStateOf(false) }
 

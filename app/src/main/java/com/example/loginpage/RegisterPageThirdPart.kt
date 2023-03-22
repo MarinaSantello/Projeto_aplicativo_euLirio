@@ -41,6 +41,7 @@ import com.example.loginpage.models.Genero
 import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
 import com.example.loginpage.models.User
+import com.example.loginpage.resources.authenticate
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.auth.*
@@ -302,13 +303,7 @@ fun accountCreate(context: Context,
                     responseValidate = response.code()
 
                     if (responseValidate == 201){
-                        // registrando o id do usuário no sqlLite
-//                        val userIDRepository = UserIDrepository(context)
-//                        userIDRepository.save(UserID(response.body()!!.id))
-
-                        val intent = Intent(context, Home::class.java)
-
-                        context.startActivity(intent)
+                        authenticate(email, password, context)
 
                         Log.i("mensagem", "parabens pelo minimo")
                     }

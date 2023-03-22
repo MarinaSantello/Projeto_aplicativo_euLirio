@@ -52,6 +52,7 @@ import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.RetornoApi
 import com.example.loginpage.models.User
 import com.example.loginpage.models.UserLogin
+import com.example.loginpage.resources.authenticate
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
@@ -359,58 +360,6 @@ fun loginPage() {
 
 }
 
-
-fun authenticate(email: String, password: String, context: Context) {
-
-    // obtendo a instancia do firebase
-    val auth = FirebaseAuth.getInstance()
-
-    // autenticação
-    auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener {
-
-            if (it.isSuccessful) {
-                val userLogin = UserLogin(
-                    uid = it.result.user!!.uid
-                )
-
-                val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                val userLoginCall = retrofit.create(UserLoginCall::class.java) // instância do objeto contact
-                val callValidateUser = userLoginCall.validate(userLogin)
-
-                var responseValidate = 0
-                // Excutar a chamada para o End-point
-                callValidateUser.enqueue(object :
-                    Callback<RetornoApi> { // enqueue: usado somente quando o objeto retorna um valor
-                    override fun onResponse(
-                        call: Call<RetornoApi>,
-                        response: Response<RetornoApi>
-                    ) {
-                        responseValidate = response.code()
-
-                        if (responseValidate == 200){
-                            // registrando o id do usuário no sqlLite
-                            val userIDRepository = UserIDrepository(context)
-                            userIDRepository.save(UserID(response.body()!!.id))
-
-                            val intent = Intent(context, Home::class.java)
-                            context.startActivity(intent)
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<RetornoApi>,
-                        t: Throwable
-                    ) {
-                        val err = t.message
-                        Log.i("teste login", err.toString())
-                    }
-                })
-            }
-            Log.i("resposta firebase", it.isSuccessful.toString()) // retorna um booleano com a autenticação
-        }
-
-}
 
 //@Preview(showBackground = true)
 //@Composable
