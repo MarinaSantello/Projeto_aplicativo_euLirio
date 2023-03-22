@@ -67,6 +67,9 @@
     <string name="title_activity_login_page">LoginPage</string>
 
     <string name="button_save">Salvar</string>
+    <string name="excluir"> Excluir </string>
+    <string name="cancelar"> Cancelar </string>
+
     <string name="title_activity_home_books">HomeBooks</string>
 
     <string name="FirebaseAuthUserCollisionException">Esse cadastro já existe.</string>

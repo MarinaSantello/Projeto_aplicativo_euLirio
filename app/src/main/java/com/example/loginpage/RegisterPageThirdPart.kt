@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.Genero
 import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
@@ -300,6 +302,10 @@ fun accountCreate(context: Context,
                     responseValidate = response.code()
 
                     if (responseValidate == 201){
+                        // registrando o id do usuário no sqlLite
+//                        val userIDRepository = UserIDrepository(context)
+//                        userIDRepository.save(UserID(response.body()!!.id))
+
                         val intent = Intent(context, Home::class.java)
 
                         context.startActivity(intent)

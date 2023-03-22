@@ -309,13 +309,11 @@ fun UserHomePage() {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Card(
-                    modifier = Modifier
-                        .height(1.dp)
-                        .width(280.dp),
-                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                    elevation = 0.dp
-                ) {}
+                Divider(
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(bottom = 10.dp),
+                    color = colorResource(id = R.color.eulirio_yellow_card_background)
+                )
 
                 Spacer(modifier = Modifier.height(10.dp))
 

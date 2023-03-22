@@ -1,26 +1,19 @@
 package com.example.loginpage
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Tag
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Tag
-import androidx.compose.material.icons.rounded.TagFaces
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -28,18 +21,14 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
-import androidx.compose.ui.modifier.modifierLocalOf
-import androidx.compose.ui.platform.InspectableModifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.ui.theme.LoginPageTheme
 
 class UpdateActivity : ComponentActivity() {
@@ -62,6 +51,8 @@ class UpdateActivity : ComponentActivity() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun UpdatePage() {
+    val context = LocalContext.current
+
     var nameState by remember {
         mutableStateOf("")
     }
@@ -79,6 +70,10 @@ fun UpdatePage() {
     }
 
     var readerCheckState by remember {
+        mutableStateOf(false)
+    }
+
+    var showDialog by remember {
         mutableStateOf(false)
     }
 
@@ -122,52 +117,52 @@ fun UpdatePage() {
                     ) {
                         Card(
                             modifier = Modifier
-                                .height(70.dp)
-                                .width(70.dp),
+                                .height(80.dp)
+                                .width(80.dp),
                             shape = RoundedCornerShape(35.dp)
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.logo_icone_eulirio),
-                                contentDescription = ""
+                                painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                                contentDescription = "sua foto de perfil"
                             )
                         }
 
+                        Spacer(modifier = Modifier.width(16.dp))
+
                         Column() {
-                            Column(
-                                Modifier
-                                    .background(colorResource(id = R.color.eulirio_light_yellow_background),
-                                        shape = RoundedCornerShape(
-                                            topStart = 8.dp,
-                                            topEnd = 8.dp
-                                        ))
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.name),
-                                    fontSize = 6.sp,
-                                    fontWeight = FontWeight.Bold
+                            TextField(
+                                value = nameState,
+                                onValueChange = {
+                                    nameState = it
+                                },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.name),
+                                        color = Color(0xFF1E1E1E),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                },
+                                singleLine = false,
+                                shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Color(0xFF1E1E1E),
+                                    backgroundColor = Color(0x66F2F2F2),
+                                    cursorColor = Color(0xFF1E1E1E),
+                                    focusedIndicatorColor = Color(0xFF1E1E1E),
                                 )
-                                OutlinedTextField(
-                                    value = nameState,
-                                    onValueChange = {
-                                        nameState = it
-                                    },
-                                    modifier = Modifier
-                                        .height(60.dp)
-                                        .widthIn(200.dp, 250.dp)
-                                        .background(colorResource(id = R.color.eulirio_light_yellow_background)),
-                                    singleLine = false
-                                )
-                            }
+                            )
 
                             Spacer(modifier = Modifier.height(4.dp))
 
                             Column(
                                 Modifier
-                                    .background(colorResource(id = R.color.eulirio_light_yellow_background),
+                                    .background(
+                                        colorResource(id = R.color.eulirio_light_yellow_background),
                                         shape = RoundedCornerShape(
-                                        topStart = 8.dp,
-                                        topEnd = 8.dp
-                                    ))
+                                            topStart = 8.dp,
+                                            topEnd = 8.dp
+                                        )
+                                    )
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.user_name),
@@ -222,7 +217,7 @@ fun UpdatePage() {
                             fontSize = 6.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         OutlinedTextField(
                             value = biographyState,
                             onValueChange = {
@@ -279,7 +274,7 @@ fun UpdatePage() {
                             }
 
                             Spacer(modifier = Modifier.width(20.dp))
-                            
+
                             Row(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
@@ -379,7 +374,8 @@ fun UpdatePage() {
                         Button(
                             onClick = { /*TODO*/ },
                             shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white))
+                            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
+                            elevation = ButtonDefaults.elevation(0.dp)
                         ) {
                             Text(
                                 text = stringResource(id = R.string.button_save).uppercase(),
@@ -392,21 +388,82 @@ fun UpdatePage() {
                 }
 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { showDialog = true },
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_red)),
-                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_light_yellow_background))
+                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_light_yellow_background)),
+                    elevation = ButtonDefaults.elevation(0.dp)
                 ) {
                     Text(
                         text = stringResource(id = R.string.text_delete_account).uppercase(),
                         color = colorResource(id = R.color.eulirio_red)
                     )
                 }
+
+                //column alert dialog
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+
+
+                    if (showDialog) {
+                        AlertDialog(
+                            shape = RoundedCornerShape(18.dp),
+                            onDismissRequest = { showDialog = false },
+                            title = {
+
+                                Column(
+                                    Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = "lixo",
+                                        modifier = Modifier.size(24.dp).padding(top = 4.dp),
+                                        tint = Color.Red
+                                    )
+
+                                    Text(
+                                        "Deseja excluir a sua conta?",
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                }
+                            },
+                            text = {
+                                Text(
+                                    "Essa ação é irreversível e resultará na exclusão completa de seus dados e publicações dentro da plataforma.",
+                                    fontSize = 16.sp,
+
+                                    )
+                            },
+                            confirmButton = {
+                                Button(
+                                    onClick = { showDialog = false },
+                                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
+                                    elevation = ButtonDefaults.elevation(0.dp)
+                                ) {
+                                    Text("Cancelar")
+
+                                }
+                                Button(
+                                    onClick = { showDialog = false },
+                                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
+                                    elevation = ButtonDefaults.elevation(0.dp)
+                                ) {
+                                    Text(text = "Excluir", color = Color.Red)
+
+                                }
+                            }
+
+                        )
+
+                    }
+                }
+
             }
         }
     }
-}
-
-fun TextField() {
-
 }
