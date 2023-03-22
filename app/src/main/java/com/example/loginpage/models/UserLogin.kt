@@ -1,8 +1,7 @@
 package com.example.loginpage.models
 
 data class UserLogin(
-    val login: String,
-    val senha: String
+    val uid: String
 )
 
 data class RetornoApi (
