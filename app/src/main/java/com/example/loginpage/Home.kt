@@ -17,9 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -224,15 +222,19 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 
 @Composable
 fun ShowDesign(){
+
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.eulirio_yellow_card_background))
-            .padding(top = 40.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(40.dp))
+
         Column(
             modifier = Modifier
-                .height(88.dp)
+                .height(90.dp)
                 .padding(start = 20.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
@@ -314,9 +316,11 @@ fun ShowDesign(){
                 .width(300.dp)
                 .background(colorResource(id = R.color.eulirio_light_yellow_background))
         ) {
+
+            //Card clicavel do perfil do usuario
             Card(
                 modifier = Modifier
-                    .height(30.dp)
+                    .height(40.dp)
                     .padding(start = 50.dp)
                     .fillMaxWidth(),
                 backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
@@ -326,7 +330,7 @@ fun ShowDesign(){
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        Icons.Outlined.Person,
+                        Icons.Filled.Person,
                         contentDescription = "Icone de usuario",
                         modifier = Modifier
                             .padding(end = 10.dp)
@@ -336,11 +340,41 @@ fun ShowDesign(){
                     Text(
                         text = "MEU PERFIL",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.W400
+                        fontWeight = FontWeight.W500
                     )
                 }
 
             }
+
+            //Card clicavel de favoritos do usuario
+            Card(
+                modifier = Modifier
+                    .height(40.dp)
+                    .padding(start = 50.dp)
+                    .fillMaxWidth(),
+                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                elevation = 0.dp
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.Bookmark,
+                        contentDescription = "Icone de usuario",
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .height(50.dp),
+                        tint = Color.Black
+                    )
+                    Text(
+                        text = "FAVORITOS",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W500
+                    )
+                }
+
+            }
+
 
         }
 
