@@ -32,7 +32,7 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun Splash(navController: NavController, i: Int) = Box(modifier = Modifier.fillMaxSize().background(
+fun Splash(navController: NavController, userState: Boolean) = Box(modifier = Modifier.fillMaxSize().background(
     Color(242, 242, 242, 255)
 ))
 {
@@ -49,7 +49,7 @@ fun Splash(navController: NavController, i: Int) = Box(modifier = Modifier.fillM
             })
         )
         delay(1000)
-        if (i == 0) navController.navigate(Routes.Home.name) {
+        if (userState) navController.navigate(Routes.Home.name) {
             popUpTo(Routes.Home.name) {
                 inclusive = true
             }

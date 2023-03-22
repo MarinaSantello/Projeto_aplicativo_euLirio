@@ -46,7 +46,11 @@ import androidx.compose.ui.unit.sp
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.API.userLogin.UserLoginCall
+import com.example.loginpage.SQLite.dao.UserIDdao
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.RetornoApi
+import com.example.loginpage.models.User
 import com.example.loginpage.models.UserLogin
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -385,6 +389,10 @@ fun authenticate(email: String, password: String, context: Context) {
                         responseValidate = response.code()
 
                         if (responseValidate == 200){
+                            // registrando o id do usuário no sqlLite
+                            val userIDRepository = UserIDrepository(context)
+                            userIDRepository.save(UserID(response.body()!!.id))
+
                             val intent = Intent(context, Home::class.java)
                             context.startActivity(intent)
                         }

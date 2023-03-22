@@ -12,6 +12,7 @@ import com.example.loginpage.constants.Routes
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : ComponentActivity() {
@@ -34,10 +35,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting() {
+    var userAuth = false
+    val auth = FirebaseAuth.getInstance()
+    val currentUser = auth.currentUser // retorna a conta que está autenticada no dispositivo (se não tiver usuario, ele é nulo)
+    
+    userAuth = currentUser != null
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.SplashScreen.name) {
         composable(Routes.SplashScreen.name) {
-            Splash(navController = navController, 1)
+            Splash(navController = navController, userAuth)
         }
 
         composable(Routes.Introduction.name) {
