@@ -1,6 +1,7 @@
 package com.example.loginpage
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +64,7 @@ fun HomeBooks() {
     val topBarState = remember { mutableStateOf(true) }
     val bottomBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
+
 
     Scaffold(
         modifier = Modifier
@@ -223,6 +227,10 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 @Composable
 fun ShowDesign(){
 
+    val clickUserPage = remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val intent = Intent(context, UserPage::class.java)
 
     Column(
         modifier = Modifier
@@ -314,14 +322,17 @@ fun ShowDesign(){
             modifier = Modifier
                 .height(450.dp)
                 .width(300.dp)
-                .background(colorResource(id = R.color.eulirio_light_yellow_background))
+                .background(colorResource(id = R.color.eulirio_light_yellow_background)),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             //Card clicavel do perfil do usuario
             Card(
                 modifier = Modifier
-                    .height(40.dp)
-                    .padding(start = 50.dp)
+                    .height(80.dp)
+                    .padding(top = 40.dp, start = 40.dp)
+                    .clickable {context.startActivity(intent)}
                     .fillMaxWidth(),
                 backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                 elevation = 0.dp
@@ -350,7 +361,7 @@ fun ShowDesign(){
             Card(
                 modifier = Modifier
                     .height(40.dp)
-                    .padding(start = 50.dp)
+                    .padding(start = 40.dp)
                     .fillMaxWidth(),
                 backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                 elevation = 0.dp
@@ -375,8 +386,142 @@ fun ShowDesign(){
 
             }
 
+            //Card clicavel de lidos do usuario
+            Card(
+                modifier = Modifier
+                    .height(40.dp)
+                    .padding(start = 40.dp)
+                    .fillMaxWidth(),
+                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                elevation = 0.dp
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.PriorityHigh,
+                        contentDescription = "ICONE DE LIDOS",
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .height(50.dp),
+                        tint = Color.Black
+                    )
+                    Text(
+                        text = "LIDOS",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W500
+                    )
+                }
+
+            }
+
+            //Card clicavel dos e-books do usuario
+            Card(
+                modifier = Modifier
+                    .height(40.dp)
+                    .padding(start = 40.dp)
+                    .fillMaxWidth(),
+                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                elevation = 0.dp
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.ShoppingBag,
+                        contentDescription = "Icone de sacola de compras",
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .height(50.dp),
+                        tint = Color.Black
+                    )
+                    Text(
+                        text = "MEUS E-BOOKS",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W500
+                    )
+                }
+
+            }
+
+            //Card clicavel para o usuario adquirir a conta premium
+            Card(
+                modifier = Modifier
+                    .height(40.dp)
+                    .padding(start = 40.dp)
+                    .fillMaxWidth(),
+                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                elevation = 0.dp
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.WorkspacePremium,
+                        contentDescription = "Icone de premium",
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .height(40.dp),
+                        tint = Color.Black
+                    )
+                    Text(
+                        text = "LÍRIO PLUS",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W500
+                    )
+                }
+
+            }
+
+            //Card clicavel para o usuario editar o seu usuario
+            Card(
+                modifier = Modifier
+                    .height(80.dp)
+                    .padding(bottom = 40.dp, start = 40.dp)
+                    .fillMaxWidth(),
+                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                elevation = 0.dp
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.EditNote,
+                        contentDescription = "Icone de edição",
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .height(50.dp),
+                        tint = Color.Black
+                    )
+                    Text(
+                        text = "EDITAR PERFIL",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W500
+                    )
+                }
+
+            }
+
 
         }
+
+       Column(
+           modifier = Modifier
+               .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+           horizontalAlignment = Alignment.Start
+       ) {
+           Icon(
+               Icons.Filled.Logout,
+               contentDescription = "Icone de logout",
+               modifier = Modifier
+                   .padding(start = 40.dp, bottom = 40.dp)
+                   .height(30.dp)
+               ,
+               tint = Color.Black
+           )
+
+       }
 
     }
 }
