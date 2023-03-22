@@ -45,7 +45,7 @@ class Home : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    homeBooks()
+                    HomeBooks()
                 }
             }
         }
@@ -54,7 +54,7 @@ class Home : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun homeBooks() {
+fun HomeBooks() {
 
     val scaffoldState = rememberScaffoldState()
 
@@ -223,7 +223,7 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 @Composable
 fun ShowDesign(){
 
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -385,6 +385,6 @@ fun ShowDesign(){
 @Composable
 fun DefaultPreview() {
     LoginPageTheme {
-        homeBooks()
+        HomeBooks()
     }
 }

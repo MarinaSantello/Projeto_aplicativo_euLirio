@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
@@ -376,11 +377,8 @@ fun registerPageSecondPart() {
                             Spacer(modifier = Modifier.height(20.dp))
 
                             val context = LocalContext.current
-                            val intent = Intent(context, RegisterPageThirdPart::class.java)
 
-                            val email = intent.getStringExtra("email1")
-                            val senha = intent.getStringExtra("senha1")
-                            val user = intent.getStringExtra("user1")
+                            val intent = Intent(context, RegisterPageThirdPart::class.java)
 
                             Button(
                                 onClick = {
@@ -408,6 +406,14 @@ fun registerPageSecondPart() {
                                     tagsErrorRequired = tags.size <= 0
 
                                     if (!userErrorRequiredInput && !dateErrorRequiredInput && !tagsErrorRequired) {
+
+                                        val intentRegisterPage = (context as RegisterPageSecondPart).intent
+
+                                        val email = intentRegisterPage.getStringExtra("email1")
+                                        val senha = intentRegisterPage.getStringExtra("senha1")
+                                        val user = intentRegisterPage.getStringExtra("user1")
+
+                                        Log.i("teste email2", email.toString())
 
                                         intent.putExtra("nome", userName)
                                         intent.putExtra("data_nascimento", pickedDate.toString())

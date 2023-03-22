@@ -15,9 +15,9 @@
         android:theme="@style/Theme.LoginPage"
         tools:targetApi="31">
         <activity
-            android:name=".HomeBooks"
+            android:name=".Home"
             android:exported="false"
-            android:label="@string/title_activity_home_books"
+            android:label="@string/title_activity_home"
             android:theme="@style/Theme.LoginPage" />
         <activity
             android:name=".UserPage"
@@ -69,7 +69,7 @@
             android:label="@string/title_activity_register_page"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".Home"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LoginPage">

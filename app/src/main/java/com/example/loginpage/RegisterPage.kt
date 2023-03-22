@@ -506,15 +506,7 @@ fun registerPage() {
                                     }
 
                                     if (!userErrorRequiredInput && !emailErrorRequiredInput && !passwordErrorRequiredInput && !confirmPasswordErrorRequiredInput) {
-
-                                        val intent = Intent(context, RegisterPageSecondPart::class.java)
-
-                                        intent.putExtra("user1", userValue)
-                                        intent.putExtra("email1", emailValue)
-                                        intent.putExtra("senha1", confirmPasswordValue)
-
-                                        accounValidate(emailValue, confirmPasswordValue, context)
-                                        //else context.startActivity(intent)
+                                        accounValidate(emailValue, confirmPasswordValue, userValue, context)
 
                                         invalidEmail = false
                                         invalidUser = false
@@ -573,7 +565,7 @@ fun registerPage() {
 
 
 
-fun accounValidate(email: String, password: String, context: Context) {
+fun accounValidate(email: String, password: String, user: String, context: Context) {
 
     // obtendo uma instancia do firebase auth
     val auth = FirebaseAuth.getInstance()
@@ -581,6 +573,10 @@ fun accounValidate(email: String, password: String, context: Context) {
     auth.createUserWithEmailAndPassword(email, password)
         .addOnSuccessListener { it -> // retorna o resultado da autenticacao, quando completada com sucesso
             val intent = Intent(context, RegisterPageSecondPart::class.java)
+
+            intent.putExtra("user1", user)
+            intent.putExtra("email1", email)
+            intent.putExtra("senha1", password)
 
             context.startActivity(intent)
         }

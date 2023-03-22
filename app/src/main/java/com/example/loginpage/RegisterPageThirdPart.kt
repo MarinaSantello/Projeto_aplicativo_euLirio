@@ -237,41 +237,9 @@ fun RegisterPageThirdPartFun() {
                                 for(i in 0 until tagsExtra!!.size)
                                     tags += listOf<Tag>(Tag(tagsExtra[i]))
 
-                                val user = User (
-                                    userName = userName,
-                                    dataNascimento = dataNascimento,
-                                    nome = nome,
-                                    email = email,
-                                    uid = auth.uid,
-                                    tags = tags,
-                                    generos = generos
-                                )
-
-                                Log.i("api tag", tags.toString())
-
-                                val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                                val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
-                                val callInsertUser = userCall.save(user)
-
-                                var responseValidate = 0
-
-                                // Excutar a chamada para o End-point
-                                callInsertUser.enqueue(object :
-                                    Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
-                                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                                        responseValidate = response.code()
-
-                                        if (responseValidate == 201){
-                                            accountCreate(email.toString(), senha.toString(), context)
-                                        }
-                                        Log.i("respon post err", response.message().toString())
-                                    }
-
-                                    override fun onFailure(call: Call<String>, t: Throwable) {
-                                        Log.i("respon post err", t.message.toString())
-                                    }
-                                }
-                                )
+                                accountCreate(context,
+                                        email.toString(), senha.toString(),
+                                        userName.toString(), dataNascimento.toString(), nome.toString(), tags, generos)
 
                                 Log.i("id genero", "${generos}")
 
@@ -300,16 +268,51 @@ fun RegisterPageThirdPartFun() {
 }
 
 
-fun accountCreate(email: String, password: String, context: Context) {
+fun accountCreate(context: Context,
+                  email: String, password: String,
+                  userName: String, dataNascimento: String, nome: String, tags: List<Tag>, generos: List<Genero>) {
 
     // obtendo uma instancia do firebase auth
     val auth = FirebaseAuth.getInstance()
 
     auth.createUserWithEmailAndPassword(email, password)
         .addOnSuccessListener { it -> // retorna o resultado da autenticacao, quando completada com sucesso
-            val intent = Intent(context, Home::class.java)
-            context.startActivity(intent)
+            val user = User (
+                userName = userName,
+                dataNascimento = dataNascimento,
+                nome = nome,
+                email = email,
+                uid = it.user!!.uid,
+                tags = tags,
+                generos = generos
+            )
 
+            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+            val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+            val callInsertUser = userCall.save(user)
+
+            var responseValidate = 0
+
+            // Excutar a chamada para o End-point
+            callInsertUser.enqueue(object :
+                Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    responseValidate = response.code()
+
+                    if (responseValidate == 201){
+                        val intent = Intent(context, Home::class.java)
+
+                        context.startActivity(intent)
+
+                        Log.i("mensagem", "parabens pelo minimo")
+                    }
+                    Log.i("respon post", response.message().toString())
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Log.i("respon post err", t.message.toString())
+                }
+            })
         }
         .addOnFailureListener { // retorna o resultado da autenticacao, quando ela falha
             try {

@@ -49,7 +49,7 @@ fun Greeting() {
         }
 
         composable(Routes.Home.name) {
-            homeBooks()
+            HomeBooks()
         }
     }
 }

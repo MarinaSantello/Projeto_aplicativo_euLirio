@@ -74,4 +74,5 @@
     <string name="FirebaseAuthInvalidUserException">Esse usuário é invalido.</string>
     <string name="FirebaseAuthException">Ocorreu um erro. Verifique se seus dados estão corretos.</string>
     <string name="FirebaseAuthInvalidCredentialsException">E-mail invalido.</string>
+    <string name="title_activity_home">Home</string>
 </resources>
