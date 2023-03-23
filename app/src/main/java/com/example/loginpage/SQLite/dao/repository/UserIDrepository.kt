@@ -14,7 +14,7 @@ class UserIDrepository(context: Context) {
 //        return db.getAll()
 //    }
 
-    fun save(userID: UserID): Int {
+    fun save(userID: UserID): Long {
         return db.save(userID)
     }
 
@@ -22,7 +22,7 @@ class UserIDrepository(context: Context) {
         return db.delete(userID)
     }
 
-    fun getByID(): List<Int> {
-        return db.getByID()
+    fun getAll(): List<UserID> {
+        return db.getAll()
     }
 }

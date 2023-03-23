@@ -434,7 +434,7 @@ fun UpdatePage() {
                             },
                             text = {
                                 Text(
-                                    "Essa ação é irreversível e resultará na exclusão completa de seus dados e publicações dentro da plataforma.",
+                                    "Esta ação é irreversível e resultará na exclusão completa de seus dados e publicações dentro da plataforma.",
                                     fontSize = 16.sp,
 
                                     )

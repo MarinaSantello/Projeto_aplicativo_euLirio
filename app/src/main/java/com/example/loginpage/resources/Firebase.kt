@@ -47,7 +47,7 @@ fun authenticate(email: String, password: String, context: Context) {
                         if (responseValidate == 200){
                             // registrando o id do usuário no sqlLite
                             val userIDRepository = UserIDrepository(context)
-                            userIDRepository.save(UserID(response.body()!!.id))
+                            userIDRepository.save(UserID(idUser = response.body()!!.id))
 
                             val intent = Intent(context, Home::class.java)
                             context.startActivity(intent)

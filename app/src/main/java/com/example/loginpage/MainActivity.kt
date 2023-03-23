@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.constants.Routes
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -35,11 +37,19 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting() {
+    val context = LocalContext.current
+
     var userAuth = false
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser // retorna a conta que está autenticada no dispositivo (se não tiver usuario, ele é nulo)
-    
+
     userAuth = currentUser != null
+
+    // registrando o id do usuário no sqlLite
+    val userIDRepository = UserIDrepository(context)
+    val users = userIDRepository.getAll()
+    val usersLogin = users.size > 0
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.SplashScreen.name) {
         composable(Routes.SplashScreen.name) {

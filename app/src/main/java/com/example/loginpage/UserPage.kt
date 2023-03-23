@@ -1,6 +1,7 @@
 package com.example.loginpage
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 //import com.example.euLirio.R
 import com.example.loginpage.ui.theme.LoginPageTheme
 
@@ -51,7 +54,6 @@ class UserPage : ComponentActivity() {
 @Composable
 fun UserHomePage() {
 
-
     var BooksOnClickState by remember {
         mutableStateOf(false)
     }
@@ -64,7 +66,13 @@ fun UserHomePage() {
         mutableStateOf(false)
     }
 
+    val context = LocalContext.current
 
+    // registrando o id do usuário no sqlLite
+    val userIDRepository = UserIDrepository(context)
+    val users = userIDRepository.getAll()
+
+    Log.i("id usuario", users[0].idUser.toString())
 
     Card(
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
@@ -90,21 +98,21 @@ fun UserHomePage() {
                 backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
 
                 ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(24.dp)
-                        .padding(top = 10.dp, start = 20.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.ArrowBackIos,
-                        contentDescription = "flecha para esquerda",
-                        modifier = Modifier
-                            .height(24.dp)
-                            .width(30.dp)
-
-                    )
-                }
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(24.dp)
+//                        .padding(top = 10.dp, start = 20.dp),
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Rounded.ArrowBackIos,
+//                        contentDescription = "flecha para esquerda",
+//                        modifier = Modifier
+//                            .height(24.dp)
+//                            .width(30.dp)
+//
+//                    )
+//                }
 
 
                 Row(

@@ -11,14 +11,14 @@ interface UserIDdao {
 
     // retorna o ID do registro criado
     @Insert
-    fun save(userID: UserID): Int
+    fun save(userID: UserID): Long
 
     // retorna a quantidade de registros que foram deletados (opcional)
     @Delete
     fun delete(userID: UserID): Int
 
     // retorna uma lista de registros
-    @Query("SELECT id FROM tbl_user WHERE id > 0")
-    fun getByID(): List<Int>
+    @Query("SELECT * FROM tbl_user")
+    fun getAll(): List<UserID>
 
 }

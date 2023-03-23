@@ -1,8 +1,10 @@
 package com.example.loginpage
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -35,7 +37,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class Home : ComponentActivity() {
@@ -59,12 +64,25 @@ class Home : ComponentActivity() {
 @Composable
 fun HomeBooks() {
 
+    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
 
     val topBarState = remember { mutableStateOf(true) }
     val bottomBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
 
+    // registrando o id do usuário no sqlLite
+    val userIDRepository = UserIDrepository(context)
+    val users = userIDRepository.getAll()
+
+    Log.i("id usuario", users[0].id.toString())
+
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+
+//    for (i in users.indices){
+//    }
+
+//    Log.i("id usuario2", users.size.toString())
 
     Scaffold(
         modifier = Modifier
@@ -89,7 +107,7 @@ fun HomeBooks() {
             }
         },
         drawerContent = {
-            DrawerDesign()
+            DrawerDesign(userID, context)
         },
         drawerGesturesEnabled = true,
     ) {
@@ -230,12 +248,16 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 }
 
 @Composable
-fun DrawerDesign(){
+fun DrawerDesign(
+    userID: UserID,
+    context: Context
+){
 
+    val auth = FirebaseAuth.getInstance()
     val clickUserPage = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
     val intent = Intent(context, UserPage::class.java)
+    val intentLogin = Intent(context, LoginPage::class.java)
 
     Column(
         modifier = Modifier
@@ -517,11 +539,20 @@ fun DrawerDesign(){
            horizontalAlignment = Alignment.Start
        ) {
            Icon(
-               Icons.Filled.Logout,
+               Icons.Default.Logout,
                contentDescription = "Icone de logout",
                modifier = Modifier
                    .padding(start = 40.dp, bottom = 40.dp)
                    .height(30.dp)
+                   .clickable {
+
+                       val userIDRepository = UserIDrepository(context)
+                       userIDRepository.delete(userID)
+
+                       auth.signOut() // metodo para deslogar o usuario
+
+                       context.startActivity(intentLogin)
+                   }
                ,
                tint = Color.Black
            )
