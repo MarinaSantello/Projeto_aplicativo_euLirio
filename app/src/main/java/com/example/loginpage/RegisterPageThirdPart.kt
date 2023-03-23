@@ -302,6 +302,8 @@ fun accountCreate(context: Context,
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     responseValidate = response.code()
 
+                    Log.i("erro fdp", responseValidate.toString())
+
                     if (responseValidate == 201){
                         authenticate(email, password, context)
 
@@ -324,6 +326,7 @@ fun accountCreate(context: Context,
             }
         }
 }
+
 
 @Preview(showBackground = true)
 @Composable

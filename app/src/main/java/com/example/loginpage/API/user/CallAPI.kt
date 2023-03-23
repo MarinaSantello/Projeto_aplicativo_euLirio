@@ -1,6 +1,8 @@
 package com.example.loginpage.API.user
 
 import android.util.Log
+import androidx.compose.runtime.Composable
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.User
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,6 +47,23 @@ class CallAPI() {
             )
 
             return retorno
+        }
+        fun getUser(userID: UserID, userData: (User) -> Unit) {
+            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+            val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+            val callCurrentUser = userCall.getByID(userID.id)
+
+            callCurrentUser.enqueue(object :
+                Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    val user = response.body()!!
+
+                    userData.invoke(user)
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                }
+            })
         }
     }
 

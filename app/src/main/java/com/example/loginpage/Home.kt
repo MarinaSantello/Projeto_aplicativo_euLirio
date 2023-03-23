@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -37,15 +38,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Genre
+import com.example.loginpage.models.Tag
+import com.example.loginpage.models.User
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Home : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             LoginPageTheme {
                 // A surface container using the 'background' color from the theme
@@ -64,6 +77,11 @@ class Home : ComponentActivity() {
 @Composable
 fun HomeBooks() {
 
+    val tag = listOf<Tag>(Tag(0, ""))
+    val genero = listOf<Genero>(Genero(0, ""))
+
+    var user = User(tags = tag, generos = genero)
+
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
 
@@ -74,13 +92,22 @@ fun HomeBooks() {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-
-    Log.i("id usuario", users[0].id.toString())
-
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-//    for (i in users.indices){
-//    }
+
+    val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+    val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+    val callCurrentUser = userCall.getByID(userID.id)
+
+    callCurrentUser.enqueue(object :
+        Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
+            user = response.body()!! ?: User(tags = tag, generos = genero)
+        }
+
+        override fun onFailure(call: Call<User>, t: Throwable) {
+        }
+    })
 
 //    Log.i("id usuario2", users.size.toString())
 
@@ -107,8 +134,9 @@ fun HomeBooks() {
             }
         },
         drawerContent = {
-            DrawerDesign(userID, context)
+            DrawerDesign(userID, user, context)
         },
+
         drawerGesturesEnabled = true,
     ) {
         Text(text = "teste $it")
@@ -250,6 +278,7 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 @Composable
 fun DrawerDesign(
     userID: UserID,
+    user: User,
     context: Context
 ){
 
@@ -280,7 +309,7 @@ fun DrawerDesign(
                     .height(60.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.download),
+                    painter = rememberAsyncImagePainter(user.foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
                     contentDescription = "",
                     modifier = Modifier
                         .height(60.dp)
@@ -296,12 +325,12 @@ fun DrawerDesign(
                         .fillMaxHeight()
                 ) {
                     Text(
-                        text = "Name",
+                        text = user.nome.toString(),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "@name",
+                        text = "@${user.userName}",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -312,7 +341,7 @@ fun DrawerDesign(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            val tags = listOf<String>("TAG-1", "TAG-2")
+            val tags = user.tags
 
             LazyRow() {
                 items(tags) {
@@ -323,13 +352,14 @@ fun DrawerDesign(
                             .width(60.dp),
                         backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
                         shape = RoundedCornerShape(100.dp),
+                        elevation = 0.dp,
                         border = BorderStroke(
                             1.dp / 2,
                             Color.White
                         )
                     ) {
                         Text(
-                            text = it,
+                            text = it.nomeTag.toString(),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center,
@@ -339,8 +369,6 @@ fun DrawerDesign(
                     }
                 }
             }
-
-
         }
 
         Spacer(modifier = Modifier.height(42.dp))
@@ -359,7 +387,7 @@ fun DrawerDesign(
                 modifier = Modifier
                     .height(80.dp)
                     .padding(top = 40.dp, start = 40.dp)
-                    .clickable {context.startActivity(intent)}
+                    .clickable { context.startActivity(intent) }
                     .fillMaxWidth(),
                 backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                 elevation = 0.dp

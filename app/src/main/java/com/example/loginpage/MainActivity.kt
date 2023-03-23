@@ -39,16 +39,14 @@ class MainActivity : ComponentActivity() {
 fun Greeting() {
     val context = LocalContext.current
 
-    var userAuth = false
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser // retorna a conta que está autenticada no dispositivo (se não tiver usuario, ele é nulo)
-
-    userAuth = currentUser != null
+    var userAuth = currentUser != null
 
     // registrando o id do usuário no sqlLite
-    val userIDRepository = UserIDrepository(context)
-    val users = userIDRepository.getAll()
-    val usersLogin = users.size > 0
+//    val userIDRepository = UserIDrepository(context)
+//    val users = userIDRepository.getAll()
+//    val usersLogin = users[0].id < 0
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.SplashScreen.name) {

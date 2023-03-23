@@ -44,6 +44,8 @@ fun authenticate(email: String, password: String, context: Context) {
                     ) {
                         responseValidate = response.code()
 
+                        Log.i("erro fdp", responseValidate.toString())
+
                         if (responseValidate == 200){
                             // registrando o id do usuário no sqlLite
                             val userIDRepository = UserIDrepository(context)

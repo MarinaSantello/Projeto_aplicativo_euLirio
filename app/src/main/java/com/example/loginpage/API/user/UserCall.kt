@@ -11,6 +11,8 @@ interface UserCall {
 
     @GET("")
     fun getAll(): Call<List<User>>
+    @GET("user/id/{id}")
+    fun getByID(@Path("id") id: Long): Call<User>
 
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("user")
