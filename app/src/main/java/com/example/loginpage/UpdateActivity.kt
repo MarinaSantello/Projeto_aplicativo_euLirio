@@ -6,10 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,10 +29,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.models.Genero
+import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 
 class UpdateActivity : ComponentActivity() {
@@ -52,6 +59,10 @@ class UpdateActivity : ComponentActivity() {
 @Composable
 fun UpdatePage() {
     val context = LocalContext.current
+
+    var checkState by remember {
+        mutableStateOf(false)
+    }
 
     var nameState by remember {
         mutableStateOf("")
@@ -132,6 +143,7 @@ fun UpdatePage() {
                         Column() {
                             TextField(
                                 value = nameState,
+                                modifier = Modifier.height(30.dp),
                                 onValueChange = {
                                     nameState = it
                                 },
@@ -139,7 +151,8 @@ fun UpdatePage() {
                                     Text(
                                         text = stringResource(id = R.string.name),
                                         color = Color(0xFF1E1E1E),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp
                                     )
                                 },
                                 singleLine = false,
@@ -164,22 +177,30 @@ fun UpdatePage() {
                                         )
                                     )
                             ) {
-                                Text(
-                                    text = stringResource(id = R.string.user_name),
-                                    fontSize = 6.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
 
-                                OutlinedTextField(
-                                    value = userNameState,
-                                    onValueChange = {
-                                        userNameState = it
-                                    },
+                                TextField(
+                                    value = nameState,
                                     modifier = Modifier
-                                        .height(60.dp)
-                                        .widthIn(200.dp, 250.dp)
-                                        .background(colorResource(id = R.color.eulirio_light_yellow_background)),
-                                    singleLine = false
+                                        .height(30.dp),
+                                    onValueChange = {
+                                        nameState = it
+                                    },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = R.string.user_name),
+                                            color = Color(0xFF1E1E1E),
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 10.sp
+                                        )
+                                    },
+                                    singleLine = false,
+                                    shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        textColor = Color(0xFF1E1E1E),
+                                        backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                                        cursorColor = Color(0xFF1E1E1E),
+                                        focusedIndicatorColor = Color(0xFF1E1E1E),
+                                    )
                                 )
                             }
                         }
@@ -212,22 +233,30 @@ fun UpdatePage() {
                                 }
                             }
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.biography),
-                            fontSize = 6.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        OutlinedTextField(
-                            value = biographyState,
-                            onValueChange = {
-                                biographyState = it
-                            },
+                        TextField(
+                            value = nameState,
                             modifier = Modifier
-                                .heightIn(115.dp)
-                                .fillMaxWidth()
-                                .background(colorResource(id = R.color.eulirio_light_yellow_background)),
-                            singleLine = false
+                                .height(120.dp)
+                                .fillMaxWidth(),
+                            onValueChange = {
+                                nameState = it
+                            },
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.biography),
+                                    color = Color(0xFF1E1E1E),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp
+                                )
+                            },
+                            singleLine = false,
+                            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                textColor = Color(0xFF1E1E1E),
+                                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                                cursorColor = Color(0xFF1E1E1E),
+                                focusedIndicatorColor = Color(0xFF1E1E1E),
+                            )
                         )
                     }
 
@@ -245,18 +274,22 @@ fun UpdatePage() {
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
+                            modifier = Modifier
+                                .padding(start = 5.dp, top = 5.dp),
                             text = "Você é...",
-                            fontSize = 6.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
 
                         Row(
                             horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .height(30.dp)
                         ) {
                             Row(
                                 horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Checkbox(
                                     checked = writerCheckState,
@@ -304,63 +337,40 @@ fun UpdatePage() {
                             )
                             .fillMaxWidth()
                     ) {
-//                        Image(painterResource(id = R.drawable.tag), contentDescription = "")
+
+
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 20.dp, top = 5.dp),
+                            text = "Generos",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.Bottom
                         ) {
-                            Row() {
-                                Row(
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Checkbox(
-                                        checked = false,
-                                        onCheckedChange = {}
-                                    )
-                                    Text(
-                                        text = "Terror".uppercase(),
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
 
-                                Row(
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Checkbox(
-                                        checked = false,
-                                        onCheckedChange = {}
-                                    )
-                                    Text(
-                                        text = "Drama".uppercase(),
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
+                            val genres =
+                                listOf<String>("TERROR", "DRAMA", "ROMANCE", "ROMANCE", "TERROR")
 
-                                Row(
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Checkbox(
-                                        checked = false,
-                                        onCheckedChange = {}
-                                    )
-                                    Text(
-                                        text = "Romance".uppercase(),
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(4),
+
+                                // content padding
+                                contentPadding = PaddingValues(
+                                    start = 9.dp,
+                                    end = 12.dp,
+                                    top = 5.dp,
+                                    bottom = 8.dp
+                                )
+                            ) {
+                                items(genres) {
+
                                 }
                             }
-
-                            Text(
-                                text = "Ver mais...",
-                                fontSize = 6.sp
-                            )
                         }
                     }
 
@@ -387,23 +397,25 @@ fun UpdatePage() {
 
                 }
 
-                Button(
-                    onClick = { showDialog = true },
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_red)),
-                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_light_yellow_background)),
-                    elevation = ButtonDefaults.elevation(0.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.text_delete_account).uppercase(),
-                        color = colorResource(id = R.color.eulirio_red)
-                    )
-                }
-
                 //column alert dialog
                 Column(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.Start
                 ) {
+
+                    Button(
+                        onClick = { showDialog = true },
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_red)),
+                        colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_light_yellow_background)),
+                        elevation = ButtonDefaults.elevation(0.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.text_delete_account).uppercase(),
+                            color = colorResource(id = R.color.eulirio_red)
+                        )
+                    }
 
 
                     if (showDialog) {
@@ -420,7 +432,9 @@ fun UpdatePage() {
                                     Icon(
                                         Icons.Default.Delete,
                                         contentDescription = "lixo",
-                                        modifier = Modifier.size(24.dp).padding(top = 4.dp),
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .padding(top = 4.dp),
                                         tint = Color.Red
                                     )
 
