@@ -353,9 +353,6 @@ fun UpdatePage() {
                             verticalAlignment = Alignment.Bottom
                         ) {
 
-                            val genres =
-                                listOf<String>("TERROR", "DRAMA", "ROMANCE", "ROMANCE", "TERROR")
-
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(4),
 
@@ -367,9 +364,7 @@ fun UpdatePage() {
                                     bottom = 8.dp
                                 )
                             ) {
-                                items(genres) {
-
-                                }
+                               
                             }
                         }
                     }
