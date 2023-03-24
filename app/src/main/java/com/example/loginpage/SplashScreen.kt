@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.loginpage.constants.Routes
@@ -34,9 +36,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun Splash(navController: NavController,
            userState: Boolean
-) = Box(modifier = Modifier.fillMaxSize().background(
-    Color(242, 242, 242, 255)
-))
+) = Box(modifier = Modifier
+    .fillMaxSize()
+    .background(
+        Color(242, 242, 242, 255)
+    ))
 {
 
     val scale = remember {
@@ -71,7 +75,9 @@ fun Splash(navController: NavController,
     }
 
     Icon(Icons.Default.Circle, contentDescription = "",
-        modifier = Modifier.align(Alignment.Center).fillMaxSize(.5f),
+        modifier = Modifier
+            .align(Alignment.Center)
+            .fillMaxSize(.5f),
         tint = colorResource(id = R.color.eulirio_purple_text_color))
     Image(
         painter = painterResource(id = R.drawable.logo_icone_eulirio),
@@ -80,4 +86,17 @@ fun Splash(navController: NavController,
             .align(Alignment.Center)
             .fillMaxSize(.35f)
     )
+
+    Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+        Text(
+            text = "FROM",
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.subtitle1)
+        Image(
+            painter = painterResource(id = R.drawable.logo_icone_iara),
+            contentDescription = "Logo da empresa",
+            modifier = Modifier
+                .fillMaxSize(.1f)
+        )
+    }
 }

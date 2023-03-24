@@ -1,6 +1,7 @@
 package com.example.loginpage
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,7 +10,9 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -31,8 +34,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,10 +45,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Genre
+import com.example.loginpage.models.Tag
+import com.example.loginpage.models.User
+import com.example.loginpage.resources.getGenres
 import com.example.loginpage.ui.components.GenreCard
+import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.storage.FirebaseStorage
+import java.time.LocalDateTime
 
 class UpdateActivity : ComponentActivity() {
 
@@ -64,64 +78,6 @@ class UpdateActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun uploadFile() {
-
-        var t: String = ""
-
-        if (filePath != null) {
-
-            //progressBar = findViewById(R.id.progressbar)
-            progressBar.visibility = View.VISIBLE
-
-            var imageRef = FirebaseStorage
-                .getInstance()
-                .reference
-                .child("images/teste")
-
-            imageRef.putFile(filePath)
-                .addOnSuccessListener { p0 ->
-                    //pd.dismiss()
-                    Toast.makeText(applicationContext, "File Uploaded", Toast.LENGTH_LONG).show()
-                    progressBar.visibility = View.INVISIBLE
-
-                    imageRef
-                        .downloadUrl
-                        .addOnSuccessListener { uri ->
-                            edUri.setText(uri.toString())
-                        }
-                }
-                .addOnFailureListener { p0 ->
-                    Toast.makeText(applicationContext, p0.message, Toast.LENGTH_LONG).show()
-                }
-                .addOnProgressListener { p0 ->
-                    var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
-                    //pd.setMessage("Uploaded ${progress.toInt()}%")
-                }
-        }
-
-        Log.d("Teste", "Uri: $t")
-    }
-
-    private fun startFileChooser() {
-        val i = Intent()
-        i.setType("image/*")
-        i.setAction(Intent.ACTION_GET_CONTENT)
-        startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        Log.d("MainActivity", resultCode.toString())
-
-        if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null) {
-            filePath = data.data!!
-            //var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
-            //ivImage.setImageBitmap(bitmap)
-            ivImage.setImageURI(filePath)
-        }
-    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -129,18 +85,15 @@ class UpdateActivity : ComponentActivity() {
 fun UpdatePage() {
     val context = LocalContext.current
 
-    var checkState by remember {
-        mutableStateOf(false)
+    var photoState by remember {
+        mutableStateOf("")
     }
-
     var nameState by remember {
         mutableStateOf("")
     }
-
     var userNameState by remember {
         mutableStateOf("")
     }
-
     var biographyState by remember {
         mutableStateOf("")
     }
@@ -148,13 +101,43 @@ fun UpdatePage() {
     var writerCheckState by remember {
         mutableStateOf(false)
     }
-
     var readerCheckState by remember {
         mutableStateOf(false)
     }
 
+    var tags by remember {
+        mutableStateOf(listOf<Tag>())
+    }
+    var generos by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+
     var showDialog by remember {
         mutableStateOf(false)
+    }
+
+    var iconUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val selectImage = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        iconUri = uri
+        Log.i("uri image", uri.toString())
+    }
+
+    val userIDRepository = UserIDrepository(context)
+    val users = userIDRepository.getAll()
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+
+    CallAPI.getUser(userID){
+        photoState = it.foto
+        nameState = it.nome
+        userNameState = it.userName
+        biographyState = it.biografia
+        //tags = it.tags
+        //generos = it.generos
     }
 
     Column(
@@ -163,17 +146,16 @@ fun UpdatePage() {
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp),
-            horizontalArrangement = Arrangement.Start,
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Rounded.ArrowBack,
+            Image(
+                painter = painterResource(id = R.drawable.logo_icone_eulirio),
                 contentDescription = "",
                 modifier = Modifier
-                    .height(48.dp)
-                    .padding(start = 12.dp)
+                    .height(52.dp)
+                    .padding(4.dp)
             )
         }
 
@@ -198,11 +180,15 @@ fun UpdatePage() {
                         Card(
                             modifier = Modifier
                                 .height(80.dp)
-                                .width(80.dp),
-                            shape = RoundedCornerShape(35.dp)
+                                .width(80.dp)
+                                .clickable {
+                                    selectImage.launch("image/*")
+                                },
+                            shape = RoundedCornerShape(40.dp)
                         ) {
                             Image(
-                                painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                                painter = rememberAsyncImagePainter(iconUri ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                                contentScale = ContentScale.Crop,
                                 contentDescription = "sua foto de perfil"
                             )
                         }
@@ -212,7 +198,6 @@ fun UpdatePage() {
                         Column() {
                             TextField(
                                 value = nameState,
-                                modifier = Modifier.height(30.dp),
                                 onValueChange = {
                                     nameState = it
                                 },
@@ -248,11 +233,9 @@ fun UpdatePage() {
                             ) {
 
                                 TextField(
-                                    value = nameState,
-                                    modifier = Modifier
-                                        .height(30.dp),
+                                    value = userNameState,
                                     onValueChange = {
-                                        nameState = it
+                                        userNameState = it
                                     },
                                     label = {
                                         Text(
@@ -303,12 +286,12 @@ fun UpdatePage() {
                             }
                     ) {
                         TextField(
-                            value = nameState,
+                            value = biographyState,
                             modifier = Modifier
-                                .height(120.dp)
+                                .heightIn(160.dp)
                                 .fillMaxWidth(),
                             onValueChange = {
-                                nameState = it
+                                biographyState = it
                             },
                             label = {
                                 Text(
@@ -335,16 +318,15 @@ fun UpdatePage() {
                         Modifier
                             .background(
                                 colorResource(id = R.color.eulirio_light_yellow_background),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(12.dp)
                             )
-                            .fillMaxWidth()
-                            .border(0.5.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
+                            .fillMaxWidth(),
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
                             modifier = Modifier
-                                .padding(start = 5.dp, top = 5.dp),
+                                .padding(start = 12.dp, top = 8.dp),
                             text = "Você é...",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
@@ -357,17 +339,32 @@ fun UpdatePage() {
                                 .height(30.dp)
                         ) {
                             Row(
-                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.width(80.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
+                                Spacer(modifier = Modifier.width(20.dp))
                                 Checkbox(
                                     checked = writerCheckState,
                                     onCheckedChange = {
                                         writerCheckState = it
                                     },
                                     modifier = Modifier
-                                        .height(10.dp)
+                                        .border(
+                                            1.dp,
+                                            Color.Black,
+                                            shape = RoundedCornerShape(2.dp)
+                                        )
+                                        .width(16.dp)
+                                        .height(16.dp)
+                                    ,
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = Color.Black,
+                                        uncheckedColor = Color.Transparent
+                                    ),
                                 )
+
+                                Spacer(modifier = Modifier.width(12.dp))
+
                                 Text(
                                     text = stringResource(id = R.string.tag_1_name).uppercase(),
                                     fontSize = 10.sp,
@@ -378,15 +375,31 @@ fun UpdatePage() {
                             Spacer(modifier = Modifier.width(20.dp))
 
                             Row(
-                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.width(80.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Checkbox(
                                     checked = readerCheckState,
                                     onCheckedChange = {
                                         readerCheckState = it
-                                    }
+                                    },
+                                    modifier = Modifier
+                                        .border(
+                                            1.dp,
+                                            Color.Black,
+                                            shape = RoundedCornerShape(2.dp)
+                                        )
+                                        .width(16.dp)
+                                        .height(16.dp)
+                                    ,
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = Color.Black,
+                                        uncheckedColor = Color.Transparent
+                                    ),
                                 )
+
+                                Spacer(modifier = Modifier.width(12.dp))
+
                                 Text(
                                     text = stringResource(id = R.string.tag_2_name).uppercase(),
                                     fontSize = 10.sp,
@@ -402,16 +415,14 @@ fun UpdatePage() {
                         modifier = Modifier
                             .background(
                                 colorResource(id = R.color.eulirio_light_yellow_background),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(12.dp)
                             )
                             .fillMaxWidth()
                     ) {
-
-
                         Text(
                             modifier = Modifier
-                                .padding(start = 20.dp, top = 5.dp),
-                            text = "Generos",
+                                .padding(start = 12.dp, top = 8.dp),
+                            text = "Seus gêneros literários são:",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -422,18 +433,29 @@ fun UpdatePage() {
                             verticalAlignment = Alignment.Bottom
                         ) {
 
+                            var genres by remember {
+                                mutableStateOf(listOf<Genre>())
+                            }
+                            getGenres(){genres += it}
+
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(4),
 
                                 // content padding
                                 contentPadding = PaddingValues(
-                                    start = 9.dp,
+                                    start = 10.dp,
                                     end = 12.dp,
                                     top = 5.dp,
                                     bottom = 8.dp
                                 )
                             ) {
-                               
+                                items(
+                                    items = genres
+                                ) {
+                                    NewGenreCard(it){ state ->
+                                        if (state) generos += Genero(it.id)
+                                    }
+                                }
                             }
                         }
                     }
@@ -446,7 +468,27 @@ fun UpdatePage() {
                         horizontalAlignment = Alignment.End
                     ) {
                         Button(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                iconUri?.let {
+                                    uploadFile(it, userNameState, context) {url ->
+                                        photoState = url
+                                    }
+                                }
+
+                                if (writerCheckState)
+                                    tags += listOf<Tag>(Tag(1))
+                                if (readerCheckState)
+                                    tags += listOf<Tag>(Tag(2))
+
+                                val user = User (
+                                    foto = photoState,
+                                    nome = nameState,
+                                    userName = userNameState,
+                                    biografia = biographyState,
+                                    tags = tags,
+                                    generos = generos
+                                )
+                            },
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
                             elevation = ButtonDefaults.elevation(0.dp)
@@ -470,6 +512,8 @@ fun UpdatePage() {
 
                     Button(
                         onClick = { showDialog = true },
+                        modifier = Modifier
+                            .height(28.dp),
                         shape = RoundedCornerShape(10.dp),
                         border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_red)),
                         colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_light_yellow_background)),
@@ -477,6 +521,7 @@ fun UpdatePage() {
                     ) {
                         Text(
                             text = stringResource(id = R.string.text_delete_account).uppercase(),
+                            fontSize = 10.sp,
                             color = colorResource(id = R.color.eulirio_red)
                         )
                     }
@@ -544,4 +589,39 @@ fun UpdatePage() {
             }
         }
     }
+}
+
+fun uploadFile(file: Uri, fileName: String, context: Context, uri: (String) -> Unit) {
+
+    val datetime = LocalDateTime.now().toString()
+    val discriminante = datetime.replace(' ', '-')
+
+    //progressBar = findViewById(R.id.progressbar)
+    //progressBar.visibility = View.VISIBLE
+
+    val imageRef = FirebaseStorage
+        .getInstance()
+        .reference
+        .child("profile/$fileName$discriminante")
+
+    imageRef.putFile(file)
+        .addOnSuccessListener { p0 ->
+            //pd.dismiss()
+            Toast.makeText(context, "File Uploaded", Toast.LENGTH_LONG).show()
+            //progressBar.visibility = View.INVISIBLE
+
+            imageRef
+                .downloadUrl
+                .addOnSuccessListener {
+                    Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show()
+                    uri.invoke(it.toString())
+                }
+        }
+        .addOnFailureListener { p0 ->
+            Toast.makeText(context, p0.message, Toast.LENGTH_LONG).show()
+        }
+        .addOnProgressListener { p0 ->
+            var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
+            //pd.setMessage("Uploaded ${progress.toInt()}%")
+        }
 }

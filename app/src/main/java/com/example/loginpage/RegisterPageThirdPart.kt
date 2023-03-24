@@ -42,6 +42,7 @@ import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
 import com.example.loginpage.models.User
 import com.example.loginpage.resources.authenticate
+import com.example.loginpage.resources.getGenres
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.auth.*
@@ -182,24 +183,29 @@ fun RegisterPageThirdPartFun() {
 
                             }
 
+//                            var genres by remember {
+//                                mutableStateOf(listOf<Genre>())
+//                            }
+//
+//                            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+//                            val genreCall = retrofit.create(GenreCall::class.java) // instância do objeto contact
+//                            val callGetGenres01 = genreCall.getAll()
+//
+//                            // Excutar a chamada para o End-point
+//                            callGetGenres01.enqueue(object :
+//                                Callback<List<Genre>> { // enqueue: usado somente quando o objeto retorna um valor
+//                                override fun onResponse(call: Call<List<Genre>>, response: Response<List<Genre>>) {
+//                                    genres = response.body()!!
+//                                }
+//
+//                                override fun onFailure(call: Call<List<Genre>>, t: Throwable) {
+//                                }
+//                            })
+
                             var genres by remember {
                                 mutableStateOf(listOf<Genre>())
                             }
-
-                            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                            val genreCall = retrofit.create(GenreCall::class.java) // instância do objeto contact
-                            val callGetGenres01 = genreCall.getAll()
-
-                            // Excutar a chamada para o End-point
-                            callGetGenres01.enqueue(object :
-                                Callback<List<Genre>> { // enqueue: usado somente quando o objeto retorna um valor
-                                override fun onResponse(call: Call<List<Genre>>, response: Response<List<Genre>>) {
-                                    genres = response.body()!!
-                                }
-
-                                override fun onFailure(call: Call<List<Genre>>, t: Throwable) {
-                                }
-                            })
+                            getGenres(){genres += it}
 
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(2),
@@ -216,8 +222,6 @@ fun RegisterPageThirdPartFun() {
                                     items = genres
                                 ) {
                                     GenreCard(it){ state ->
-                                        //if(state) generos += it
-
                                         if (state) generos += Genero(it.id)
                                     }
                                 }

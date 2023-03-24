@@ -27,6 +27,7 @@ fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
 
     Card(
         modifier = Modifier
+            .width(80.dp)
             .height(30.dp)
             .clickable {
                 checkState = !checkState
@@ -39,9 +40,7 @@ fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
 
 
     ) {
-
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
 
         ) {
@@ -63,8 +62,9 @@ fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
                     checkedColor = Color.Black,
                     uncheckedColor = Color.Transparent
                 ),
+            )
 
-                )
+            Spacer(modifier = Modifier.width(12.dp))
 
             Text(
                 text = genre.nome,

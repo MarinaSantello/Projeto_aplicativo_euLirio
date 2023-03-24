@@ -63,19 +63,18 @@ fun UserHomePage() {
 
     val context = LocalContext.current
 
-    var BooksOnClickState by remember {
+    var booksOnClickState by remember {
         mutableStateOf(false)
     }
 
-    var CurtasOnClickState by remember {
+    var curtasOnClickState by remember {
         mutableStateOf(false)
     }
 
-    var RecomendationOnClickState by remember {
+    var recomendationOnClickState by remember {
         mutableStateOf(false)
     }
 
-    // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
@@ -392,172 +391,172 @@ fun UserHomePage() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier
-                        .height(25.dp)
-                        .padding(start = 50.dp, end = 50.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                TabsPerfil()
 
-                    //Card de Livros
-                    Card(
-                        modifier = Modifier
-                            .height(22.dp)
-                            .width(90.dp)
-                            .clickable {
-                                BooksOnClickState = true
-                                CurtasOnClickState = false
-                                RecomendationOnClickState = false
-                            },
-                        backgroundColor = Color.Transparent,
-                        elevation = 0.dp
-
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-
-                        ) {
-
-                            Icon(
-                                Icons.Outlined.MenuBook,
-                                contentDescription = "icone de livro",
-                                modifier = Modifier
-                                    .height(12.dp)
-                                    .padding(end = 8.dp),
-                                tint = if (BooksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-                            )
-
-                            Text(
-                                text = "Livros",
-                                fontSize = 8.sp,
-                                fontWeight = FontWeight.W400
-                            )
-
-                        }
-
-                        Spacer(modifier = Modifier.height(5.dp))
-
-                        if (BooksOnClickState) {
-                            Card(
-                                modifier = Modifier
-                                    .height(3.dp)
-                                    .fillMaxWidth(),
-                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                                elevation = 0.dp,
-
-
-                                ) {}
-                        }
-
-                    }
-
-                    //Card de Curtas
-                    Card(
-                        modifier = Modifier
-                            .height(22.dp)
-                            .width(90.dp)
-                            .clickable {
-                                CurtasOnClickState = true
-                                BooksOnClickState = false
-                                RecomendationOnClickState = false
-                            },
-                        backgroundColor = Color.Transparent,
-                        elevation = 0.dp
-
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-
-                        ) {
-                            Icon(
-                                Icons.Outlined.FormatAlignCenter,
-                                contentDescription = "icone de livro",
-                                modifier = Modifier
-                                    .height(12.dp)
-                                    .padding(end = 8.dp),
-                                tint = if (CurtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-                            )
-
-                            Text(
-                                text = "Curtas",
-                                fontSize = 8.sp,
-                                fontWeight = FontWeight.W400
-                            )
-
-                        }
-
-                        Spacer(modifier = Modifier.height(5.dp))
-
-                        if (CurtasOnClickState) {
-                            Card(
-                                modifier = Modifier
-                                    .height(3.dp)
-                                    .fillMaxWidth(),
-                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                                elevation = 0.dp,
-
-
-                                ) {}
-                        }
-
-                    }
-
-                    //Card de Recomendações
-                    Card(
-                        modifier = Modifier
-                            .height(22.dp)
-                            .width(90.dp)
-                            .clickable {
-                                RecomendationOnClickState = true
-                                BooksOnClickState = false
-                                CurtasOnClickState = false
-                            },
-                        backgroundColor = Color.Transparent,
-                        elevation = 0.dp
-
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-
-                        ) {
-                            Icon(
-                                Icons.Outlined.LocalLibrary,
-                                contentDescription = "icone de livro",
-                                modifier = Modifier
-                                    .height(12.dp)
-                                    .padding(end = 8.dp),
-                                tint = if (RecomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-                            )
-
-                            Text(
-                                text = "Recomendações",
-                                fontSize = 8.sp,
-                                fontWeight = FontWeight.W400
-                            )
-
-                        }
-                        Spacer(modifier = Modifier.height(5.dp))
-
-                        if (RecomendationOnClickState) {
-                            Card(
-                                modifier = Modifier
-                                    .height(3.dp)
-                                    .fillMaxWidth(),
-                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                                elevation = 0.dp,
-
-
-                                ) {}
-                        }
-
-                    }
-
-
-                }
+//                Row(
+//                    modifier = Modifier
+//                        .height(25.dp)
+//                        .padding(start = 50.dp, end = 50.dp)
+//                        .fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceBetween
+//                ) {
+//
+//                    //Card de Livros
+//                    Card(
+//                        modifier = Modifier
+//                            .height(22.dp)
+//                            .width(90.dp)
+//                            .clickable {
+//                                booksOnClickState = true
+//                                curtasOnClickState = false
+//                                recomendationOnClickState = false
+//                            },
+//                        backgroundColor = Color.Transparent,
+//                        elevation = 0.dp
+//
+//                    ) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            horizontalArrangement = Arrangement.Center
+//
+//                        ) {
+//
+//                            Icon(
+//                                Icons.Outlined.MenuBook,
+//                                contentDescription = "icone de livro",
+//                                modifier = Modifier
+//                                    .height(12.dp)
+//                                    .padding(end = 8.dp),
+//                                tint = if (booksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+//                            )
+//
+//                            Text(
+//                                text = "Livros",
+//                                fontSize = 8.sp,
+//                                fontWeight = FontWeight.W400
+//                            )
+//
+//                        }
+//
+//                        Spacer(modifier = Modifier.height(5.dp))
+//
+//                        if (booksOnClickState) {
+//                            Card(
+//                                modifier = Modifier
+//                                    .height(3.dp)
+//                                    .fillMaxWidth(),
+//                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+//                                elevation = 0.dp,
+//
+//
+//                                ) {}
+//                        }
+//
+//                    }
+//
+//                    //Card de Curtas
+//                    Card(
+//                        modifier = Modifier
+//                            .height(22.dp)
+//                            .width(90.dp)
+//                            .clickable {
+//                                curtasOnClickState = true
+//                                booksOnClickState = false
+//                                recomendationOnClickState = false
+//                            },
+//                        backgroundColor = Color.Transparent,
+//                        elevation = 0.dp
+//
+//                    ) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            horizontalArrangement = Arrangement.Center
+//
+//                        ) {
+//                            Icon(
+//                                Icons.Outlined.FormatAlignCenter,
+//                                contentDescription = "icone de livro",
+//                                modifier = Modifier
+//                                    .height(12.dp)
+//                                    .padding(end = 8.dp),
+//                                tint = if (curtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+//                            )
+//
+//                            Text(
+//                                text = "Curtas",
+//                                fontSize = 8.sp,
+//                                fontWeight = FontWeight.W400
+//                            )
+//
+//                        }
+//
+//                        Spacer(modifier = Modifier.height(5.dp))
+//
+//                        if (curtasOnClickState) {
+//                            Card(
+//                                modifier = Modifier
+//                                    .height(3.dp)
+//                                    .fillMaxWidth(),
+//                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+//                                elevation = 0.dp,
+//
+//
+//                                ) {}
+//                        }
+//
+//                    }
+//
+//                    //Card de Recomendações
+//                    Card(
+//                        modifier = Modifier
+//                            .height(22.dp)
+//                            .width(90.dp)
+//                            .clickable {
+//                                recomendationOnClickState = true
+//                                booksOnClickState = false
+//                                curtasOnClickState = false
+//                            },
+//                        backgroundColor = Color.Transparent,
+//                        elevation = 0.dp
+//
+//                    ) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            horizontalArrangement = Arrangement.Center
+//
+//                        ) {
+//                            Icon(
+//                                Icons.Outlined.LocalLibrary,
+//                                contentDescription = "icone de livro",
+//                                modifier = Modifier
+//                                    .height(12.dp)
+//                                    .padding(end = 8.dp),
+//                                tint = if (recomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+//                            )
+//
+//                            Text(
+//                                text = "Recomendações",
+//                                fontSize = 8.sp,
+//                                fontWeight = FontWeight.W400
+//                            )
+//
+//                        }
+//                        Spacer(modifier = Modifier.height(5.dp))
+//
+//                        if (recomendationOnClickState) {
+//                            Card(
+//                                modifier = Modifier
+//                                    .height(3.dp)
+//                                    .fillMaxWidth(),
+//                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+//                                elevation = 0.dp,
+//                                ) {}
+//                        }
+//
+//                    }
+//
+//
+//                }
 
 
             }
@@ -566,6 +565,56 @@ fun UserHomePage() {
         }
 
 
+    }
+}
+@Composable
+fun TabsPerfil() {
+    var tabIndex by remember { mutableStateOf(0) }
+
+    val tabs = listOf("Livros", "Histórias pequenas", "Recomendações")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        ScrollableTabRow(selectedTabIndex = tabIndex) {
+            tabs.forEachIndexed { index, title ->
+                Tab(text = { Text(title) },
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index },
+                    icon = {
+                        when (index) {
+                            0 -> Icon(
+                                    Icons.Outlined.MenuBook,
+                                    contentDescription = "icone de livro",
+                                    modifier = Modifier
+                                        .height(12.dp)
+                                        .padding(end = 8.dp),
+                                    //tint = if (booksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                                )
+                            1 -> Icon(
+                                    Icons.Outlined.FormatAlignCenter,
+                                    contentDescription = "icone de texto",
+                                    modifier = Modifier
+                                        .height(12.dp)
+                                        .padding(end = 8.dp),
+                                    //tint = if (curtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                                )
+                            2 -> Icon(
+                                    Icons.Outlined.LocalLibrary,
+                                    contentDescription = "icone de pessoa lendo um livro",
+                                    modifier = Modifier
+                                        .height(12.dp)
+                                        .padding(end = 8.dp),
+                                    //tint = if (recomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                                )
+                        }
+                    }
+                )
+            }
+        }
+        when (tabIndex) {
+            0 -> Text(text = "teste livro")
+            1 -> Text(text = "teste pequena historia")
+            2 -> Text(text = "teste recomendacao")
+        }
     }
 }
 

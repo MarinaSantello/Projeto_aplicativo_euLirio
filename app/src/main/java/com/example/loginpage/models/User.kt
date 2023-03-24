@@ -25,15 +25,15 @@ data class User(
 }
 
 data class Tag (
-    @SerializedName("id_tag")
+    @SerializedName("id")
     var idTag: Int = 0,
-    @SerializedName("nome_tag")
+    @SerializedName("nome")
     var nomeTag: String = ""
 )
 
 data class Genero (
-    @SerializedName("id_genero")
+    @SerializedName("id")
     var idGenero: Int = 0,
-    @SerializedName("nome_genero")
+    @SerializedName("nome")
     var nomeGenero: String = ""
 )
