@@ -58,7 +58,6 @@ import retrofit2.Response
 class Home : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LoginPageTheme {
                 // A surface container using the 'background' color from the theme
@@ -77,11 +76,6 @@ class Home : ComponentActivity() {
 @Composable
 fun HomeBooks() {
 
-    val tag = listOf<Tag>(Tag(0, ""))
-    val genero = listOf<Genero>(Genero(0, ""))
-
-    var user = User(tags = tag, generos = genero)
-
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
 
@@ -93,23 +87,6 @@ fun HomeBooks() {
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
-
-
-    val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-    val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
-    val callCurrentUser = userCall.getByID(userID.id)
-
-    callCurrentUser.enqueue(object :
-        Callback<User> {
-        override fun onResponse(call: Call<User>, response: Response<User>) {
-            user = response.body()!! ?: User(tags = tag, generos = genero)
-        }
-
-        override fun onFailure(call: Call<User>, t: Throwable) {
-        }
-    })
-
-//    Log.i("id usuario2", users.size.toString())
 
     Scaffold(
         modifier = Modifier
@@ -134,7 +111,7 @@ fun HomeBooks() {
             }
         },
         drawerContent = {
-            DrawerDesign(userID, user, context)
+            DrawerDesign(userID, context)
         },
 
         drawerGesturesEnabled = true,
@@ -278,9 +255,25 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
 @Composable
 fun DrawerDesign(
     userID: UserID,
-    user: User,
+    //user: User,
     context: Context
 ){
+
+    var foto by remember {
+        mutableStateOf("")
+    }
+    var nome by remember {
+        mutableStateOf("")
+    }
+    var userName by remember {
+        mutableStateOf("")
+    }
+
+    CallAPI.getUser(userID){
+        foto = it.foto
+        nome = it.nome
+        userName = it.userName
+    }
 
     val auth = FirebaseAuth.getInstance()
     val clickUserPage = remember { mutableStateOf(false) }
@@ -307,9 +300,15 @@ fun DrawerDesign(
             Row(
                 modifier = Modifier
                     .height(60.dp)
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(context, UserPage::class.java)
+
+                        context.startActivity(intent)
+                    }
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(user.foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                    painter = rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
                     contentDescription = "",
                     modifier = Modifier
                         .height(60.dp)
@@ -325,50 +324,48 @@ fun DrawerDesign(
                         .fillMaxHeight()
                 ) {
                     Text(
-                        text = user.nome.toString(),
+                        text = nome,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "@${user.userName}",
+                        text = "@${userName}",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.ExtraLight
                     )
                 }
-
-
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            val tags = user.tags
-
-            LazyRow() {
-                items(tags) {
-                    Card(
-                        modifier = Modifier
-                            .height(18.dp)
-                            .padding(end = 5.dp)
-                            .width(60.dp),
-                        backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                        shape = RoundedCornerShape(100.dp),
-                        elevation = 0.dp,
-                        border = BorderStroke(
-                            1.dp / 2,
-                            Color.White
-                        )
-                    ) {
-                        Text(
-                            text = it.nomeTag.toString(),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textAlign = TextAlign.Center,
-                            color = Color.White
-                        )
-
-                    }
-                }
-            }
+//            val tags = user.tags
+//
+//            LazyRow() {
+//                items(tags) {
+//                    Card(
+//                        modifier = Modifier
+//                            .height(18.dp)
+//                            .padding(end = 5.dp)
+//                            .width(60.dp),
+//                        backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+//                        shape = RoundedCornerShape(100.dp),
+//                        elevation = 0.dp,
+//                        border = BorderStroke(
+//                            1.dp / 2,
+//                            Color.White
+//                      )
+//                    ) {
+//                        Text(
+//                            text = it.nomeTag.toString(),
+//                            fontSize = 14.sp,
+//                            fontWeight = FontWeight.SemiBold,
+//                            textAlign = TextAlign.Center,
+//                            color = Color.White
+//                        )
+//
+//                    }
+//                }
+//            }
         }
 
         Spacer(modifier = Modifier.height(42.dp))

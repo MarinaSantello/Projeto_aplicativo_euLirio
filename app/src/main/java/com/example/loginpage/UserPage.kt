@@ -1,5 +1,6 @@
 package com.example.loginpage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -30,7 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Genre
+import com.example.loginpage.models.Tag
 //import com.example.euLirio.R
 import com.example.loginpage.ui.theme.LoginPageTheme
 
@@ -54,6 +61,8 @@ class UserPage : ComponentActivity() {
 @Composable
 fun UserHomePage() {
 
+    val context = LocalContext.current
+
     var BooksOnClickState by remember {
         mutableStateOf(false)
     }
@@ -66,13 +75,40 @@ fun UserHomePage() {
         mutableStateOf(false)
     }
 
-    val context = LocalContext.current
-
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
     Log.i("id usuario", users[0].idUser.toString())
+
+    var foto by remember {
+        mutableStateOf("")
+    }
+    var nome by remember {
+        mutableStateOf("")
+    }
+    var userName by remember {
+        mutableStateOf("")
+    }
+    var biografia by remember {
+        mutableStateOf("")
+    }
+    var tags by remember {
+        mutableStateOf(listOf<Tag>())
+    }
+    var genres by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+
+    CallAPI.getUser(userID){
+        foto = it.foto
+        nome = it.nome
+        userName = it.userName
+        biografia = it.biografia
+        tags = it.tags
+        genres = it.generos
+    }
 
     Card(
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
@@ -96,7 +132,7 @@ fun UserHomePage() {
                     .shadow(55.dp),
                 shape = RoundedCornerShape(bottomEnd = 50.dp, bottomStart = 50.dp),
                 backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-
+                elevation = 0.dp
                 ) {
 //                Row(
 //                    modifier = Modifier
@@ -123,7 +159,7 @@ fun UserHomePage() {
                         .padding(start = 41.dp, top = 8.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_icon_user_eulirio_example_background),
+                        painter = rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
                         contentDescription = "",
                         modifier = Modifier
                             .height(60.dp)
@@ -141,14 +177,14 @@ fun UserHomePage() {
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Noah Sebastian",
+                            text = nome,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold
 
                         )
 
                         Text(
-                            text = "@n.sebastian",
+                            text = "@${userName}",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Light,
                             modifier = Modifier.padding(bottom = 4.dp)
@@ -158,10 +194,14 @@ fun UserHomePage() {
                         Card(
                             modifier = Modifier
                                 .height(12.dp)
-                                .width(80.dp),
-                            backgroundColor = colorResource(id = R.color.white),
-                            shape = RoundedCornerShape(100.dp),
+                                .width(80.dp)
+                                .clickable {
+                                    val intent = Intent(context, UpdateActivity::class.java)
 
+                                    context.startActivity(intent)
+                                },
+                            backgroundColor = colorResource(id = R.color.white),
+                            shape = RoundedCornerShape(100.dp)
                             ) {
                             Text(
                                 text = "EDITAR PERFIL",
@@ -278,16 +318,12 @@ fun UserHomePage() {
 
             ) {
                 Text(
-                    text = "The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.",
+                    text = biografia,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.W400,
                     modifier = Modifier
                         .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 9.dp)
                 )
-
-
-                //Cards da tag de ESCRITOR e LEITOR
-                val tags = listOf<String>("ESCRITOR", "AUTOR")
 
                 LazyRow() {
                     items(tags) {
@@ -302,7 +338,7 @@ fun UserHomePage() {
                             shape = RoundedCornerShape(100.dp),
                         ) {
                             Text(
-                                text = it,
+                                text = it.nomeTag,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 textAlign = TextAlign.Center,
@@ -325,12 +361,9 @@ fun UserHomePage() {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                val generos = listOf<String>("TERROR", "DRAMA", "ROMANCE")
-
-
                 //Cards para mostrar o Genero selecionado de cada usuario
                 LazyRow() {
-                    items(generos) {
+                    items(genres) {
                         //Card button com o nome do escritor
                         Card(
                             modifier = Modifier
@@ -346,13 +379,11 @@ fun UserHomePage() {
                             shape = RoundedCornerShape(100.dp),
                         ) {
                             Text(
-                                text = it,
+                                text = it.nomeGenero,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Light,
                                 textAlign = TextAlign.Center,
                                 color = colorResource(id = R.color.eulirio_yellow_card_background)
-
-
                             )
 
                         }
@@ -483,7 +514,7 @@ fun UserHomePage() {
                                 RecomendationOnClickState = true
                                 BooksOnClickState = false
                                 CurtasOnClickState = false
-                                       },
+                            },
                         backgroundColor = Color.Transparent,
                         elevation = 0.dp
 
