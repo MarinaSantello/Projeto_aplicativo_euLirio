@@ -1,6 +1,12 @@
 package com.example.loginpage
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,8 +43,13 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.models.Genero
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.google.firebase.storage.FirebaseStorage
 
 class UpdateActivity : ComponentActivity() {
+
+    //lateinit var progressBar: ProgressBar
+    lateinit var filePath: Uri
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -51,6 +62,64 @@ class UpdateActivity : ComponentActivity() {
                     UpdatePage()
                 }
             }
+        }
+    }
+
+    private fun uploadFile() {
+
+        var t: String = ""
+
+        if (filePath != null) {
+
+            //progressBar = findViewById(R.id.progressbar)
+            progressBar.visibility = View.VISIBLE
+
+            var imageRef = FirebaseStorage
+                .getInstance()
+                .reference
+                .child("images/teste")
+
+            imageRef.putFile(filePath)
+                .addOnSuccessListener { p0 ->
+                    //pd.dismiss()
+                    Toast.makeText(applicationContext, "File Uploaded", Toast.LENGTH_LONG).show()
+                    progressBar.visibility = View.INVISIBLE
+
+                    imageRef
+                        .downloadUrl
+                        .addOnSuccessListener { uri ->
+                            edUri.setText(uri.toString())
+                        }
+                }
+                .addOnFailureListener { p0 ->
+                    Toast.makeText(applicationContext, p0.message, Toast.LENGTH_LONG).show()
+                }
+                .addOnProgressListener { p0 ->
+                    var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
+                    //pd.setMessage("Uploaded ${progress.toInt()}%")
+                }
+        }
+
+        Log.d("Teste", "Uri: $t")
+    }
+
+    private fun startFileChooser() {
+        val i = Intent()
+        i.setType("image/*")
+        i.setAction(Intent.ACTION_GET_CONTENT)
+        startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        Log.d("MainActivity", resultCode.toString())
+
+        if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null) {
+            filePath = data.data!!
+            //var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
+            //ivImage.setImageBitmap(bitmap)
+            ivImage.setImageURI(filePath)
         }
     }
 }

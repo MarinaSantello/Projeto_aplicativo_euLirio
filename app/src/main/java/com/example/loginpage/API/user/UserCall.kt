@@ -18,6 +18,6 @@ interface UserCall {
     @POST("user")
     fun save(@Body user: User): Call<String>
 
-    @DELETE("/{id}")
+    @DELETE("user/id/{id}")
     fun delete(@Path("id") id: Long): Call<String>
 }
