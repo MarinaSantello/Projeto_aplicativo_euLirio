@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.User
+import com.example.loginpage.models.UserName
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,6 +63,25 @@ class CallAPI() {
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
+                }
+            })
+        }
+        fun verifyUsername(username: String, validUsername: (Boolean) -> Unit) {
+            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+            val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+            val callVerify = userCall.verifyUserName(username)
+
+            callVerify.enqueue(object :
+                Callback<UserName> {
+                override fun onResponse(call: Call<UserName>, response: Response<UserName>) {
+                    val validate = response.code()
+
+                    if (validate == 404)
+                        validUsername.invoke(false)
+                }
+
+                override fun onFailure(call: Call<UserName>, t: Throwable) {
+//                    TODO("Not yet implemented")
                 }
             })
         }

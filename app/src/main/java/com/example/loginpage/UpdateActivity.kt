@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.CallAPI
@@ -58,6 +59,7 @@ import com.example.loginpage.resources.getGenres
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import retrofit2.Call
 import retrofit2.Callback
@@ -124,14 +126,6 @@ fun UpdatePage() {
     var iconUri by remember {
         mutableStateOf<Uri?>(null)
     }
-
-    val selectImage = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        iconUri = uri
-        Log.i("uri image", uri.toString())
-    }
-
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
@@ -141,8 +135,16 @@ fun UpdatePage() {
         nameState = it.nome
         userNameState = it.userName
         biographyState = it.biografia
-        //tags = it.tags
-        //generos = it.generos
+    }
+
+
+    val selectImage = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        iconUri = uri
+
+        updateStorage(photoState)
+        Log.i("uri image", uri.toString())
     }
 
     Column(
@@ -194,7 +196,7 @@ fun UpdatePage() {
                             shape = RoundedCornerShape(40.dp)
                         ) {
                             Image(
-                                painter = rememberAsyncImagePainter(iconUri ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                                painter = rememberAsyncImagePainter(iconUri ?: photoState),
                                 contentScale = ContentScale.Crop,
                                 contentDescription = "sua foto de perfil"
                             )
@@ -495,55 +497,53 @@ fun UpdatePage() {
                             onClick = {
                                 iconUri?.let {
                                     uploadFile(it, userNameState, context) {url ->
-                                        photoState = url
+                                        Log.i("foto url", url)
+
+                                        var tag1: Int? = null
+                                        var tag2: Int? = null
+
+                                        if (writerCheckState)
+                                            tag1 = 1
+                                        if (readerCheckState)
+                                            tag2 = 2
+
+                                        val user = UserUpdate (
+                                            foto = url,
+                                            nome = nameState,
+                                            userName = userNameState,
+                                            biografia = biographyState,
+                                            tag01 = tag1,
+                                            tag02 = tag2,
+                                            generos = generos
+                                        )
+
+                                        val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                        val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+                                        val callInsertUser = userCall.update(userID.idUser, user)
+
+                                        var responseValidate = 0
+
+                                        // Excutar a chamada para o End-point
+                                        callInsertUser.enqueue(object :
+                                            Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+                                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                                                responseValidate = response.code()
+
+                                                Log.i("erro fdp", responseValidate.toString())
+
+                                                if (responseValidate == 200) {
+                                                    val intent = Intent(context, Home::class.java)
+                                                    context.startActivity(intent)
+                                                }
+                                                Log.i("respon post", response.message().toString())
+                                            }
+
+                                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                                Log.i("respon post err", t.message.toString())
+                                            }
+                                        })
                                     }
                                 }
-
-                                var tag1: Int? = null
-                                var tag2: Int? = null
-
-                                if (writerCheckState)
-                                    tag1 = 1
-                                if (readerCheckState)
-                                    tag2 = 2
-
-                                Log.i("generos", generos.toString())
-
-                                val user = UserUpdate (
-                                    foto = photoState,
-                                    nome = nameState,
-                                    userName = userNameState,
-                                    biografia = biographyState,
-                                    tag01 = tag1,
-                                    tag02 = tag2,
-                                    generos = generos
-                                )
-
-                                val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                                val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
-                                val callInsertUser = userCall.update(userID.idUser, user)
-
-                                var responseValidate = 0
-
-                                // Excutar a chamada para o End-point
-                                callInsertUser.enqueue(object :
-                                    Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
-                                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                                        responseValidate = response.code()
-
-                                        Log.i("erro fdp", responseValidate.toString())
-
-                                        if (responseValidate == 200) {
-                                            val intent = Intent(context, Home::class.java)
-                                            context.startActivity(intent)
-                                        }
-                                        Log.i("respon post", response.message().toString())
-                                    }
-
-                                    override fun onFailure(call: Call<String>, t: Throwable) {
-                                        Log.i("respon post err", t.message.toString())
-                                    }
-                                })
                             },
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
@@ -628,7 +628,38 @@ fun UpdatePage() {
 
                                 }
                                 Button(
-                                    onClick = { showDialog = false },
+                                    onClick = {
+                                        val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                        val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+                                        val callDeleteUser = userCall.delete(userID.idUser)
+
+                                        callDeleteUser.enqueue(object:
+                                            Callback<String> {
+                                            override fun onResponse(
+                                                call: Call<String>,
+                                                response: Response<String>
+                                            ) {
+                                                if (response.code() == 200) {
+                                                    Toast.makeText(context, "Sua conta foi excluída com sucesso!", Toast.LENGTH_SHORT)
+                                                        .show()
+
+                                                    val auth = FirebaseAuth.getInstance()
+                                                    auth.currentUser?.delete()
+
+                                                    val intent = Intent(context, Home::class.java)
+                                                    context.startActivity(intent)
+                                                }
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<String>,
+                                                t: Throwable
+                                            ) {
+
+                                            }
+                                        }
+                                        )
+                                    },
                                     colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
                                     elevation = ButtonDefaults.elevation(0.dp)
                                 ) {
@@ -647,6 +678,22 @@ fun UpdatePage() {
     }
 }
 
+fun updateStorage(photoState: String) {
+    val storageRef = FirebaseStorage
+        .getInstance()
+        .reference
+        .child(photoState)
+
+    storageRef.delete()
+        .addOnSuccessListener {
+            Log.i("att foto perfil", "parabens pelo minimo")
+        }
+        .addOnFailureListener { e ->
+            Log.i("att foto perfil", "$e")
+            // An error occurred while updating the file
+        }
+}
+
 fun uploadFile(file: Uri, fileName: String, context: Context, uri: (String) -> Unit) {
 
     val datetime = LocalDateTime.now().toString()
@@ -662,14 +709,9 @@ fun uploadFile(file: Uri, fileName: String, context: Context, uri: (String) -> U
 
     imageRef.putFile(file)
         .addOnSuccessListener { p0 ->
-            //pd.dismiss()
-            Toast.makeText(context, "File Uploaded", Toast.LENGTH_LONG).show()
-            //progressBar.visibility = View.INVISIBLE
-
             imageRef
                 .downloadUrl
                 .addOnSuccessListener {
-                    Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show()
                     uri.invoke(it.toString())
                 }
         }

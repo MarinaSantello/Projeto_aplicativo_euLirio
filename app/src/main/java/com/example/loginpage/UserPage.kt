@@ -337,7 +337,7 @@ fun UserHomePage() {
                             shape = RoundedCornerShape(100.dp),
                         ) {
                             Text(
-                                text = it.nomeTag,
+                                text = it.nomeTag.uppercase(),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 textAlign = TextAlign.Center,
@@ -378,7 +378,7 @@ fun UserHomePage() {
                             shape = RoundedCornerShape(100.dp),
                         ) {
                             Text(
-                                text = it.nomeGenero,
+                                text = it.nomeGenero.uppercase(),
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Light,
                                 textAlign = TextAlign.Center,

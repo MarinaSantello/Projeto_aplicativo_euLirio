@@ -42,6 +42,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.AccountCircle
+import com.example.loginpage.API.user.CallAPI
 import com.google.firebase.auth.*
 import com.google.firebase.auth.FirebaseAuth
 
@@ -115,6 +116,9 @@ fun registerPage() {
     }
     var invalidUser by remember {
         mutableStateOf(false)
+    }
+    var usernameInvalid by remember {
+        mutableStateOf(true)
     }
 
     var clickButton by remember {
@@ -432,11 +436,21 @@ fun registerPage() {
                             Button(
                                 onClick = {
                                     clickButton = true
+                                    CallAPI.verifyUsername(userValue) {
+                                        usernameInvalid = it
+                                    }
 
                                     if(userValue.isEmpty()) {
                                         userErrorRequiredInput = true
                                         colorIconUser = Color(0xFFB00020)
                                         userFocusRequester.requestFocus()
+                                    }
+                                    else if (usernameInvalid) {
+                                        userErrorRequiredInput = true
+                                        colorIconUser = Color(0xFFB00020)
+                                        userFocusRequester.requestFocus()
+                                        Toast.makeText(context, "Este nome de usuário já existe. Por favor utilize um único.", Toast.LENGTH_SHORT)
+                                            .show()
                                     }
                                     else userErrorRequiredInput = false
 
@@ -530,7 +544,7 @@ fun registerPage() {
                                 )
                             }
 
-                            if(userValue.isNotEmpty() && ' ' !in userValue) {
+                            if(userValue.isNotEmpty() && ' ' !in userValue && !usernameInvalid) {
                                 userErrorRequiredInput = false
                                 invalidUser = false
                                 colorIconUser = colorResource(id = R.color.eulirio_purple_text_color_border)

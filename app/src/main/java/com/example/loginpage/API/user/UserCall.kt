@@ -2,6 +2,7 @@ package com.example.loginpage.API.user
 
 import com.example.loginpage.constants.Constant
 import com.example.loginpage.models.User
+import com.example.loginpage.models.UserName
 import com.example.loginpage.models.UserUpdate
 import retrofit2.Call
 import retrofit2.http.*
@@ -25,5 +26,7 @@ interface UserCall {
                @Body user: UserUpdate): Call<String>
 
     @DELETE("user/id/{id}")
-    fun delete(@Path("id") id: Long): Call<String>
+    fun delete(@Path("id") id: Int): Call<String>
+    @GET("verify-username/{username}")
+    fun verifyUserName(@Path("username") username: String): Call<UserName>
 }

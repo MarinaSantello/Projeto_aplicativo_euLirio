@@ -57,3 +57,7 @@ data class Genero (
     @SerializedName("nome_genero")
     var nomeGenero: String = ""
 )
+
+data class UserName (
+    var id: Int
+)
