@@ -14,6 +14,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,18 +46,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
-import com.example.loginpage.models.Genero
-import com.example.loginpage.models.Genre
-import com.example.loginpage.models.Tag
-import com.example.loginpage.models.User
+import com.example.loginpage.models.*
+import com.example.loginpage.resources.authenticate
 import com.example.loginpage.resources.getGenres
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.storage.FirebaseStorage
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.LocalDateTime
 
 class UpdateActivity : ComponentActivity() {
@@ -105,9 +110,9 @@ fun UpdatePage() {
         mutableStateOf(false)
     }
 
-    var tags by remember {
-        mutableStateOf(listOf<Tag>())
-    }
+//    var tags by remember {
+//        mutableStateOf(listOf<Tag>())
+//    }
     var generos by remember {
         mutableStateOf(listOf<Genero>())
     }
@@ -160,7 +165,8 @@ fun UpdatePage() {
         }
 
         Card(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
             shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)
         ) {
@@ -168,6 +174,7 @@ fun UpdatePage() {
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxSize(),
+                    //.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column() {
@@ -433,10 +440,27 @@ fun UpdatePage() {
                             verticalAlignment = Alignment.Bottom
                         ) {
 
+
                             var genres by remember {
-                                mutableStateOf(listOf<Genre>())
+                                mutableStateOf(listOf<Genero>())
                             }
-                            getGenres(){genres += it}
+
+                            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                            val genreCall = retrofit.create(GenreCall::class.java) // instância do objeto contact
+                            val callGetGenres01 = genreCall.getAll()
+
+                            // Excutar a chamada para o End-point
+                            callGetGenres01.enqueue(object :
+                                Callback<List<Genero>> { // enqueue: usado somente quando o objeto retorna um valor
+                                override fun onResponse(call: Call<List<Genero>>, response: Response<List<Genero>>) {
+                                    genres = response.body()!!
+
+                                    Log.i("teste gen", genres.toString())
+                                }
+
+                                override fun onFailure(call: Call<List<Genero>>, t: Throwable) {
+                                }
+                            })
 
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(4),
@@ -453,7 +477,7 @@ fun UpdatePage() {
                                     items = genres
                                 ) {
                                     NewGenreCard(it){ state ->
-                                        if (state) generos += Genero(it.id)
+                                        if (state) generos += Genero(it.idGenero)
                                     }
                                 }
                             }
@@ -475,19 +499,51 @@ fun UpdatePage() {
                                     }
                                 }
 
-                                if (writerCheckState)
-                                    tags += listOf<Tag>(Tag(1))
-                                if (readerCheckState)
-                                    tags += listOf<Tag>(Tag(2))
+                                var tag1: Int? = null
+                                var tag2: Int? = null
 
-                                val user = User (
+                                if (writerCheckState)
+                                    tag1 = 1
+                                if (readerCheckState)
+                                    tag2 = 2
+
+                                Log.i("generos", generos.toString())
+
+                                val user = UserUpdate (
                                     foto = photoState,
                                     nome = nameState,
                                     userName = userNameState,
                                     biografia = biographyState,
-                                    tags = tags,
+                                    tag01 = tag1,
+                                    tag02 = tag2,
                                     generos = generos
                                 )
+
+                                val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+                                val callInsertUser = userCall.update(userID.idUser, user)
+
+                                var responseValidate = 0
+
+                                // Excutar a chamada para o End-point
+                                callInsertUser.enqueue(object :
+                                    Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+                                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                                        responseValidate = response.code()
+
+                                        Log.i("erro fdp", responseValidate.toString())
+
+                                        if (responseValidate == 200) {
+                                            val intent = Intent(context, Home::class.java)
+                                            context.startActivity(intent)
+                                        }
+                                        Log.i("respon post", response.message().toString())
+                                    }
+
+                                    override fun onFailure(call: Call<String>, t: Throwable) {
+                                        Log.i("respon post err", t.message.toString())
+                                    }
+                                })
                             },
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),

@@ -572,7 +572,11 @@ fun DrawerDesign(
                    .clickable {
 
                        val userIDRepository = UserIDrepository(context)
-                       userIDRepository.delete(userID)
+                       val users = userIDRepository.getAll()
+                       for (i in users.indices) {
+                           val userID2 = UserID(id = users[i].id, idUser = users[i].idUser)
+                           userIDRepository.delete(userID2)
+                       }
 
                        auth.signOut() // metodo para deslogar o usuario
 

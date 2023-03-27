@@ -41,7 +41,7 @@ fun Greeting() {
 
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser // retorna a conta que está autenticada no dispositivo (se não tiver usuario, ele é nulo)
-    var userAuth = currentUser != null
+    val userAuth = currentUser != null
 
     // registrando o id do usuário no sqlLite
 //    val userIDRepository = UserIDrepository(context)

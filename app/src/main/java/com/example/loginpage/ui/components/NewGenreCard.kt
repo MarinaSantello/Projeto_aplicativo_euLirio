@@ -17,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.loginpage.models.Genre
 import com.example.loginpage.R
+import com.example.loginpage.models.Genero
 
 @Composable
-fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
+fun NewGenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
 
     var checkState by rememberSaveable() {
         mutableStateOf(false)
@@ -27,18 +28,10 @@ fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
 
     Card(
         modifier = Modifier
-            .width(80.dp)
-            .height(30.dp)
-            .clickable {
-                checkState = !checkState
-
-                onChecked.invoke(checkState)
-            },
+            .widthIn(80.dp)
+            .height(30.dp),
         backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
-        elevation = 0.dp,
-
-
-
+        elevation = 0.dp
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -57,6 +50,8 @@ fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
                 ,
                 onCheckedChange = {
                     checkState = it
+
+                    onChecked.invoke(checkState)
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color.Black,
@@ -67,7 +62,7 @@ fun NewGenreCard(genre: Genre, onChecked: (Boolean) -> Unit) {
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text = genre.nome,
+                text = genre.nomeGenero,
                 fontWeight = FontWeight.W500,
                 fontSize = 10.sp
             )

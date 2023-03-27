@@ -203,9 +203,27 @@ fun RegisterPageThirdPartFun() {
 //                            })
 
                             var genres by remember {
-                                mutableStateOf(listOf<Genre>())
+                                mutableStateOf(listOf<Genero>())
                             }
-                            getGenres(){genres += it}
+
+                            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                            val genreCall = retrofit.create(GenreCall::class.java) // instância do objeto contact
+                            val callGetGenres01 = genreCall.getAll()
+
+                            // Excutar a chamada para o End-point
+                            callGetGenres01.enqueue(object :
+                                Callback<List<Genero>> { // enqueue: usado somente quando o objeto retorna um valor
+                                override fun onResponse(call: Call<List<Genero>>, response: Response<List<Genero>>) {
+                                    genres = response.body()!!
+
+                                    Log.i("teste gen", genres.toString())
+                                }
+
+                                override fun onFailure(call: Call<List<Genero>>, t: Throwable) {
+                                }
+                            })
+
+//                            getGenres(){genres += it}
 
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(2),
@@ -222,7 +240,7 @@ fun RegisterPageThirdPartFun() {
                                     items = genres
                                 ) {
                                     GenreCard(it){ state ->
-                                        if (state) generos += Genero(it.id)
+                                        if (state) generos += Genero(it.idGenero)
                                     }
                                 }
                             }

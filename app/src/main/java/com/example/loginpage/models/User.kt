@@ -24,16 +24,36 @@ data class User(
     }
 }
 
+data class UserUpdate(
+    @SerializedName("user_name") // indica para o gson qual a chave equivalente desse atributo
+    var userName: String = "",
+    @SerializedName("id_tag_1")
+    var tag01: Int?,
+    @SerializedName("id_tag_2")
+    var tag02: Int?,
+
+    var nome: String = "",
+    var foto: String = "",
+    var biografia: String = "",
+    var premium: Boolean = false,
+
+    var generos: List<Genero>
+) {
+    override fun toString(): String {
+        return super.toString()
+    }
+}
+
 data class Tag (
-    @SerializedName("id")
+    @SerializedName("id_tag")
     var idTag: Int = 0,
-    @SerializedName("nome")
+    @SerializedName("nome_tag")
     var nomeTag: String = ""
 )
 
 data class Genero (
-    @SerializedName("id")
+    @SerializedName("id_genero")
     var idGenero: Int = 0,
-    @SerializedName("nome")
+    @SerializedName("nome_genero")
     var nomeGenero: String = ""
 )
