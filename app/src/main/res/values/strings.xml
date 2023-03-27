@@ -78,4 +78,5 @@
     <string name="FirebaseAuthException">Ocorreu um erro. Verifique se seus dados estão corretos.</string>
     <string name="FirebaseAuthInvalidCredentialsException">E-mail invalido.</string>
     <string name="title_activity_home">Home</string>
+    <string name="title_activity_view_books">ViewBooks</string>
 </resources>
