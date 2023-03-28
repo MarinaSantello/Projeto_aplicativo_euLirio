@@ -1,17 +1,22 @@
 package com.example.loginpage
 
 import android.os.Bundle
+import android.provider.MediaStore.Audio.Genres
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FormatAlignCenter
-import androidx.compose.material.icons.outlined.LocalLibrary
-import androidx.compose.material.icons.outlined.MenuBook
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -129,16 +135,156 @@ fun ShowBooks() {
 
                 }
             }
-            
+
             Row() {
+                //Imagem da capa do livro
                 Card(
                     modifier = Modifier
                         .height(150.dp)
-                        .width(100.dp)
+                        .width(100.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    backgroundColor = Color.Black
+                ) {}
+
+                Spacer(modifier = Modifier.width(9.dp))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
 
+                    //Sistema de avaliação
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Rounded.Star,
+                            contentDescription = "estrela de avaliação",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Rounded.Star,
+                            contentDescription = "estrela de avaliação",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Rounded.Star,
+                            contentDescription = "estrela de avaliação",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Rounded.Star,
+                            contentDescription = "estrela de avaliação",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Rounded.Star,
+                            contentDescription = "estrela de avaliação",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
+
+                    }
+
+                    val genres = listOf<String>("TERROR", "DRAMA", "SUSPENSE")
+
+                    LazyRow() {
+                        items(genres) {
+                            Card(
+                                modifier = Modifier
+//                            .padding(end = 6.dp)
+                                    .height(14.dp)
+                                    .padding(start = 5.dp, end = 5.dp)
+                                   ,
+                                backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                shape = RoundedCornerShape(100.dp),
+                            ) {
+                                Text(
+                                    text = it,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    textAlign = TextAlign.Center
+                                )
+
+                            }
+                        }
+
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lorem elit, congue sed tincidunt id, maximus sagittis leo. Curabitur ultricies elit sem, ac consequat enim posuere vel. Fusce eget condimentum enim, vel aliquam augue. ...",
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.W500
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(Modifier.fillMaxSize()) {
+                        Text(
+                            text = "R$ 20,00",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.W500
+                        )
+
+                        //Linha de curtir
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Icon(
+                                Icons.Outlined.Favorite,
+                                contentDescription = "icone de curtir",
+                                tint = Color.Red
+                            )
+                            
+                            Text(
+                                text = "570",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.W500
+
+                            )
+                        }
+
+                        //Linha de favoritar
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Icon(
+                                Icons.Rounded.Bookmark,
+                                contentDescription = "icone de favoritar",
+                                tint = Color.Yellow
+                            )
+
+                            Text(
+                                text = "570",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.W500
+                            )
+                        }
+
+                        //Linha de visualização
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Icon(
+                                Icons.Outlined.DoneAll,
+                                contentDescription = "icone de visualizacão",
+                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                            )
+
+                            Text(
+                                text = "570",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.W500
+
+                            )
+                        }
+                    }
+
                 }
-                
+
             }
 
         }
