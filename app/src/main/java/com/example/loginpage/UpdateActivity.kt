@@ -465,7 +465,7 @@ fun UpdatePage() {
                             })
 
                             LazyVerticalGrid(
-                                columns = GridCells.Fixed(4),
+                                columns = GridCells.Fixed(3),
 
                                 // content padding
                                 contentPadding = PaddingValues(
@@ -679,19 +679,20 @@ fun UpdatePage() {
 }
 
 fun updateStorage(photoState: String) {
-    val storageRef = FirebaseStorage
-        .getInstance()
-        .reference
-        .child(photoState)
+    if ("firebase" in photoState) {
+        val storageRef = FirebaseStorage
+            .getInstance()
+            .getReferenceFromUrl(photoState)
 
-    storageRef.delete()
-        .addOnSuccessListener {
-            Log.i("att foto perfil", "parabens pelo minimo")
-        }
-        .addOnFailureListener { e ->
-            Log.i("att foto perfil", "$e")
-            // An error occurred while updating the file
-        }
+        storageRef.delete()
+            .addOnSuccessListener {
+                Log.i("att foto perfil", "parabens pelo minimo")
+            }
+            .addOnFailureListener { e ->
+                Log.i("att foto perfil", "$e")
+                // An error occurred while updating the file
+            }
+    }
 }
 
 fun uploadFile(file: Uri, fileName: String, context: Context, uri: (String) -> Unit) {

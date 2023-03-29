@@ -111,17 +111,17 @@ fun HomeBooks() {
         drawerContent = {
             DrawerDesign(userID, context)
         },
-
-        drawerGesturesEnabled = true,
+//
+//        drawerGesturesEnabled = true,
     ) {
         Text(text = "teste $it")
     }
 
-    if(!fabState.value) ButtonsPost()
+    if(!fabState.value) ButtonsPost(context)
 }
 
 @Composable
-fun ButtonsPost () {
+fun ButtonsPost (context: Context) {
     Box (
         Modifier
             .fillMaxSize()
@@ -181,7 +181,12 @@ fun ButtonsPost () {
                         color = Color.White
                     )
                 }
-                FloatingActionButton(onClick = { /* do something */ }, modifier = Modifier.padding(top = 8.dp)) {
+                FloatingActionButton(
+                    onClick = {
+                        val intent = Intent(context, PostEbook::class.java)
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.padding(top = 8.dp)) {
                     Icon(Icons.Default.Add, contentDescription = "plus")
                 }
             }
@@ -302,7 +307,8 @@ fun DrawerDesign(
                         val intentUserPage = Intent(context, UserPage::class.java)
 
                         context.startActivity(intentUserPage)
-                    }
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
@@ -318,7 +324,7 @@ fun DrawerDesign(
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.Start,
                     modifier = Modifier
-                        .padding(start = 10.dp)
+                        .padding(start = 12.dp, bottom = 16.dp)
                         .fillMaxHeight()
                 ) {
                     Text(

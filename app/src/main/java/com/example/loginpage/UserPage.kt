@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FormatAlignCenter
 import androidx.compose.material.icons.outlined.LocalLibrary
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -40,6 +42,8 @@ import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
 //import com.example.euLirio.R
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.Montserrat
+import com.example.loginpage.ui.theme.Montserrat2
 
 class UserPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,7 +116,7 @@ fun UserHomePage() {
     Card(
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
         modifier = Modifier
-            .height(300.dp)
+//            .height(300.dp)
             .fillMaxWidth()
 
     ) {
@@ -121,191 +125,198 @@ fun UserHomePage() {
         //Card de informações do usuario
         Column(
             modifier = Modifier
-                .fillMaxSize(),
-
+                .fillMaxSize()
             ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(144.dp)
-                    .shadow(55.dp),
+                    .fillMaxHeight(.25f),
                 shape = RoundedCornerShape(bottomEnd = 50.dp, bottomStart = 50.dp),
                 backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                elevation = 0.dp
+                elevation = 5.dp
                 ) {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(24.dp)
-//                        .padding(top = 10.dp, start = 20.dp),
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Rounded.ArrowBackIos,
-//                        contentDescription = "flecha para esquerda",
-//                        modifier = Modifier
-//                            .height(24.dp)
-//                            .width(30.dp)
-//
-//                    )
-//                }
-
-
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(start = 41.dp, top = 8.dp)
+                Column(
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
-                        contentDescription = "",
+                    Row(
                         modifier = Modifier
-                            .height(60.dp)
-                            .width(60.dp)
-                            .clip(RoundedCornerShape(100.dp))
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .padding(top = 10.dp, start = 20.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBackIos,
+                            contentDescription = "flecha para esquerda",
+                            modifier = Modifier
+                                .height(24.dp)
+                                .width(30.dp)
+                                .clickable {
+                                    val intent = Intent(context, Home::class.java)
+                                    context.startActivity(intent)
+                                }
+                        )
+                    }
 
-
+                    Divider(
+                        thickness = .5.dp,
+                        color = Color.White
                     )
 
-                    Column(
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 10.dp, bottom = 10.dp),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Center
+                            .height(88.dp)
+                            .padding(start = 40.dp, top = 12.dp)
                     ) {
-                        Text(
-                            text = nome,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold
-
-                        )
-
-                        Text(
-                            text = "@${userName}",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Light,
-                            modifier = Modifier.padding(bottom = 4.dp)
-
-                        )
-
-                        Card(
+                        Image(
+                            painter = rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = "",
                             modifier = Modifier
-                                .height(12.dp)
-                                .width(80.dp)
-                                .clickable {
-                                    val intent = Intent(context, UpdateActivity::class.java)
+                                .height(60.dp)
+                                .width(60.dp)
+                                .clip(RoundedCornerShape(100.dp))
+                                .border(.5.dp, Color.White, RoundedCornerShape(100.dp))
+                        )
 
-                                    context.startActivity(intent)
-                                },
-                            backgroundColor = colorResource(id = R.color.white),
-                            shape = RoundedCornerShape(100.dp)
-                            ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(start = 12.dp),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Center
+                        ) {
                             Text(
-                                text = "EDITAR PERFIL",
-                                fontSize = 8.sp,
-                                fontWeight = FontWeight.Light,
-                                textAlign = TextAlign.Center,
+                                text = nome,
+                                fontSize = 18.sp,
+                                style = MaterialTheme.typography.h1
 
+                            )
+
+                            Text(
+                                text = "@${userName}",
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                fontSize = 10.sp,
+                                style = MaterialTheme.typography.body2,
+                                fontWeight = FontWeight.ExtraLight
+
+                            )
+
+                            Card(
+                                modifier = Modifier
+                                    .padding(start = 148.dp)
+                                    .clickable {
+                                        val intent = Intent(context, UpdateActivity::class.java)
+
+                                        context.startActivity(intent)
+                                    },
+                                backgroundColor = colorResource(id = R.color.white),
+                                shape = RoundedCornerShape(10.dp),
+                                elevation = 0.dp
+                            ) {
+                                Text(
+                                    text = "EDITAR PERFIL",
+                                    modifier = Modifier.padding(12.dp, 2.dp),
+                                    fontSize = 8.sp,
+                                    fontFamily = Montserrat2,
+                                    fontWeight = FontWeight.Light,
+                                    textAlign = TextAlign.Center,
                                 )
+                            }
+
+
+                        }
+
+                    }
+
+
+                    Row(
+
+                        modifier = Modifier
+                            .padding(start = 40.dp)
+                            .heightIn(20.dp),
+                        horizontalArrangement = Arrangement.Start,
+//                        verticalAlignment = Alignment.Bottom
+                    ) {
+
+                        //Contador de obras
+                        Column(
+                            verticalArrangement = Arrangement.Bottom,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .height(36.dp)
+                                .padding(end = 12.dp)
+                        ) {
+                            Text(
+                                text = "182",
+                                fontSize = 16.sp,
+                                style = MaterialTheme.typography.h2,
+                                fontWeight = FontWeight.Light,
+                                color = Color.White
+                            )
+                            Text(
+                                text = "OBRAS",
+                                fontSize = 8.sp,
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.subtitle1,
+                                color = Color.White
+                            )
+                        }
+
+                        //Contador de seguindo
+                        Column(
+                            verticalArrangement = Arrangement.Bottom,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .height(36.dp)
+                                .padding(end = 12.dp)
+                        ) {
+                            Text(
+                                text = "570",
+                                fontSize = 16.sp,
+                                style = MaterialTheme.typography.h2,
+                                fontWeight = FontWeight.Light,
+                                color = Color.White
+                            )
+                            Text(
+                                text = "SEGUINDO",
+                                fontSize = 8.sp,
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.subtitle1,
+                                color = Color.White
+                            )
+                        }
+
+                        //Contador de seguidores
+                        Column(
+                            verticalArrangement = Arrangement.Bottom,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .height(36.dp)
+                        ) {
+                            Text(
+                                text = "4,1k",
+                                fontSize = 16.sp,
+                                style = MaterialTheme.typography.h2,
+                                fontWeight = FontWeight.Light,
+                                color = Color.White
+                            )
+                            Text(
+                                text = "SEGUIDORES",
+                                fontSize = 8.sp,
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.subtitle1,
+                                color = Color.White
+                            )
                         }
 
 
                     }
 
                 }
-
-
-                Row(
-
-                    modifier = Modifier
-                        .padding(start = 41.dp)
-                        .width(169.dp)
-                        .height(20.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-
-                    //Contador de obras
-                    Column(
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier
-                            .height(50.dp)
-                            .width(33.dp)
-                    ) {
-                        Text(
-                            text = "182",
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-
-
-                        )
-                        Text(
-                            text = "OBRAS",
-                            fontSize = 8.sp,
-                            modifier = Modifier.padding(bottom = 5.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Light
-                        )
-
-                    }
-
-                    //Contador de seguindo
-                    Column(
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .height(50.dp)
-                            .width(52.dp)
-                    ) {
-                        Text(
-                            text = "570",
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-
-                        )
-                        Text(
-                            text = "SEGUINDO",
-                            fontSize = 8.sp,
-                            modifier = Modifier.padding(bottom = 5.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Light
-                        )
-
-                    }
-
-                    //Contador de seguidores
-                    Column(
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .height(50.dp)
-                            .width(52.dp)
-                    ) {
-                        Text(
-                            text = "570",
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-
-                        )
-                        Text(
-                            text = "SEGUIDORES",
-                            fontSize = 8.sp,
-                            modifier = Modifier.padding(bottom = 5.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Light
-                        )
-
-                    }
-
-
-                }
-
             }
 
             //Coluna para a biografia do autor
@@ -313,15 +324,13 @@ fun UserHomePage() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-
-
             ) {
                 Text(
                     text = biografia,
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.W400,
                     modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 9.dp)
+                        .padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 9.dp)
                 )
 
                 LazyRow() {
@@ -329,23 +338,20 @@ fun UserHomePage() {
                         //Card button com o nome do escritor
                         Card(
                             modifier = Modifier
-//                            .padding(end = 6.dp)
-                                .height(16.dp)
-                                .padding(start = 5.dp, end = 5.dp)
-                                .width(90.dp),
+                                .padding(start = 5.dp, end = 5.dp),
                             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                            shape = RoundedCornerShape(100.dp),
+                            shape = RoundedCornerShape(20.dp),
+                            elevation = 0.dp
                         ) {
                             Text(
                                 text = it.nomeTag.uppercase(),
+                                modifier = Modifier.padding(24.dp, 2.dp),
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
+                                fontFamily = Montserrat,
+                                fontWeight = FontWeight.ExtraLight,
                                 textAlign = TextAlign.Center,
                                 color = Color.White
-
-
                             )
-
                         }
                     }
                 }
@@ -354,11 +360,11 @@ fun UserHomePage() {
 
                 Divider(
                     thickness = 1.dp,
-                    modifier = Modifier.padding(bottom = 10.dp),
+                    modifier = Modifier.padding(start = 32.dp, end = 32.dp, bottom = 4.dp),
                     color = colorResource(id = R.color.eulirio_yellow_card_background)
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 //Cards para mostrar o Genero selecionado de cada usuario
                 LazyRow() {
@@ -366,25 +372,24 @@ fun UserHomePage() {
                         //Card button com o nome do escritor
                         Card(
                             modifier = Modifier
-//                            .padding(end = 6.dp)
-                                .height(14.dp)
-                                .padding(start = 5.dp, end = 5.dp)
-                                .width(90.dp),
+                                .padding(start = 5.dp, end = 5.dp),
                             backgroundColor = colorResource(id = R.color.white),
                             border = BorderStroke(
                                 1.dp,
                                 colorResource(id = R.color.eulirio_yellow_card_background)
                             ),
-                            shape = RoundedCornerShape(100.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            elevation = 0.dp
                         ) {
                             Text(
                                 text = it.nomeGenero.uppercase(),
+                                modifier = Modifier.padding(24.dp, 2.dp),
                                 fontSize = 10.sp,
-                                fontWeight = FontWeight.Light,
+                                fontFamily = Montserrat2,
+                                fontWeight = FontWeight.Black,
                                 textAlign = TextAlign.Center,
                                 color = colorResource(id = R.color.eulirio_yellow_card_background)
                             )
-
                         }
                     }
                 }

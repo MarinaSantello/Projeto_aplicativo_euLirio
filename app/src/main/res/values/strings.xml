@@ -77,6 +77,18 @@
     <string name="FirebaseAuthInvalidUserException">Esse usuário é invalido.</string>
     <string name="FirebaseAuthException">Ocorreu um erro. Verifique se seus dados estão corretos.</string>
     <string name="FirebaseAuthInvalidCredentialsException">E-mail invalido.</string>
+
     <string name="title_activity_home">Home</string>
+
     <string name="title_activity_view_books">ViewBooks</string>
+
+    <string name="title_activity_post_ebook">PostEbook</string>
+    <string name="publicar"> Publique seu e-book </string>
+    <string name="publicartitulo"> Título </string>
+    <string name="publicarname"> Carolyn </string>
+    <string name="precopub"> Preço </string>
+    <string name="adicionarimagem"> Adicione a capa </string>
+    <string name="precificacaopub"> R$ </string>
+    <string name="sinopsepub"> Sinopse </string>
+    <string name="textsinopse"> Texto </string>
 </resources>
