@@ -59,6 +59,7 @@ import com.example.loginpage.resources.getGenres
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.Montserrat2
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import retrofit2.Call
@@ -367,17 +368,19 @@ fun UpdatePage() {
                                         .height(16.dp)
                                     ,
                                     colors = CheckboxDefaults.colors(
-                                        checkedColor = Color.Black,
+                                        checkedColor = colorResource(id = R.color.eulirio_black),
                                         uncheckedColor = Color.Transparent
                                     ),
                                 )
 
-                                Spacer(modifier = Modifier.width(12.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
 
                                 Text(
                                     text = stringResource(id = R.string.tag_1_name).uppercase(),
                                     fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = Montserrat2,
+                                    color = colorResource(id = R.color.eulirio_black)
                                 )
                             }
 
@@ -402,17 +405,19 @@ fun UpdatePage() {
                                         .height(16.dp)
                                     ,
                                     colors = CheckboxDefaults.colors(
-                                        checkedColor = Color.Black,
+                                        checkedColor = colorResource(id = R.color.eulirio_black),
                                         uncheckedColor = Color.Transparent
                                     ),
                                 )
 
-                                Spacer(modifier = Modifier.width(12.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
 
                                 Text(
                                     text = stringResource(id = R.string.tag_2_name).uppercase(),
                                     fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = Montserrat2,
+                                    color = colorResource(id = R.color.eulirio_black)
                                 )
                             }
                         }
@@ -427,10 +432,10 @@ fun UpdatePage() {
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .fillMaxWidth()
+                            .padding(start = 12.dp, top = 8.dp)
                     ) {
                         Text(
-                            modifier = Modifier
-                                .padding(start = 12.dp, top = 8.dp),
+                            modifier = Modifier,
                             text = "Seus gêneros literários são:",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
@@ -469,9 +474,9 @@ fun UpdatePage() {
 
                                 // content padding
                                 contentPadding = PaddingValues(
-                                    start = 10.dp,
-                                    end = 12.dp,
-                                    top = 5.dp,
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 4.dp,
                                     bottom = 8.dp
                                 )
                             ) {

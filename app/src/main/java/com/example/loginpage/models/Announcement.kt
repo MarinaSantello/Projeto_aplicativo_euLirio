@@ -2,6 +2,10 @@ package com.example.loginpage.models
 
 import com.google.gson.annotations.SerializedName
 
+data class Announcements (
+    val announcements: List<AnnouncementGet>
+)
+
 data class AnnouncementGet(
     var capa: String = "",
     var classificacao: List<Classificacao>,

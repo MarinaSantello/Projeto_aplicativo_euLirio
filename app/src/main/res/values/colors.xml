@@ -15,4 +15,6 @@
     <color name="eulirio_yellow_card_background">#FBDB5A</color>
     <color name="eulirio_light_yellow_background">#F7E496</color>
     <color name="eulirio_red">#BD0020</color>
+    <color name="eulirio_like">#F93E54</color>
+    <color name="eulirio_black">#1E1E1E</color>
 </resources>

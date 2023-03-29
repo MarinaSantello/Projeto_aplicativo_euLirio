@@ -44,6 +44,8 @@ import com.example.loginpage.models.Tag
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat
 import com.example.loginpage.ui.theme.Montserrat2
+import com.example.loginpage.ui.theme.QuickSand
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 class UserPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +63,7 @@ class UserPage : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun UserHomePage() {
@@ -165,7 +168,7 @@ fun UserHomePage() {
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .height(88.dp)
+                            .height(80.dp)
                             .padding(start = 40.dp, top = 12.dp)
                     ) {
                         Image(
@@ -328,7 +331,8 @@ fun UserHomePage() {
                 Text(
                     text = biografia,
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.W400,
+                    fontFamily = QuickSand,
+                    fontWeight = FontWeight.W500,
                     modifier = Modifier
                         .padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 9.dp)
                 )
@@ -396,173 +400,7 @@ fun UserHomePage() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                TabsPerfil()
-
-//                Row(
-//                    modifier = Modifier
-//                        .height(25.dp)
-//                        .padding(start = 50.dp, end = 50.dp)
-//                        .fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.SpaceBetween
-//                ) {
-//
-//                    //Card de Livros
-//                    Card(
-//                        modifier = Modifier
-//                            .height(22.dp)
-//                            .width(90.dp)
-//                            .clickable {
-//                                booksOnClickState = true
-//                                curtasOnClickState = false
-//                                recomendationOnClickState = false
-//                            },
-//                        backgroundColor = Color.Transparent,
-//                        elevation = 0.dp
-//
-//                    ) {
-//                        Row(
-//                            verticalAlignment = Alignment.CenterVertically,
-//                            horizontalArrangement = Arrangement.Center
-//
-//                        ) {
-//
-//                            Icon(
-//                                Icons.Outlined.MenuBook,
-//                                contentDescription = "icone de livro",
-//                                modifier = Modifier
-//                                    .height(12.dp)
-//                                    .padding(end = 8.dp),
-//                                tint = if (booksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-//                            )
-//
-//                            Text(
-//                                text = "Livros",
-//                                fontSize = 8.sp,
-//                                fontWeight = FontWeight.W400
-//                            )
-//
-//                        }
-//
-//                        Spacer(modifier = Modifier.height(5.dp))
-//
-//                        if (booksOnClickState) {
-//                            Card(
-//                                modifier = Modifier
-//                                    .height(3.dp)
-//                                    .fillMaxWidth(),
-//                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-//                                elevation = 0.dp,
-//
-//
-//                                ) {}
-//                        }
-//
-//                    }
-//
-//                    //Card de Curtas
-//                    Card(
-//                        modifier = Modifier
-//                            .height(22.dp)
-//                            .width(90.dp)
-//                            .clickable {
-//                                curtasOnClickState = true
-//                                booksOnClickState = false
-//                                recomendationOnClickState = false
-//                            },
-//                        backgroundColor = Color.Transparent,
-//                        elevation = 0.dp
-//
-//                    ) {
-//                        Row(
-//                            verticalAlignment = Alignment.CenterVertically,
-//                            horizontalArrangement = Arrangement.Center
-//
-//                        ) {
-//                            Icon(
-//                                Icons.Outlined.FormatAlignCenter,
-//                                contentDescription = "icone de livro",
-//                                modifier = Modifier
-//                                    .height(12.dp)
-//                                    .padding(end = 8.dp),
-//                                tint = if (curtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-//                            )
-//
-//                            Text(
-//                                text = "Curtas",
-//                                fontSize = 8.sp,
-//                                fontWeight = FontWeight.W400
-//                            )
-//
-//                        }
-//
-//                        Spacer(modifier = Modifier.height(5.dp))
-//
-//                        if (curtasOnClickState) {
-//                            Card(
-//                                modifier = Modifier
-//                                    .height(3.dp)
-//                                    .fillMaxWidth(),
-//                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-//                                elevation = 0.dp,
-//
-//
-//                                ) {}
-//                        }
-//
-//                    }
-//
-//                    //Card de Recomendações
-//                    Card(
-//                        modifier = Modifier
-//                            .height(22.dp)
-//                            .width(90.dp)
-//                            .clickable {
-//                                recomendationOnClickState = true
-//                                booksOnClickState = false
-//                                curtasOnClickState = false
-//                            },
-//                        backgroundColor = Color.Transparent,
-//                        elevation = 0.dp
-//
-//                    ) {
-//                        Row(
-//                            verticalAlignment = Alignment.CenterVertically,
-//                            horizontalArrangement = Arrangement.Center
-//
-//                        ) {
-//                            Icon(
-//                                Icons.Outlined.LocalLibrary,
-//                                contentDescription = "icone de livro",
-//                                modifier = Modifier
-//                                    .height(12.dp)
-//                                    .padding(end = 8.dp),
-//                                tint = if (recomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-//                            )
-//
-//                            Text(
-//                                text = "Recomendações",
-//                                fontSize = 8.sp,
-//                                fontWeight = FontWeight.W400
-//                            )
-//
-//                        }
-//                        Spacer(modifier = Modifier.height(5.dp))
-//
-//                        if (recomendationOnClickState) {
-//                            Card(
-//                                modifier = Modifier
-//                                    .height(3.dp)
-//                                    .fillMaxWidth(),
-//                                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-//                                elevation = 0.dp,
-//                                ) {}
-//                        }
-//
-//                    }
-//
-//
-//                }
-
+                TabsFiltro()
 
             }
 
@@ -579,7 +417,8 @@ fun TabsPerfil() {
     val tabs = listOf("Livros", "Histórias pequenas", "Recomendações")
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        ScrollableTabRow(selectedTabIndex = tabIndex) {
+        ScrollableTabRow(selectedTabIndex = tabIndex,
+            modifier = Modifier.height(20.dp),) {
             tabs.forEachIndexed { index, title ->
                 Tab(text = { Text(title) },
                     selected = tabIndex == index,

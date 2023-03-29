@@ -10,6 +10,8 @@ val EuLirio_purple = Color(0xFF7822BE)
 val EuLirio_purpleTextColor = Color(0xFF3C1C72)
 val EuLirio_purpleTextColorBorder = Color(0xFF381871)
 val EuLirio_greyBackground = Color(0xFFF2F2F2)
+val Eulirio_light_yellow_background = Color(0xFFF7E496)
+val Eulirio_yellow_card_background = Color(0xFFFBDB5A)
 
 //<color name="eulirio_purple">#7822BE</color>
 //<color name="eulirio_purple_text_color">#3C1C72</color>

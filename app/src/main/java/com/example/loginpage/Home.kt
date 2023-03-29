@@ -47,6 +47,9 @@ import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
 import com.example.loginpage.models.User
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.Montserrat
+import com.example.loginpage.ui.theme.Montserrat2
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -70,6 +73,7 @@ class Home : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeBooks() {
@@ -98,7 +102,7 @@ fun HomeBooks() {
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBar(scaffoldState, topBarState) },
+        topBar = { TopBar(userID, scaffoldState, topBarState) },
         bottomBar = { BottomBar(bottomBarState) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
@@ -109,12 +113,12 @@ fun HomeBooks() {
             }
         },
         drawerContent = {
-            DrawerDesign(userID, context)
+            DrawerDesign(userID, context, scaffoldState)
         },
 //
 //        drawerGesturesEnabled = true,
-    ) {
-        Text(text = "teste $it")
+    ) {it
+        ShowBooks()
     }
 
     if(!fabState.value) ButtonsPost(context)
@@ -148,7 +152,7 @@ fun ButtonsPost (context: Context) {
                     )
                 }
                 FloatingActionButton(onClick = { /* do something */ }) {
-                    Icon(Icons.Default.Edit, contentDescription = "plus")
+                    Icon(Icons.Default.Edit, contentDescription = "plus", tint = Color.White)
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -165,7 +169,7 @@ fun ButtonsPost (context: Context) {
                     )
                 }
                 FloatingActionButton(onClick = { /* do something */ }, modifier = Modifier.padding(top = 8.dp)) {
-                    Icon(Icons.Default.Add, contentDescription = "plus")
+                    Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -187,7 +191,7 @@ fun ButtonsPost (context: Context) {
                         context.startActivity(intent)
                     },
                     modifier = Modifier.padding(top = 8.dp)) {
-                    Icon(Icons.Default.Add, contentDescription = "plus")
+                    Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
                 }
             }
         }
@@ -196,9 +200,19 @@ fun ButtonsPost (context: Context) {
 
 @Composable
 fun TopBar(
+    userID: UserID,
     scaffoldState: ScaffoldState,
     state: MutableState<Boolean>
 ) {
+
+    var foto by remember {
+        mutableStateOf("")
+    }
+
+    CallAPI.getUser(userID){
+        foto = it.foto
+    }
+
     val coroutineScope = rememberCoroutineScope()
     AnimatedVisibility(
         visible = state.value,
@@ -207,7 +221,18 @@ fun TopBar(
         exit = slideOutVertically(targetOffsetY = { -it }),
         content = {
             TopAppBar(
-                title = { Text("Top Bar") },
+                title = {
+                    Image(
+                        painter = painterResource(id = R.drawable.logo_icone_eulirio),
+                        contentDescription = "logo aplicativo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 44.dp),
+                        alignment = Alignment.Center
+//                        modifier = Modifier
+//                            .height(90.dp)
+                    )
+                },
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -216,12 +241,25 @@ fun TopBar(
                             }
                         }
                     ) {
-                        Icon(
-                            Icons.Filled.Menu,
-                            contentDescription = "Localized description"
+
+                        Image(
+                            rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = "foto de perfil",
+                            modifier = Modifier
+                                .height(40.dp)
+                                .width(40.dp)
+                                .clip(RoundedCornerShape(100.dp))
                         )
+
+//                        Icon(
+//                            Icons.Filled.Menu,
+//                            contentDescription = "Localized description"
+//                        )
                     }
-                }
+                },
+                backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
+                elevation = 0.dp
             )
         }
     )
@@ -251,16 +289,18 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
             showAdditionalButtons = !showAdditionalButtons
         }
     ) {
-        Icon(Icons.Default.Add, contentDescription = "plus")
+        Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
     }
 }
 
 @Composable
 fun DrawerDesign(
     userID: UserID,
-    //user: User,
-    context: Context
+    context: Context,
+    scaffoldState: ScaffoldState
 ){
+
+    val coroutineScope = rememberCoroutineScope()
 
     var foto by remember {
         mutableStateOf("")
@@ -271,11 +311,15 @@ fun DrawerDesign(
     var userName by remember {
         mutableStateOf("")
     }
+    var tags by remember {
+        mutableStateOf(listOf<Tag>())
+    }
 
     CallAPI.getUser(userID){
         foto = it.foto
         nome = it.nome
         userName = it.userName
+        tags = it.tags
     }
 
     val auth = FirebaseAuth.getInstance()
@@ -304,11 +348,12 @@ fun DrawerDesign(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable {
-                        val intentUserPage = Intent(context, UserPage::class.java)
+                        context.startActivity(intent)
 
-                        context.startActivity(intentUserPage)
-                    },
-                verticalAlignment = Alignment.CenterVertically
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.close()
+                        }
+                    }
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
@@ -317,7 +362,7 @@ fun DrawerDesign(
                     modifier = Modifier
                         .height(60.dp)
                         .width(60.dp)
-                        .clip(RoundedCornerShape(100.dp))
+                        .clip(RoundedCornerShape(40.dp))
                 )
 
                 Column(
@@ -340,39 +385,35 @@ fun DrawerDesign(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            LazyRow() {
+                items(tags) {
+                    Card(
+                        modifier = Modifier
+                            .height(18.dp)
+                            .padding(end = 4.dp)
+                            .width(60.dp)
+                            .background(Color.Blue),
+                        shape = RoundedCornerShape(10.dp),
+                        elevation = 0.dp,
+                        border = BorderStroke(
+                            .5.dp,
+                            Color.White
+                      )
+                    ) {
+                        Text(
+                            text = it.nomeTag.uppercase(),
+                            modifier = Modifier.padding(24.dp, 2.dp),
+                            fontSize = 12.sp,
+                            fontFamily = Montserrat,
+                            fontWeight = FontWeight.ExtraLight,
+                            textAlign = TextAlign.Center,
+                            color = Color.White
+                        )
 
-//            val tags = user.tags
-//
-//            LazyRow() {
-//                items(tags) {
-//                    Card(
-//                        modifier = Modifier
-//                            .height(18.dp)
-//                            .padding(end = 5.dp)
-//                            .width(60.dp),
-//                        backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-//                        shape = RoundedCornerShape(100.dp),
-//                        elevation = 0.dp,
-//                        border = BorderStroke(
-//                            1.dp / 2,
-//                            Color.White
-//                      )
-//                    ) {
-//                        Text(
-//                            text = it.nomeTag.toString(),
-//                            fontSize = 14.sp,
-//                            fontWeight = FontWeight.SemiBold,
-//                            textAlign = TextAlign.Center,
-//                            color = Color.White
-//                        )
-//
-//                    }
-//                }
-//            }
+                    }
+                }
+            }
         }
-
-        Spacer(modifier = Modifier.height(42.dp))
 
         Card(
             modifier = Modifier
@@ -386,11 +427,6 @@ fun DrawerDesign(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 36.dp)
-//                    .border(
-//                        width = 0.dp,
-//                        color = Color.Transparent,
-//                        shape = RoundedCornerShape(topEnd = 36.dp, bottomEnd = 36.dp)
-//                    )
                 ,
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -399,7 +435,13 @@ fun DrawerDesign(
                 //Card clicavel do perfil do usuario
                 Card(
                     modifier = Modifier
-                        .clickable { context.startActivity(intent) }
+                        .clickable {
+                            context.startActivity(intent)
+
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        }
                         .fillMaxWidth(),
                     backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                     elevation = 0.dp
@@ -413,12 +455,14 @@ fun DrawerDesign(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .height(50.dp),
-                            tint = Color.Black
+                            tint = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "MEU PERFIL",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.W500
+                            fontSize = 16.sp,
+                            fontFamily = Montserrat2,
+                            color = colorResource(id = R.color.eulirio_black),
+                            fontWeight = FontWeight.Black
                         )
                     }
 
@@ -427,7 +471,12 @@ fun DrawerDesign(
                 //Card clicavel de favoritos do usuario
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
                     backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                     elevation = 0.dp
                 ) {
@@ -440,12 +489,14 @@ fun DrawerDesign(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .height(50.dp),
-                            tint = Color.Black
+                            tint = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "FAVORITOS",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.W500
+                            fontSize = 16.sp,
+                            fontFamily = Montserrat2,
+                            color = colorResource(id = R.color.eulirio_black),
+                            fontWeight = FontWeight.Black
                         )
                     }
 
@@ -454,7 +505,12 @@ fun DrawerDesign(
                 //Card clicavel de lidos do usuario
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
                     backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                     elevation = 0.dp
                 ) {
@@ -467,12 +523,14 @@ fun DrawerDesign(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .height(50.dp),
-                            tint = Color.Black
+                            tint = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "LIDOS",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.W500
+                            fontSize = 16.sp,
+                            fontFamily = Montserrat2,
+                            color = colorResource(id = R.color.eulirio_black),
+                            fontWeight = FontWeight.Black
                         )
                     }
 
@@ -481,7 +539,12 @@ fun DrawerDesign(
                 //Card clicavel dos e-books do usuario
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
                     backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                     elevation = 0.dp
                 ) {
@@ -494,12 +557,48 @@ fun DrawerDesign(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .height(50.dp),
-                            tint = Color.Black
+                            tint = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "MEUS E-BOOKS",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.W500
+                            fontSize = 16.sp,
+                            fontFamily = Montserrat2,
+                            color = colorResource(id = R.color.eulirio_black),
+                            fontWeight = FontWeight.Black
+                        )
+                    }
+
+                }
+
+                //Card clicavel para o usuario visualizar suas publicações
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
+                    backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
+                    elevation = 0.dp
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Filled.EditNote,
+                            contentDescription = "Icone de sacola de compras",
+                            modifier = Modifier
+                                .padding(end = 10.dp)
+                                .height(50.dp),
+                            tint = colorResource(id = R.color.eulirio_black)
+                        )
+                        Text(
+                            text = "MINHAS OBRAS",
+                            fontSize = 16.sp,
+                            fontFamily = Montserrat2,
+                            color = colorResource(id = R.color.eulirio_black),
+                            fontWeight = FontWeight.Black
                         )
                     }
 
@@ -508,7 +607,12 @@ fun DrawerDesign(
                 //Card clicavel para o usuario adquirir a conta premium
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
                     backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                     elevation = 0.dp
                 ) {
@@ -521,45 +625,18 @@ fun DrawerDesign(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .height(50.dp),
-                            tint = Color.Black
+                            tint = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "LÍRIO PLUS",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.W500
+                            fontSize = 16.sp,
+                            fontFamily = Montserrat2,
+                            color = colorResource(id = R.color.eulirio_black),
+                            fontWeight = FontWeight.Black
                         )
                     }
 
                 }
-
-                //Card clicavel para o usuario editar o seu usuario
-//            Card(
-//                modifier = Modifier
-//                    .height(80.dp)
-//                    .padding(bottom = 40.dp, start = 40.dp)
-//                    .fillMaxWidth(),
-//                backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
-//                elevation = 0.dp
-//            ) {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Icon(
-//                        Icons.Filled.EditNote,
-//                        contentDescription = "Icone de edição",
-//                        modifier = Modifier
-//                            .padding(end = 10.dp)
-//                            .height(50.dp),
-//                        tint = Color.Black
-//                    )
-//                    Text(
-//                        text = "EDITAR PERFIL",
-//                        fontSize = 18.sp,
-//                        fontWeight = FontWeight.W500
-//                    )
-//                }
-//
-//            }
 
             }
 

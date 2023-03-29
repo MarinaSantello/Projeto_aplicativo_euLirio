@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 private val DarkColorPalette = darkColors(
     primary = Purple200,
     primaryVariant = Purple700,
-    secondary = Teal200
+    secondary = Eulirio_yellow_card_background
 )
 
 private val LightColorPalette = lightColors(
-    primary = EuLirio_purpleTextColorBorder,
+    primary = Eulirio_light_yellow_background,
     primaryVariant = Purple700,
-    secondary = Teal200
+    secondary = Eulirio_yellow_card_background
 
     /* Other default colors to override
     background = Color.White,

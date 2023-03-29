@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.loginpage.models.Genre
 import com.example.loginpage.R
 import com.example.loginpage.models.Genero
+import com.example.loginpage.ui.theme.Montserrat2
 
 @Composable
 fun NewGenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
@@ -47,24 +48,26 @@ fun NewGenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
                     )
                     .width(16.dp)
                     .height(16.dp)
-                ,
+                    .padding(start = 2.dp),
                 onCheckedChange = {
                     checkState = it
 
                     onChecked.invoke(checkState)
                 },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color.Black,
+                    checkedColor = colorResource(id = R.color.eulirio_black),
                     uncheckedColor = Color.Transparent
                 ),
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = genre.nomeGenero,
-                fontWeight = FontWeight.W500,
-                fontSize = 10.sp
+                text = genre.nomeGenero.uppercase(),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Montserrat2,
+                color = colorResource(id = R.color.eulirio_black)
             )
         }
 
