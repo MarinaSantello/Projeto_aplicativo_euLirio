@@ -33,8 +33,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.shortStory.CallShortStory
+import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.ui.components.AnnouncementCard
+import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.theme.*
 //import com.google.accompanist.pager.ExperimentalPagerApi
 //import com.google.accompanist.pager.rememberPagerState
@@ -156,7 +160,21 @@ fun TabsFiltro() {
                     }
                 }
             }
-            1 -> Text(text = "Pequenas Histórias")
+            1 -> {
+                var shortStory by remember {
+                    mutableStateOf(listOf<ShortStoryGet>())
+                }
+
+                CallShortStoryAPI.getShortStories {
+                    shortStory = it
+                }
+
+                LazyColumn() {
+                    items(shortStory) {
+                        ShortStorysCard(it)
+                    }
+                }
+            }
             2 -> Text(text = "Pequenas Histórias")
         }
     }

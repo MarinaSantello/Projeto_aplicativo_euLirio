@@ -45,7 +45,7 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat
 import com.example.loginpage.ui.theme.Montserrat2
 import com.example.loginpage.ui.theme.QuickSand
-import com.google.accompanist.pager.ExperimentalPagerApi
+//import com.google.accompanist.pager.ExperimentalPagerApi
 
 class UserPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +63,7 @@ class UserPage : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+//@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun UserHomePage() {

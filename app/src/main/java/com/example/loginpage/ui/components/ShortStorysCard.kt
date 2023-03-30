@@ -28,12 +28,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Generos
+import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.ui.theme.*
 
 
 @Composable
 fun ShortStorysCard(
-    announcement: AnnouncementGet
+    shortStory: ShortStoryGet
 ) {
 
     var likeState by remember {
@@ -74,7 +75,7 @@ fun ShortStorysCard(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = announcement.titulo,
+                    text = shortStory.titulo,
                     fontSize = 20.sp,
                     fontFamily = SpartanBold
                 )
@@ -87,7 +88,7 @@ fun ShortStorysCard(
                     )
 
                     Text(
-                        text = announcement.usuario[0].nomeUsuario,
+                        text = shortStory.usuario[0].nomeUsuario,
                         fontSize = 10.sp,
                         fontFamily = SpartanMedium
                     )
@@ -98,7 +99,7 @@ fun ShortStorysCard(
             Row() {
                 //Imagem da capa do livro
                 Image(
-                    painter = rememberAsyncImagePainter(announcement.capa),
+                    painter = rememberAsyncImagePainter(shortStory.capa),
                     contentDescription = "",
                     modifier = Modifier
                         .height(150.dp)
@@ -152,7 +153,7 @@ fun ShortStorysCard(
                         mutableStateOf(listOf<Generos>())
                     }
 
-                    generos = announcement.generos
+//                    generos = shortStory.generos
 
                     LazyRow() {
                         items(items = generos) {
@@ -181,7 +182,7 @@ fun ShortStorysCard(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = announcement.sinopse,
+                        text = shortStory.sinopse,
                         style = MaterialTheme.typography.subtitle2,
                         maxLines = 5,
                         overflow = TextOverflow.Ellipsis
@@ -196,7 +197,15 @@ fun ShortStorysCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            
+                            Icons.Outlined.ChatBubble,
+                            contentDescription = "balão de fala"
+                        )
+
+                        Text(
+                            text = "28",
+                            fontSize = 10.sp,
+                            fontFamily = Montserrat2,
+                            fontWeight = FontWeight.W500,
                         )
 
                         Row() {
