@@ -75,7 +75,7 @@ fun InputDataEbook(navController: NavController) {
         mutableStateOf("")
     }
     var pagesState by remember {
-        mutableStateOf(0)
+        mutableStateOf("")
     }
     var generos by remember {
         mutableStateOf(listOf<Genero>())
@@ -137,6 +137,13 @@ fun InputDataEbook(navController: NavController) {
 
         Log.i("uri image", uri.toString())
     }
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    var selectedItem by remember {
+        mutableStateOf(0)
+    }
     Column() {
 
         Card(
@@ -156,12 +163,6 @@ fun InputDataEbook(navController: NavController) {
                     modifier = Modifier
                         .padding(top = 2.dp)
                         .clickable {
-//                            navController.navigate(Routes.Home.name) {
-//                                popUpTo(Routes.Home.name) {
-//                                    inclusive = true
-//                                }
-//                            }
-
                             val intent = Intent(context, Home::class.java)
                             context.startActivity(intent)
                         }
@@ -210,61 +211,128 @@ fun InputDataEbook(navController: NavController) {
             //column titulo
             Column() {
 
-//                TextField(value = , onValueChange = )
-                Text(text = stringResource(id = R.string.publicartitulo),
-                    modifier = Modifier.padding(4.dp))
-                Text(
-                    text = stringResource(id = R.string.publicarname),
-                    fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-
-                Divider(
-                    color = Color.Black,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
-                )
-
-                Text(text = stringResource(id = R.string.precopub),
-                    modifier = Modifier.padding(start = 4.dp))
-                Text(
-                    text = stringResource(id = R.string.precificacaopub),
-                    fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-
-                Divider(
-                    color = Color.Black,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp, start = 4.dp)
-                )
-
-                Spacer(modifier = Modifier.padding(vertical = 20.dp))
-
-
-
-
-                Column() {
-
-                    Text(
-                        text = stringResource(id = R.string.sinopsepub),
-                        modifier = Modifier.padding(start = 2.dp),
-                        textAlign = TextAlign.Start
+                TextField(
+                    value = titleState,
+                    onValueChange = {
+                        titleState = it
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.publicartitulo),
+                            color = Color(0xFF1E1E1E),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        backgroundColor = Color.Transparent,
+                        cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     )
+                )
 
-                    Text(text = stringResource(id = R.string.textsinopse),
-                        fontSize = 10.sp)
+                TextField(
+                    value = priceState,
+                    onValueChange = {
+                        priceState = it
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.precopub),
+                            color = Color(0xFF1E1E1E),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.precificacaopub),
+                            modifier = Modifier.padding(top = 2.dp),
+                            color = Color(0xCC1E1E1E),
+                            fontSize = 12.sp
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        backgroundColor = Color.Transparent,
+                        cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    )
+                )
 
-                    Divider(
-                        color = Color.Black,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(top = 4.dp, bottom = 4.dp))
-
-                }
             }
 
         }
 
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Column(Modifier.padding(20.dp, 0.dp)) {
+            TextField(
+                value = sinopseState,
+                onValueChange = {
+                    sinopseState = it
+                },
+                modifier = Modifier
+                    .heightIn(120.dp)
+                    .fillMaxWidth(),
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.sinopsepub),
+                        color = Color(0xFF1E1E1E),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
+                },
+                singleLine = false,
+                shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    backgroundColor = Color.Transparent,
+                    cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                )
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Classificação indicativa",
+                fontFamily = Spartan,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 20.sp,
+                color = colorResource(id = R.color.eulirio_purple_text_color_border)
+            )
+
+            val items = listOf("Opção 1", "Opção 2")
+
+            Box {
+                Text(
+                    text = items[selectedItem],
+                    modifier = Modifier
+                        .clickable(onClick = { expanded = true })
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    items.forEachIndexed { index, item ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedItem = index
+                                expanded = false
+                            }
+                        ) {
+                            Text(text = item)
+                        }
+                    }
+                }
+            }
+        }
 
     }
 }

@@ -85,10 +85,8 @@
     <string name="title_activity_post_ebook">PostEbook</string>
     <string name="publicar"> Publique seu e-book </string>
     <string name="publicartitulo"> Título </string>
-    <string name="publicarname"> Carolyn </string>
     <string name="precopub"> Preço </string>
     <string name="adicionarimagem"> Adicione a capa </string>
     <string name="precificacaopub"> R$ </string>
     <string name="sinopsepub"> Sinopse </string>
-    <string name="textsinopse"> Texto </string>
 </resources>
