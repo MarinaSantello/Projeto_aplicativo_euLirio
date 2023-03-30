@@ -55,6 +55,9 @@ fun AnnouncementCard(
         mutableStateOf(false)
     }
 
+    val priceVerify = announcement.preco.toString().split('.')
+    var price = announcement.preco.toString()
+
     Card(
         modifier = Modifier
             .height(204.dp)
@@ -198,8 +201,13 @@ fun AnnouncementCard(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        if (priceVerify[1].isEmpty())
+                            price = "${priceVerify[0]}.00"
+                        else if (priceVerify[1].length == 1)
+                            price = "${announcement.preco}0"
+
                         Text(
-                            text = "R$ ${announcement.preco.toString().replace('.', ',')}",
+                            text = "R$ ${price.replace('.', ',')}",
                             fontSize = 16.sp,
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Bold

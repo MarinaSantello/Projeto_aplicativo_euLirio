@@ -46,6 +46,8 @@ import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.*
+import com.example.loginpage.resources.updateStorage
+import com.example.loginpage.resources.uploadFile
 import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat2
@@ -529,7 +531,7 @@ fun UpdatePage() {
 
 
                                 iconUri?.let {
-                                    uploadFile(it, userNameState, context) {url ->
+                                    uploadFile(it, "profile", userNameState, context) {url ->
                                         Log.i("foto url", url)
 
                                         var tag1: Int? = null
@@ -709,53 +711,6 @@ fun UpdatePage() {
             }
         }
     }
-}
-
-fun updateStorage(photoState: String) {
-    if ("firebase" in photoState) {
-        val storageRef = FirebaseStorage
-            .getInstance()
-            .getReferenceFromUrl(photoState)
-
-        storageRef.delete()
-            .addOnSuccessListener {
-                Log.i("att foto perfil", "parabens pelo minimo")
-            }
-            .addOnFailureListener { e ->
-                Log.i("att foto perfil", "$e")
-                // An error occurred while updating the file
-            }
-    }
-}
-
-fun uploadFile(file: Uri, fileName: String, context: Context, uri: (String) -> Unit) {
-
-    val datetime = LocalDateTime.now().toString()
-    val discriminante = datetime.replace(' ', '-')
-
-    //progressBar = findViewById(R.id.progressbar)
-    //progressBar.visibility = View.VISIBLE
-
-    val imageRef = FirebaseStorage
-        .getInstance()
-        .reference
-        .child("profile/$fileName$discriminante")
-
-    imageRef.putFile(file)
-        .addOnSuccessListener { p0 ->
-            imageRef
-                .downloadUrl
-                .addOnSuccessListener {
-                    uri.invoke(it.toString())
-                }
-        }
-        .addOnFailureListener { p0 ->
-            Toast.makeText(context, p0.message, Toast.LENGTH_LONG).show()
-        }
-        .addOnProgressListener { p0 ->
-            var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
-            //pd.setMessage("Uploaded ${progress.toInt()}%")
-        }
 }
 
 @Preview(showBackground = true, showSystemUi = true)

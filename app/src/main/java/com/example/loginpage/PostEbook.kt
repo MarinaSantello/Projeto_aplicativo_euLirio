@@ -1,18 +1,26 @@
 package com.example.loginpage
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.PermMedia
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -21,6 +29,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.loginpage.constants.Routes
+import com.example.loginpage.models.Genero
+import com.example.loginpage.resources.updateStorage
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Spartan
 
@@ -34,7 +47,8 @@ class PostEbook : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    InputDataEbook()
+                    val navController = rememberNavController()
+                    InputDataEbook(navController)
                 }
             }
         }
@@ -42,7 +56,87 @@ class PostEbook : ComponentActivity() {
 }
 
 @Composable
-fun InputDataEbook() {
+fun InputDataEbook(navController: NavController) {
+    val context = LocalContext.current
+
+    var capaState by remember {
+        mutableStateOf("")
+    }
+    var titleState by remember {
+        mutableStateOf("")
+    }
+    var priceState by remember {
+        mutableStateOf("")
+    }
+    var sinopseState by remember {
+        mutableStateOf("")
+    }
+    var volumeState by remember {
+        mutableStateOf("")
+    }
+    var pagesState by remember {
+        mutableStateOf(0)
+    }
+    var generos by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+    var pdfState by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+    var epubState by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+    var mobiState by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var capaUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val selectImage = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        capaUri = uri
+
+        Log.i("uri image", uri.toString())
+    }
+
+    var pdfUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val selectPDF = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        pdfUri = uri
+
+        Log.i("uri image", uri.toString())
+    }
+
+    var epubUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val selectEPUB = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        epubUri = uri
+
+        Log.i("uri image", uri.toString())
+    }
+
+    var mobiUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val selectMOBI = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        mobiUri = uri
+
+        Log.i("uri image", uri.toString())
+    }
     Column() {
 
         Card(
@@ -59,7 +153,18 @@ fun InputDataEbook() {
                 Icon(
                     Icons.Default.Close,
                     contentDescription = "icone para fechar",
-                    modifier = Modifier.padding(top = 2.dp)
+                    modifier = Modifier
+                        .padding(top = 2.dp)
+                        .clickable {
+//                            navController.navigate(Routes.Home.name) {
+//                                popUpTo(Routes.Home.name) {
+//                                    inclusive = true
+//                                }
+//                            }
+
+                            val intent = Intent(context, Home::class.java)
+                            context.startActivity(intent)
+                        }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -80,17 +185,19 @@ fun InputDataEbook() {
 
             Card(
                 modifier = Modifier
-                    .size(100.dp)
-                    .padding(start = 8.dp, top = 8.dp),
-                shape = RoundedCornerShape(
-                    topStart = 8.dp,
-                    topEnd = 8.dp,
-                    bottomEnd = 8.dp,
-                    bottomStart = 8.dp
-                ),
+                    .height(160.dp)
+                    .width(120.dp)
+                    .padding(start = 8.dp, top = 8.dp)
+                    .clickable {
+                        selectImage.launch("image/*")
+                    },
+                shape = RoundedCornerShape(8.dp),
                 backgroundColor = Color.LightGray
             ) {
 
+                Icon(
+                    Icons.Default.PermMedia, contentDescription = ""
+                )
                 Text(
                     text = stringResource(id = R.string.adicionarimagem),
                     textAlign = TextAlign.Center,
@@ -103,6 +210,7 @@ fun InputDataEbook() {
             //column titulo
             Column() {
 
+//                TextField(value = , onValueChange = )
                 Text(text = stringResource(id = R.string.publicartitulo),
                     modifier = Modifier.padding(4.dp))
                 Text(
@@ -165,6 +273,7 @@ fun InputDataEbook() {
 @Composable
 fun DefaultPreview5() {
     LoginPageTheme {
-        InputDataEbook()
+        val navController = rememberNavController()
+        InputDataEbook(navController)
     }
 }

@@ -36,12 +36,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Genero
 import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
@@ -49,7 +52,7 @@ import com.example.loginpage.models.User
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat
 import com.example.loginpage.ui.theme.Montserrat2
-import com.google.accompanist.pager.ExperimentalPagerApi
+//import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -73,12 +76,13 @@ class Home : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+//@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeBooks() {
 
     val context = LocalContext.current
+
     val scaffoldState = rememberScaffoldState()
 
     val topBarState = remember { mutableStateOf(true) }
@@ -89,6 +93,8 @@ fun HomeBooks() {
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+
+    val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -121,11 +127,17 @@ fun HomeBooks() {
         ShowBooks()
     }
 
-    if(!fabState.value) ButtonsPost(context)
+    if(!fabState.value) ButtonsPost(navController, context) {
+        fabState.value = it
+    }
 }
 
 @Composable
-fun ButtonsPost (context: Context) {
+fun ButtonsPost (
+    navController: NavController,
+    context: Context,
+    onChecked: (Boolean) -> Unit ) {
+
     Box (
         Modifier
             .fillMaxSize()
@@ -187,8 +199,15 @@ fun ButtonsPost (context: Context) {
                 }
                 FloatingActionButton(
                     onClick = {
+//                        navController.navigate(Routes.PostEbook.name) {
+//                            popUpTo(Routes.PostEbook.name) {
+//                                inclusive = true
+//                            }
+//                        }
                         val intent = Intent(context, PostEbook::class.java)
                         context.startActivity(intent)
+
+                        onChecked.invoke(true)
                     },
                     modifier = Modifier.padding(top = 8.dp)) {
                     Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)

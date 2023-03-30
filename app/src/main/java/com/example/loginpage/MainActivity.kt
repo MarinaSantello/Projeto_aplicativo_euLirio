@@ -65,6 +65,10 @@ fun Greeting() {
         composable(Routes.Home.name) {
             HomeBooks()
         }
+
+        composable(Routes.PostEbook.name) {
+            InputDataEbook(navController)
+        }
     }
 }
 
