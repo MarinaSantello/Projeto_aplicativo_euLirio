@@ -36,13 +36,13 @@ import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.theme.*
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
+//import com.google.accompanist.pager.ExperimentalPagerApi
+//import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class ViewBooks : ComponentActivity() {
-    @OptIn(ExperimentalPagerApi::class)
+//    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -59,7 +59,7 @@ class ViewBooks : ComponentActivity() {
     }
 }
 
-@ExperimentalPagerApi
+//@ExperimentalPagerApi
 @Composable
 fun ShowBooks() {
 
@@ -77,7 +77,7 @@ fun ShowBooks() {
 }
 
 
-@OptIn(ExperimentalPagerApi::class)
+//@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview4() {
@@ -87,7 +87,7 @@ fun DefaultPreview4() {
 }
 
 @OptIn(ExperimentalUnitApi::class)
-@ExperimentalPagerApi
+//@ExperimentalPagerApi
 @Composable
 fun TabsFiltro() {
     var tabIndex by remember { mutableStateOf(0) }

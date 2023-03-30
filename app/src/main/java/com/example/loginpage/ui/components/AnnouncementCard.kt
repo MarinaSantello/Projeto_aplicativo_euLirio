@@ -157,29 +157,29 @@ fun AnnouncementCard(
 
                     generos = announcement.generos
 
-//                    LazyRow() {
-//                        items(items = generos) {
-//                            Card(
-//                                modifier = Modifier
-//                                    .height(14.dp)
-//                                    .padding(start = 4.dp, end = 4.dp)
-//                                ,
-//                                backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border),
-//                                shape = RoundedCornerShape(100.dp),
-//                            ) {
-//                                Text(
-//                                    text = it.nome.uppercase(),
-//                                    fontSize = 10.sp,
-//                                    fontFamily = MontSerratSemiBold,
-//                                    textAlign = TextAlign.Center,
-//                                    modifier = Modifier
-//                                        .padding(start = 8.dp, end = 8.dp),
-//                                    color = Color.White
-//                                )
-//
-//                            }
-//                        }
-//                    }
+                    LazyRow() {
+                        items(items = generos) {
+                            Card(
+                                modifier = Modifier
+                                    .height(14.dp)
+                                    .padding(start = 4.dp, end = 4.dp)
+                                ,
+                                backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border),
+                                shape = RoundedCornerShape(100.dp),
+                            ) {
+                                Text(
+                                    text = it.nome.uppercase(),
+                                    fontSize = 10.sp,
+                                    fontFamily = MontSerratSemiBold,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .padding(start = 8.dp, end = 8.dp),
+                                    color = Color.White
+                                )
+
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
