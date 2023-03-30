@@ -1,20 +1,15 @@
 package com.example.loginpage
-
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -23,8 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.CheckBox
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.CallAPI
@@ -54,9 +46,6 @@ import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.*
-import com.example.loginpage.resources.authenticate
-import com.example.loginpage.resources.getGenres
-import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat2
@@ -88,7 +77,6 @@ class UpdateActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun UpdatePage() {
     val context = LocalContext.current
@@ -99,11 +87,24 @@ fun UpdatePage() {
     var nameState by remember {
         mutableStateOf("")
     }
+    var nameStateRequired by remember {
+        mutableStateOf(false)
+    }
+
     var userNameState by remember {
         mutableStateOf("")
     }
+
+    var userNameStateRequired by remember {
+        mutableStateOf(false)
+    }
+
     var biographyState by remember {
         mutableStateOf("")
+    }
+
+    var biographyStateRequired by remember {
+        mutableStateOf(false)
     }
 
     var writerCheckState by remember {
@@ -127,6 +128,13 @@ fun UpdatePage() {
     var iconUri by remember {
         mutableStateOf<Uri?>(null)
     }
+
+    var invalidUsername by remember {
+        mutableStateOf(false)
+    }
+
+
+
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
@@ -180,7 +188,7 @@ fun UpdatePage() {
                     //.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column() {
+                Column {
                     Row( // Row para conter a foto, o nome e o username do usuário
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -205,7 +213,7 @@ fun UpdatePage() {
 
                         Spacer(modifier = Modifier.width(16.dp))
 
-                        Column() {
+                        Column {
                             TextField(
                                 value = nameState,
                                 onValueChange = {
@@ -263,6 +271,15 @@ fun UpdatePage() {
                                         cursorColor = Color(0xFF1E1E1E),
                                         focusedIndicatorColor = Color(0xFF1E1E1E),
                                     )
+                                )
+
+                                if (invalidUsername) Text(
+                                    modifier = Modifier
+                                        .padding(start = 16.dp, top = 5.dp),
+                                    text = stringResource(id = R.string.erro_message_invalid_user),
+                                    color = Color(0xFFB00020),
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         }
@@ -493,6 +510,9 @@ fun UpdatePage() {
 
                     Spacer(modifier = Modifier.height(25.dp))
 
+
+
+
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.Bottom,
@@ -500,6 +520,14 @@ fun UpdatePage() {
                     ) {
                         Button(
                             onClick = {
+
+
+
+                                if(userNameState.isEmpty()){
+                                    userNameStateRequired = true
+                                }
+
+
                                 iconUri?.let {
                                     uploadFile(it, userNameState, context) {url ->
                                         Log.i("foto url", url)
@@ -729,3 +757,12 @@ fun uploadFile(file: Uri, fileName: String, context: Context, uri: (String) -> U
             //pd.setMessage("Uploaded ${progress.toInt()}%")
         }
 }
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun UpdatePreview() {
+    LoginPageTheme {
+        UpdatePage()
+    }
+}
+
