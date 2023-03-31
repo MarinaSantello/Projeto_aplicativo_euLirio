@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -25,6 +26,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -237,7 +240,16 @@ fun InputDataEbook(navController: NavController) {
                 TextField(
                     value = priceState,
                     onValueChange = {
-                        priceState = it
+                        // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
+                        val lastChar = if(it.isEmpty()) it
+                        else it.get(it.length - 1) // '.get': recupera um caracter de acordo com a posição do vetor que é passada no argumento da função
+                        Log.i("console log", lastChar.toString()) // equivalente ao 'console.log'
+
+                        // verifica se o último caracter é indesejado
+                        val newValue = if (lastChar == ' ' || lastChar == '-') it.dropLast(1)  // se sim, remove 1 caracter 'do final para o começo'
+                        else it // se não, o valor digitado é mantido intacto
+
+                        priceState = newValue // valor desejado, porque recebeu o valor do 'it'
                     },
                     label = {
                         Text(
@@ -256,6 +268,7 @@ fun InputDataEbook(navController: NavController) {
                         )
                     },
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                     shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
