@@ -176,7 +176,7 @@ fun AnnouncementCard(
 //                                    fontFamily = MontSerratSemiBold,
 //                                    textAlign = TextAlign.Center,
 //                                    modifier = Modifier
-//                                        .padding(start = 8.dp, end = 8.dp),
+//                                      .padding(12.dp, 1.dp),
 //                                    color = Color.White
 //                                )
 //

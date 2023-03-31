@@ -119,12 +119,9 @@ fun UserHomePage() {
     Card(
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
         modifier = Modifier
-//            .height(300.dp)
             .fillMaxWidth()
 
     ) {
-
-
         //Card de informações do usuario
         Column(
             modifier = Modifier

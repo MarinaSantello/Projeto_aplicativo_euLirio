@@ -9,16 +9,20 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +48,9 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.MontSerratSemiBold
+import com.example.loginpage.ui.theme.SpartanBold
+import com.example.loginpage.ui.theme.SpartanMedium
 import kotlinx.coroutines.launch
 
 //class Ebook : ComponentActivity() {
@@ -93,7 +100,7 @@ fun EbookView(idAnnouncement: Int) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, false, context) },
+        bottomBar = { BottomBarEbook(bottomBarState, true, context) },
     ) {
         ShowEbook(idAnnouncement, it.calculateBottomPadding())
     }
@@ -103,6 +110,140 @@ fun EbookView(idAnnouncement: Int) {
 fun ShowEbook(idAnnouncement: Int, bottomBarLength: Dp) {
     CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
         val announcementGet = it
+    }
+
+
+    //Card de informações do usuario
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Divider(
+            thickness = .5.dp,
+            color = Color.White
+        )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(168.dp),
+            shape = RoundedCornerShape(bottomEnd = 40.dp, bottomStart = 40.dp),
+            backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+            elevation = 0.dp
+        ){
+            Row(
+                Modifier
+                    .fillMaxSize()
+                    .padding(28.dp, 12.dp)
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                    contentDescription = "capa do livro",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(98.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column() {
+                    Text(
+                        text = "Lorem Ipsum",
+                        modifier = Modifier
+                            .padding(start = 4.dp),
+                        fontWeight = FontWeight.Light,
+                        fontFamily = SpartanBold,
+                        fontSize = 24.sp,
+                        color = colorResource(id = R.color.eulirio_black)
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    val generos = listOf<String>("genero 1", "genero 2", "genero 4")
+
+                    LazyRow() {
+                        items(generos) {
+                            Card(
+                                modifier = Modifier
+                                    .padding(start = 4.dp, end = 4.dp)
+                                ,
+                                backgroundColor = Color(0xFF1B0C36),
+                                shape = RoundedCornerShape(100.dp),
+                            ) {
+                                Text(
+                                    text = it,//.nome.uppercase(),
+                                    fontSize = 10.sp,
+                                    fontFamily = MontSerratSemiBold,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .padding(12.dp, 1.dp),
+                                    color = Color.White
+                                )
+
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    //Sistema de avaliação
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 4.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "estrela de avaliação",
+                            modifier = Modifier.size(20.dp),
+                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "estrela de avaliação",
+                            modifier = Modifier.size(20.dp),
+                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "estrela de avaliação",
+                            modifier = Modifier.size(20.dp),
+                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "estrela de avaliação",
+                            modifier = Modifier.size(20.dp),
+                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                        )
+                        Icon(
+                            Icons.Outlined.StarOutline,
+                            contentDescription = "estrela de avaliação",
+                            modifier = Modifier.size(20.dp),
+                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+                        
+                        Text(text = "4,5")
+
+                    }
+                    
+                }
+            }
+        }
+        
+        Column(Modifier.height(1000.dp)) {
+            Text(text = "teste")
+            
+        }
     }
 
 
@@ -139,14 +280,11 @@ fun BottomBarEbook(bottomBarState: MutableState<Boolean>, userAuthor: Boolean, c
 
             else {
                 BottomAppBar(
-                    modifier = Modifier.clickable {
-                        Toast.makeText(context, "oi", Toast.LENGTH_SHORT).show()
-                    },
                     contentPadding = PaddingValues(0.dp),
                     elevation = 0.dp
 //                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
                 ) {
-                    Row(Modifier.fillMaxSize(). background(Color.Blue)) {
+                    Row(Modifier.fillMaxSize()) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth(.5f)
@@ -160,21 +298,16 @@ fun BottomBarEbook(bottomBarState: MutableState<Boolean>, userAuthor: Boolean, c
                             backgroundColor = Color.White,
                             elevation = 0.dp
                         ) {
-                            Text(
-                                text = stringResource(R.string.ebook_bag).uppercase(),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .align(Alignment.CenterVertically),
-//                                    .fillMaxSize(.5f)
-//                                    .background(Color.White)
-//                                .padding(end = 44.dp),
-                                color = colorResource(id = R.color.eulirio_yellow_card_background),
-                                textAlign = TextAlign.Center,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.ExtraLight,
-                                style = MaterialTheme.typography.h2
-                            )
-
+                            Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = stringResource(R.string.ebook_bag).uppercase(),
+                                    color = colorResource(id = R.color.eulirio_yellow_card_background),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.ExtraLight,
+                                    style = MaterialTheme.typography.h2
+                                )
+                            }
                         }
 
                         Card(
@@ -189,24 +322,17 @@ fun BottomBarEbook(bottomBarState: MutableState<Boolean>, userAuthor: Boolean, c
                             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
                             elevation = 0.dp
                         ) {
-
-                            Text(
-                                text = stringResource(R.string.ebook_buy).uppercase(),
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically),
-//                                    .clickable {
-//                                        Toast
-//                                            .makeText(context, "oi", Toast.LENGTH_SHORT)
-//                                            .show()
-//                                    },
-//                                .padding(end = 44.dp),
-                                color = Color.White,
-                                textAlign = TextAlign.Center,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.ExtraLight,
-                                style = MaterialTheme.typography.h2
-                            )
-
+                            Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = stringResource(R.string.ebook_buy).uppercase(),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.ExtraLight,
+                                    style = MaterialTheme.typography.h2
+                                )
+                            }
                         }
                     }
                 }
