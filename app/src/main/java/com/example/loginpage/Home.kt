@@ -235,7 +235,6 @@ fun TopBar(
     val coroutineScope = rememberCoroutineScope()
     AnimatedVisibility(
         visible = state.value,
-        modifier = Modifier.background(Color.Red),
         enter = slideInVertically(initialOffsetY = { -it }),
         exit = slideOutVertically(targetOffsetY = { -it }),
         content = {

@@ -63,7 +63,7 @@ fun Greeting() {
         }
 
         composable(Routes.Home.name) {
-            HomeBooks()
+            EbookView(1)
         }
 
         composable(Routes.PostEbook.name) {

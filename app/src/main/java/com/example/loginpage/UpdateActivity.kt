@@ -523,8 +523,6 @@ fun UpdatePage() {
                         Button(
                             onClick = {
 
-
-
                                 if(userNameState.isEmpty()){
                                     userNameStateRequired = true
                                 }
