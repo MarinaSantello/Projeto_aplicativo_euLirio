@@ -18,8 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Star
@@ -47,10 +47,7 @@ import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.ui.theme.LoginPageTheme
-import com.example.loginpage.ui.theme.MontSerratSemiBold
-import com.example.loginpage.ui.theme.SpartanBold
-import com.example.loginpage.ui.theme.SpartanMedium
+import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 
 //class Ebook : ComponentActivity() {
@@ -100,16 +97,33 @@ fun EbookView(idAnnouncement: Int) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, true, context) },
+        bottomBar = { BottomBarEbook(bottomBarState, false, context) },
     ) {
-        ShowEbook(idAnnouncement, it.calculateBottomPadding())
+        ShowEbook(idAnnouncement, false, it.calculateBottomPadding(), context)
     }
 }
 
 @Composable
-fun ShowEbook(idAnnouncement: Int, bottomBarLength: Dp) {
+fun ShowEbook(
+    idAnnouncement: Int,
+    userAuthor: Boolean,
+    bottomBarLength: Dp,
+    context: Context
+) {
     CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
         val announcementGet = it
+    }
+
+    var likeState by remember {
+        mutableStateOf(false)
+    }
+
+    var saveState by remember{
+        mutableStateOf(false)
+    }
+
+    var viewState by remember{
+        mutableStateOf(false)
     }
 
 
@@ -130,7 +144,7 @@ fun ShowEbook(idAnnouncement: Int, bottomBarLength: Dp) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(168.dp),
-            shape = RoundedCornerShape(bottomEnd = 40.dp, bottomStart = 40.dp),
+            shape = RoundedCornerShape(bottomEnd = if (userAuthor) 40.dp else 0.dp, bottomStart = if (userAuthor) 40.dp else 0.dp),
             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
             elevation = 0.dp
         ){
@@ -151,98 +165,304 @@ fun ShowEbook(idAnnouncement: Int, bottomBarLength: Dp) {
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Column() {
-                    Text(
-                        text = "Lorem Ipsum",
-                        modifier = Modifier
-                            .padding(start = 4.dp),
-                        fontWeight = FontWeight.Light,
-                        fontFamily = SpartanBold,
-                        fontSize = 24.sp,
-                        color = colorResource(id = R.color.eulirio_black)
-                    )
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
 
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Column() {
 
-                    val generos = listOf<String>("genero 1", "genero 2", "genero 4")
+                        Text(
+                            text = "Lorem Ipsum",
+                            modifier = Modifier
+                                .padding(start = 4.dp),
+                            fontWeight = FontWeight.Light,
+                            fontFamily = SpartanBold,
+                            fontSize = 24.sp,
+                            color = colorResource(id = R.color.eulirio_black)
+                        )
 
-                    LazyRow() {
-                        items(generos) {
-                            Card(
-                                modifier = Modifier
-                                    .padding(start = 4.dp, end = 4.dp)
-                                ,
-                                backgroundColor = Color(0xFF1B0C36),
-                                shape = RoundedCornerShape(100.dp),
-                            ) {
-                                Text(
-                                    text = it,//.nome.uppercase(),
-                                    fontSize = 10.sp,
-                                    fontFamily = MontSerratSemiBold,
-                                    textAlign = TextAlign.Center,
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        val generos = listOf<String>("genero 1", "genero 2", "genero 4")
+
+                        LazyRow() {
+                            items(generos) {
+                                Card(
                                     modifier = Modifier
-                                        .padding(12.dp, 1.dp),
-                                    color = Color.White
-                                )
+                                        .padding(start = 4.dp, end = 4.dp)
+                                    ,
+                                    backgroundColor = Color(0xFF1B0C36),
+                                    shape = RoundedCornerShape(100.dp),
+                                ) {
+                                    Text(
+                                        text = it,//.nome.uppercase(),
+                                        fontSize = 10.sp,
+                                        fontFamily = MontSerratSemiBold,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .padding(12.dp, 1.dp),
+                                        color = Color.White
+                                    )
 
+                                }
                             }
+                        }
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        //Sistema de avaliação
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 4.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = "estrela de avaliação",
+                                modifier = Modifier.size(20.dp),
+                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = "estrela de avaliação",
+                                modifier = Modifier.size(20.dp),
+                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = "estrela de avaliação",
+                                modifier = Modifier.size(20.dp),
+                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = "estrela de avaliação",
+                                modifier = Modifier.size(20.dp),
+                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                            Icon(
+                                Icons.Outlined.StarOutline,
+                                contentDescription = "estrela de avaliação",
+                                modifier = Modifier.size(20.dp),
+                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Text(text = "(4,5)")
+
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Row() {
+                        //Coluna de curtir
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                            ){
 
-                    //Sistema de avaliação
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 4.dp),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            modifier = Modifier.size(20.dp),
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            modifier = Modifier.size(20.dp),
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            modifier = Modifier.size(20.dp),
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            modifier = Modifier.size(20.dp),
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Outlined.StarOutline,
-                            contentDescription = "estrela de avaliação",
-                            modifier = Modifier.size(20.dp),
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
+                                //Verificação se o usuário curtiu a publicação
+                                if(likeState){
+                                    Icon(
+                                        Icons.Outlined.Favorite,
+                                        contentDescription = "icone de curtir",
+                                        modifier = Modifier
+                                            .clickable { likeState = !likeState },
+                                        tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
+                                    )
+                                }
+
+                                else Icon(
+                                    Icons.Outlined.FavoriteBorder,
+                                    contentDescription = "icone de curtir",
+                                    modifier = Modifier
+                                        .clickable { likeState = !likeState },
+                                    tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
+                                )
+
+                                Text(
+                                    text = "curtidas",
+                                    fontSize = 10.sp,
+                                    fontFamily = QuickSand,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            }
+
+                            Text(
+                                text = "570",
+                                fontSize = 16.sp,
+                                fontFamily = MontSerratSemiBold,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
 
                         Spacer(modifier = Modifier.width(12.dp))
-                        
-                        Text(text = "4,5")
 
+                        //Coluna de favoritar
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                            ){
+
+                                //Verificação se o usuário favoritou a publicação
+                                if(saveState){
+                                    Icon(
+                                        Icons.Outlined.Bookmark,
+                                        contentDescription = "icone de salvar",
+                                        modifier = Modifier
+                                            .clickable { saveState = !saveState },
+                                        tint = Color.White
+                                    )
+                                }
+
+                                else Icon(
+                                    Icons.Outlined.BookmarkAdd,
+                                    contentDescription = "icone de salvar",
+                                    modifier = Modifier
+                                        .clickable { saveState = !saveState },
+                                    tint = Color.White
+                                )
+
+                                Text(
+                                    text = "favoritos",
+                                    fontSize = 10.sp,
+                                    fontFamily = QuickSand,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            }
+
+                            Text(
+                                text = "182",
+                                fontSize = 16.sp,
+                                fontFamily = MontSerratSemiBold,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        //Coluna de marcar como lido
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                            ){
+
+                                //Verificação se o usuário marcou como lido a publicação
+                                if(viewState){
+                                    Icon(
+                                        Icons.Rounded.CheckCircle,
+                                        contentDescription = "icone de salvar",
+                                        modifier = Modifier
+                                            .clickable { viewState = !viewState },
+                                        tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                                    )
+                                }
+
+                                else Icon(
+                                    Icons.Outlined.CheckCircle,
+                                    contentDescription = "icone de salvar",
+                                    modifier = Modifier
+                                        .clickable { viewState = !viewState },
+                                    tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                                )
+
+                                Text(
+                                    text = "lidos",
+                                    fontSize = 10.sp,
+                                    fontFamily = QuickSand,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            }
+
+                            Text(
+                                text = "4,1k",
+                                fontSize = 16.sp,
+                                fontFamily = MontSerratSemiBold,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
-                    
                 }
             }
         }
-        
+
+        if (!userAuthor) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(bottomBarLength),
+                shape = RoundedCornerShape(bottomEnd = 40.dp, bottomStart = 40.dp),
+                elevation = 0.dp
+            ){
+                Row(Modifier.fillMaxSize()) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth(.5f)
+                            .fillMaxHeight(),
+                        backgroundColor = Color(0x1AFBDB5A),
+                        shape = RoundedCornerShape(bottomStart = 40.dp),
+                        border = BorderStroke(.5.dp, colorResource(id = R.color.eulirio_yellow_card_background)),
+                        elevation = 0.dp
+                    ) {
+                        Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "R$ 20,00",
+                                modifier = Modifier.fillMaxWidth(),
+                                color = colorResource(id = R.color.eulirio_yellow_card_background),
+                                textAlign = TextAlign.Center,
+                                fontSize = 28.sp,
+//                                fontWeight = FontWeight.ExtraLight,
+                                fontFamily = SpartanBold
+                            )
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable {
+                                Toast
+                                    .makeText(context, "oi", Toast.LENGTH_SHORT)
+                                    .show()
+                            },
+                        shape = RoundedCornerShape(0.dp),
+                        backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                        elevation = 0.dp
+                    ) {
+                        Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.ebook_buy).uppercase(),
+                                modifier = Modifier.fillMaxWidth(),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.ExtraLight,
+                                style = MaterialTheme.typography.h2
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         Column(Modifier.height(1000.dp)) {
             Text(text = "teste")
-            
+
         }
     }
 

@@ -193,12 +193,11 @@ fun ShortStorysCard(
                     Row(
                         Modifier
                             .fillMaxSize(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             Icons.Outlined.ChatBubble,
-                            contentDescription = "balão de fala"
+                            contentDescription = "balão de comentario"
                         )
 
                         Text(
