@@ -1,4 +1,5 @@
 package com.example.loginpage
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -22,6 +23,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -93,6 +96,10 @@ fun UpdatePage() {
         mutableStateOf(false)
     }
 
+    var nameFocusRequester = remember {
+        FocusRequester()
+    }
+
     var userNameState by remember {
         mutableStateOf("")
     }
@@ -101,13 +108,18 @@ fun UpdatePage() {
         mutableStateOf(false)
     }
 
+    var userNameFocusRequester = remember {
+        FocusRequester()
+    }
+
+    var duplicatedUserName by remember {
+        mutableStateOf(false)
+    }
+
     var biographyState by remember {
         mutableStateOf("")
     }
 
-    var biographyStateRequired by remember {
-        mutableStateOf(false)
-    }
 
     var writerCheckState by remember {
         mutableStateOf(false)
@@ -116,11 +128,19 @@ fun UpdatePage() {
         mutableStateOf(false)
     }
 
+    var tagsValidate by remember {
+        mutableStateOf(false)
+    }
+
 //    var tags by remember {
 //        mutableStateOf(listOf<Tag>())
 //    }
     var generos by remember {
         mutableStateOf(listOf<Genero>())
+    }
+
+    var generosValidate by remember {
+        mutableStateOf(false)
     }
 
     var showDialog by remember {
@@ -136,12 +156,17 @@ fun UpdatePage() {
     }
 
 
-
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-    CallAPI.getUser(userID){
+
+    var colorValidateNameTextField = Color.Black
+    var colorValidateUserTextField = Color.Black
+    var colorValidateCheckBox = colorResource(id = R.color.eulirio_black)
+    var colorValidateCheckedGenres = Color.Transparent
+
+    CallAPI.getUser(userID) {
         photoState = it.foto
         nameState = it.nome
         userNameState = it.userName
@@ -187,7 +212,7 @@ fun UpdatePage() {
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxSize(),
-                    //.verticalScroll(rememberScrollState()),
+                //.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
@@ -235,8 +260,14 @@ fun UpdatePage() {
                                     textColor = Color(0xFF1E1E1E),
                                     backgroundColor = Color(0x66F2F2F2),
                                     cursorColor = Color(0xFF1E1E1E),
-                                    focusedIndicatorColor = Color(0xFF1E1E1E),
-                                )
+                                    focusedIndicatorColor = colorValidateNameTextField,
+                                    unfocusedIndicatorColor = colorValidateNameTextField
+                                ),
+                                modifier = Modifier
+                                    .focusRequester(nameFocusRequester),
+
+                                isError = nameStateRequired
+
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
@@ -254,6 +285,8 @@ fun UpdatePage() {
 
                                 TextField(
                                     value = userNameState,
+                                    modifier = Modifier
+                                        .focusRequester(userNameFocusRequester),
                                     onValueChange = {
                                         userNameState = it
                                     },
@@ -271,8 +304,10 @@ fun UpdatePage() {
                                         textColor = Color(0xFF1E1E1E),
                                         backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                                         cursorColor = Color(0xFF1E1E1E),
-                                        focusedIndicatorColor = Color(0xFF1E1E1E),
-                                    )
+                                        focusedIndicatorColor = colorValidateUserTextField,
+                                        unfocusedIndicatorColor = colorValidateUserTextField,
+
+                                        )
                                 )
 
                                 if (invalidUsername) Text(
@@ -336,8 +371,11 @@ fun UpdatePage() {
                                 textColor = Color(0xFF1E1E1E),
                                 backgroundColor = colorResource(id = R.color.eulirio_light_yellow_background),
                                 cursorColor = Color(0xFF1E1E1E),
-                                focusedIndicatorColor = Color(0xFF1E1E1E),
-                            )
+                                focusedIndicatorColor = colorValidateUserTextField,
+                                unfocusedIndicatorColor = colorValidateUserTextField
+                            ),
+
+                            isError = userNameStateRequired
                         )
                     }
 
@@ -375,22 +413,22 @@ fun UpdatePage() {
                                 Checkbox(
                                     checked = writerCheckState,
                                     onCheckedChange = {
-                                        writerCheckState = it
+                                        writerCheckState = !writerCheckState
                                     },
                                     modifier = Modifier
                                         .border(
                                             1.dp,
-                                            Color.Black,
+                                            colorValidateCheckBox,
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .width(16.dp)
-                                        .height(16.dp)
-                                    ,
+                                        .height(16.dp),
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = colorResource(id = R.color.eulirio_black),
                                         uncheckedColor = Color.Transparent
                                     ),
-                                )
+
+                                    )
 
                                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -412,17 +450,16 @@ fun UpdatePage() {
                                 Checkbox(
                                     checked = readerCheckState,
                                     onCheckedChange = {
-                                        readerCheckState = it
+                                        readerCheckState = !readerCheckState
                                     },
                                     modifier = Modifier
                                         .border(
                                             1.dp,
-                                            Color.Black,
+                                            colorValidateCheckBox,
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .width(16.dp)
-                                        .height(16.dp)
-                                    ,
+                                        .height(16.dp),
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = colorResource(id = R.color.eulirio_black),
                                         uncheckedColor = Color.Transparent
@@ -450,6 +487,7 @@ fun UpdatePage() {
                                 colorResource(id = R.color.eulirio_light_yellow_background),
                                 shape = RoundedCornerShape(12.dp)
                             )
+                            .border(1.dp, colorValidateCheckedGenres)
                             .fillMaxWidth()
                             .padding(start = 12.dp, top = 8.dp)
                     ) {
@@ -471,14 +509,19 @@ fun UpdatePage() {
                                 mutableStateOf(listOf<Genero>())
                             }
 
-                            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                            val genreCall = retrofit.create(GenreCall::class.java) // instância do objeto contact
+                            val retrofit =
+                                RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                            val genreCall =
+                                retrofit.create(GenreCall::class.java) // instância do objeto contact
                             val callGetGenres01 = genreCall.getAll()
 
                             // Excutar a chamada para o End-point
                             callGetGenres01.enqueue(object :
                                 Callback<List<Genero>> { // enqueue: usado somente quando o objeto retorna um valor
-                                override fun onResponse(call: Call<List<Genero>>, response: Response<List<Genero>>) {
+                                override fun onResponse(
+                                    call: Call<List<Genero>>,
+                                    response: Response<List<Genero>>
+                                ) {
                                     genres = response.body()!!
 
                                     Log.i("teste gen", genres.toString())
@@ -502,7 +545,7 @@ fun UpdatePage() {
                                 items(
                                     items = genres
                                 ) {
-                                    NewGenreCard(it){ state ->
+                                    NewGenreCard(it) { state ->
                                         if (state) generos += Genero(it.idGenero)
                                     }
                                 }
@@ -515,67 +558,156 @@ fun UpdatePage() {
 
 
 
+
+
+
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.End
                     ) {
+
                         Button(
                             onClick = {
 
-                                if(userNameState.isEmpty()){
-                                    userNameStateRequired = true
+                                if (nameState.isEmpty()) {
+                                    userNameStateRequired = true;
+                                    colorValidateNameTextField = Color.Red
+                                    Toast.makeText(
+                                        context,
+                                        "O campo do seu nome precisa ser preenchido",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    nameFocusRequester.requestFocus()
+                                }
+
+                                if (userNameState.isEmpty()) {
+                                    userNameStateRequired = true;
+                                    colorValidateUserTextField = Color.Red
+                                    Toast.makeText(
+                                        context,
+                                        "O campo do seu nome de usuário precisa ser preenchido",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    userNameFocusRequester.requestFocus()
+                                }
+
+                                Log.i("testegenero", "${writerCheckState}")
+                                Log.i("testegenero", "${readerCheckState}")
+                                if (!writerCheckState) {
+                                    tagsValidate = true;
+                                    colorValidateCheckBox = Color.Red
+                                    Toast.makeText(
+                                        context,
+                                        "O campo de sua tag precisa ser preenchido",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                } else{
+                                    tagsValidate = false
                                 }
 
 
-                                iconUri?.let {
-                                    uploadFile(it, "profile", userNameState, context) {url ->
-                                        Log.i("foto url", url)
+                                Log.i("testegenero", "${generos}")
+                                if (generos.isEmpty()) {
+                                    generosValidate = true;
+                                    colorValidateCheckedGenres = Color.Red
+                                    Toast.makeText(
+                                        context,
+                                        "O campo para seus gêneros literários não pode estar vazio",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }else{
+                                    generosValidate = false
+                                    colorValidateCheckedGenres = Color.Black
+                                }
 
-                                        var tag1: Int? = null
-                                        var tag2: Int? = null
+                                CallAPI.verifyUsername(userNameState) {
+                                    duplicatedUserName = it
+                                }
 
-                                        if (writerCheckState)
-                                            tag1 = 1
-                                        if (readerCheckState)
-                                            tag2 = 2
+                                if (duplicatedUserName) {
+                                    userNameFocusRequester.requestFocus()
+                                    colorValidateUserTextField = Color.Red
+                                    Toast.makeText(
+                                        context,
+                                        "Este nome de usuário já existe. Por favor utilize um único.",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
 
-                                        val user = UserUpdate (
-                                            foto = url,
-                                            nome = nameState,
-                                            userName = userNameState,
-                                            biografia = biographyState,
-                                            tag01 = tag1,
-                                            tag02 = tag2,
-                                            generos = generos
-                                        )
 
-                                        val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                                        val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
-                                        val callInsertUser = userCall.update(userID.idUser, user)
+                                if (!userNameStateRequired && !nameStateRequired && !tagsValidate && !generosValidate && !duplicatedUserName) {
 
-                                        var responseValidate = 0
+//                                    iconUri?.let {
+//                                        uploadFile(it, "profile", userNameState, context) { url ->
+//                                            Log.i("foto url", url)
+//
+//                                            var tag1: Int? = null
+//                                            var tag2: Int? = null
+//
+//                                            if (writerCheckState)
+//                                                tag1 = 1
+//                                            if (readerCheckState)
+//                                                tag2 = 2
+//
+//                                            val user = UserUpdate(
+//                                                foto = url,
+//                                                nome = nameState,
+//                                                userName = userNameState,
+//                                                biografia = biographyState,
+//                                                tag01 = tag1,
+//                                                tag02 = tag2,
+//                                                generos = generos
+//                                            )
+//
+//
+//                                            val retrofit =
+//                                                RetrofitApi.getRetrofit() // pegar a instância do retrofit
+//                                            val userCall =
+//                                                retrofit.create(UserCall::class.java) // instância do objeto contact
+//                                            val callInsertUser =
+//                                                userCall.update(userID.idUser, user)
+//
+//                                            var responseValidate = 0
+//
+//
+//                                            // Excutar a chamada para o End-point
+//                                            callInsertUser.enqueue(object :
+//                                                Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+//                                                override fun onResponse(
+//                                                    call: Call<String>,
+//                                                    response: Response<String>
+//                                                ) {
+//                                                    responseValidate = response.code()
+//
+//                                                    Log.i("erro fdp", responseValidate.toString())
+//
+//                                                    if (responseValidate == 200) {
+//                                                        val intent =
+//                                                            Intent(context, Home::class.java)
+//                                                        context.startActivity(intent)
+//                                                    }
+//                                                    Log.i(
+//                                                        "respon post",
+//                                                        response.message().toString()
+//                                                    )
+//                                                }
+//
+//                                                override fun onFailure(
+//                                                    call: Call<String>,
+//                                                    t: Throwable
+//                                                ) {
+//                                                    Log.i("respon post err", t.message.toString())
+//                                                }
+//                                            })
+//                                        }
 
-                                        // Excutar a chamada para o End-point
-                                        callInsertUser.enqueue(object :
-                                            Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
-                                            override fun onResponse(call: Call<String>, response: Response<String>) {
-                                                responseValidate = response.code()
-
-                                                Log.i("erro fdp", responseValidate.toString())
-
-                                                if (responseValidate == 200) {
-                                                    val intent = Intent(context, Home::class.java)
-                                                    context.startActivity(intent)
-                                                }
-                                                Log.i("respon post", response.message().toString())
-                                            }
-
-                                            override fun onFailure(call: Call<String>, t: Throwable) {
-                                                Log.i("respon post err", t.message.toString())
-                                            }
-                                        })
-                                    }
+//                                    }
                                 }
                             },
                             shape = RoundedCornerShape(10.dp),
@@ -662,18 +794,24 @@ fun UpdatePage() {
                                 }
                                 Button(
                                     onClick = {
-                                        val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-                                        val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+                                        val retrofit =
+                                            RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                        val userCall =
+                                            retrofit.create(UserCall::class.java) // instância do objeto contact
                                         val callDeleteUser = userCall.delete(userID.idUser)
 
-                                        callDeleteUser.enqueue(object:
+                                        callDeleteUser.enqueue(object :
                                             Callback<String> {
                                             override fun onResponse(
                                                 call: Call<String>,
                                                 response: Response<String>
                                             ) {
                                                 if (response.code() == 200) {
-                                                    Toast.makeText(context, "Sua conta foi excluída com sucesso!", Toast.LENGTH_SHORT)
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Sua conta foi excluída com sucesso!",
+                                                        Toast.LENGTH_SHORT
+                                                    )
                                                         .show()
 
                                                     val auth = FirebaseAuth.getInstance()
