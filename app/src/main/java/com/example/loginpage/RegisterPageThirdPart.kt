@@ -1,7 +1,6 @@
 package com.example.loginpage
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -35,14 +34,10 @@ import androidx.compose.ui.unit.sp
 import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
-import com.example.loginpage.SQLite.dao.repository.UserIDrepository
-import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.Genero
-import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
 import com.example.loginpage.models.User
 import com.example.loginpage.resources.authenticate
-import com.example.loginpage.resources.getGenres
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.google.firebase.auth.*

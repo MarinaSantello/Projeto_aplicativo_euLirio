@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 //import com.example.euLirio.R
-import com.example.loginpage.models.Genre
 import com.example.loginpage.R
 import com.example.loginpage.models.Genero
 
@@ -54,7 +53,7 @@ fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = genre.nomeGenero,
+                text = "",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.eulirio_purple)
