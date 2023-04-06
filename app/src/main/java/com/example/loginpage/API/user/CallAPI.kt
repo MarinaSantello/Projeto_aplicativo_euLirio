@@ -76,7 +76,12 @@ class CallAPI() {
                 override fun onResponse(call: Call<UserName>, response: Response<UserName>) {
                     val validate = response.code()
 
-                    if (validate == 404)
+                    Log.i("verificar user", validate.toString())
+                    Log.i("verificar user", response.message().toString())
+
+                    if (validate == 200)
+                        validUsername.invoke(true)
+                    else if (validate == 404)
                         validUsername.invoke(false)
                 }
 

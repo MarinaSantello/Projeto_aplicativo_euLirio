@@ -95,19 +95,17 @@ fun UpdatePage() {
     var nameStateRequired by remember {
         mutableStateOf(false)
     }
-
     var nameFocusRequester = remember {
         FocusRequester()
     }
 
+    var originalUserName = ""
     var userNameState by remember {
         mutableStateOf("")
     }
-
     var userNameStateRequired by remember {
         mutableStateOf(false)
     }
-
     var userNameFocusRequester = remember {
         FocusRequester()
     }
@@ -170,6 +168,7 @@ fun UpdatePage() {
         photoState = it.foto
         nameState = it.nome
         userNameState = it.userName
+        originalUserName = it.userName
         biographyState = it.biografia
     }
 
@@ -555,12 +554,6 @@ fun UpdatePage() {
 
                     Spacer(modifier = Modifier.height(25.dp))
 
-
-
-
-
-
-
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.Bottom,
@@ -570,8 +563,12 @@ fun UpdatePage() {
                         Button(
                             onClick = {
 
+                                CallAPI.verifyUsername(userNameState) {
+                                    duplicatedUserName = it
+                                }
+
                                 if (nameState.isEmpty()) {
-                                    userNameStateRequired = true;
+                                    nameStateRequired = true;
                                     colorValidateNameTextField = Color.Red
                                     Toast.makeText(
                                         context,
@@ -580,6 +577,8 @@ fun UpdatePage() {
                                     )
                                         .show()
                                     nameFocusRequester.requestFocus()
+                                } else{
+                                    nameStateRequired = false
                                 }
 
                                 if (userNameState.isEmpty()) {
@@ -592,6 +591,8 @@ fun UpdatePage() {
                                     )
                                         .show()
                                     userNameFocusRequester.requestFocus()
+                                } else{
+                                    userNameStateRequired = false
                                 }
 
                                 Log.i("testegenero", "${writerCheckState}")
@@ -625,19 +626,17 @@ fun UpdatePage() {
                                     colorValidateCheckedGenres = Color.Black
                                 }
 
-                                CallAPI.verifyUsername(userNameState) {
-                                    duplicatedUserName = it
-                                }
-
-                                if (duplicatedUserName) {
-                                    userNameFocusRequester.requestFocus()
-                                    colorValidateUserTextField = Color.Red
-                                    Toast.makeText(
-                                        context,
-                                        "Este nome de usuário já existe. Por favor utilize um único.",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
+                                if (userNameState != originalUserName) {
+                                    if (duplicatedUserName) {
+                                        userNameFocusRequester.requestFocus()
+                                        colorValidateUserTextField = Color.Red
+                                        Toast.makeText(
+                                            context,
+                                            "Este nome de usuário já existe. Por favor utilize um único.",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                    }
                                 }
 
 
