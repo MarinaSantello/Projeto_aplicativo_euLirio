@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.loginpage.models.Genero
+import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat2
 import com.example.loginpage.ui.theme.Spartan
@@ -457,72 +458,12 @@ fun InputDataEbook(navController: NavController) {
             Spacer(modifier = Modifier.height(12.dp))
 
 
-            Text(
-                "Gêneros de História",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold
-            )
-            val genres = listOf("AÇÃO", "TERROR", "SCI-FI", "AVENTURA")
 
 
 
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(4),
 
-                // content padding
-                contentPadding = PaddingValues(
-                    start = 8.dp,
-                    end = 8.dp,
-                    top = 4.dp,
-                    bottom = 8.dp
-                )
-            ) {
-                items(
-                    items = genres
-                ){
 
-                    Card(
-                        modifier = Modifier
-                            .width(320.dp)
-                            .height(100.dp),
-                        backgroundColor = colorResource(id = R.color.eulirio_grey_background),
-                        elevation = 0.dp
-                    ) {
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Checkbox(
-                                checked = checkState,
-                                modifier = Modifier
-                                    .border(
-                                        1.dp,
-                                        Color.Black,
-                                        shape = RoundedCornerShape(2.dp)
-                                    )
-                                    .width(16.dp)
-                                    .height(16.dp)
-                                    .padding(start = 2.dp),
-                                onCheckedChange = {},
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                                    uncheckedColor = Color.Transparent
-                                ),
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Text(
-                                text = it,
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = Montserrat2,
-                                color = colorResource(id = R.color.eulirio_black)
-                            )
-                        }
-                    }
-
-                }
-            }
+            GenerateGenresCards()
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -549,7 +490,7 @@ fun InputDataEbook(navController: NavController) {
                         modifier = Modifier
                             .height(116.dp)
                             .width(110.dp)
-                            .clickable {  },
+                            .clickable { },
                     ) {
 
                     }
@@ -559,7 +500,7 @@ fun InputDataEbook(navController: NavController) {
                         modifier = Modifier
                             .height(116.dp)
                             .width(110.dp)
-                            .clickable {  },
+                            .clickable { },
                     ) {
 
                     }
@@ -569,13 +510,35 @@ fun InputDataEbook(navController: NavController) {
                         modifier = Modifier
                             .height(116.dp)
                             .width(110.dp)
-                            .clickable {  },
+                            .clickable { },
                     ) {
 
                     }
 
                 }
 
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp),
+                backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border)
+                    ){
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "PUBLICAR",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
 
