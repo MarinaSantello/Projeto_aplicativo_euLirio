@@ -83,12 +83,12 @@
     <string name="title_activity_view_books">ViewBooks</string>
 
     <string name="title_activity_post_ebook">PostEbook</string>
-    <string name="publicar"> Publique seu e-book </string>
-    <string name="publicartitulo"> Título </string>
-    <string name="precopub"> Preço </string>
-    <string name="adicionarimagem"> Adicione a capa </string>
-    <string name="precificacaopub"> R$ </string>
-    <string name="sinopsepub"> Sinopse </string>
+    <string name="publicar">Publique seu e-book</string>
+    <string name="publicartitulo">Título</string>
+    <string name="precopub">Preço</string>
+    <string name="adicionarimagem">Adicione a capa</string>
+    <string name="precificacaopub">R$</string>
+    <string name="sinopsepub">Sinopse</string>
     <string name="title_activity_ebook">Ebook</string>
 
     <string name="title_ebook">E-book</string>
@@ -96,4 +96,6 @@
     <string name="ebook_buy">comprar</string>
     <string name="ebook_bag">adicionar ao carrinho</string>
     <string name="title_activity_user_stories">UserStories</string>
+    <string name="resenhatilte"> Título da história </string>
+    <string name="review">  </string>
 </resources>

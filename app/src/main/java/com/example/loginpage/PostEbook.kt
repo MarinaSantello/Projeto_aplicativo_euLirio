@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_EXPRESSION")
+
 package com.example.loginpage
 
 import android.content.Intent
@@ -125,7 +127,7 @@ fun InputDataEbook(navController: NavController) {
     ) { uri: Uri? ->
         pdfUri = uri
 
-        Log.i("uri image", uri.toString())
+        Log.i("uri pdf", uri.toString())
     }
 
     var epubUri by remember {
@@ -136,7 +138,7 @@ fun InputDataEbook(navController: NavController) {
     ) { uri: Uri? ->
         epubUri = uri
 
-        Log.i("uri image", uri.toString())
+        Log.i("uri epub", uri.toString())
     }
 
     var mobiUri by remember {
@@ -147,7 +149,7 @@ fun InputDataEbook(navController: NavController) {
     ) { uri: Uri? ->
         mobiUri = uri
 
-        Log.i("uri image", uri.toString())
+        Log.i("uri mobi", uri.toString())
     }
 
     var expanded by remember {
@@ -222,6 +224,7 @@ fun InputDataEbook(navController: NavController) {
                 )
             }
 
+            Spacer(modifier = Modifier.width(12.dp))
 
             //column titulo
             Column() {
@@ -338,29 +341,29 @@ fun InputDataEbook(navController: NavController) {
 
             val items = listOf("Opção 1", "Opção 2")
 
-            Box {
+            Box (Modifier.padding(top = 8.dp)) {
                 Text(
                     text = items[selectedItem],
-                    modifier = Modifier.clickable(onClick = { expanded = true })
+                    modifier = Modifier
+                        .clickable(onClick = { expanded = true })
                 )
                 Card(modifier = Modifier
-                    .height(30.dp)
                     .clickable { expanded = true }
                     .fillMaxWidth(),
                     backgroundColor = colorResource(id = R.color.eulirio_grey_background),
                     shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)) {
 
-
                     Row(
                         modifier = Modifier
-                            .padding(start = 13.dp, end = 13.dp)
+                            .padding(start = 12.dp, end = 12.dp)
                             .fillMaxSize(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Selecione a Faixa Etária",
-                            fontSize = 10.sp,
+                            text = items[selectedItem],
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(4.dp, 10.dp)
                         )
                         Icon(
                             Icons.Rounded.ExpandMore,
@@ -372,27 +375,23 @@ fun InputDataEbook(navController: NavController) {
 
                 }
 
-
-
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .height(30.dp)
-                        .fillMaxWidth()
-
+                    modifier = Modifier.fillMaxWidth(.85f)
                 ) {
                     items.forEachIndexed { index, item ->
-                        DropdownMenuItem(onClick = {
-                            selectedItem = index
-                            expanded = false
-                        }) {
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedItem = index
+                                expanded = false
+                            }
+                        ) {
                             Text(text = item)
                         }
                     }
                 }
-
-            }
+        }
 
             Card(
                 modifier = Modifier
@@ -417,6 +416,9 @@ fun InputDataEbook(navController: NavController) {
                     )
                 },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                ),
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
@@ -444,6 +446,9 @@ fun InputDataEbook(navController: NavController) {
                     )
                 },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                ),
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
@@ -456,12 +461,6 @@ fun InputDataEbook(navController: NavController) {
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
-
-
-
-
-
 
             GenerateGenresCards()
 
@@ -488,9 +487,11 @@ fun InputDataEbook(navController: NavController) {
                     Card(
                         backgroundColor = Color.Gray,
                         modifier = Modifier
-                            .height(116.dp)
-                            .width(110.dp)
-                            .clickable { },
+                            .height(120.dp)
+                            .width(112.dp)
+                            .clickable {
+                                selectEPUB.launch("application/pdf")
+                            },
                     ) {
 
                     }
@@ -498,9 +499,11 @@ fun InputDataEbook(navController: NavController) {
                     Card(
                         backgroundColor = Color.Gray,
                         modifier = Modifier
-                            .height(116.dp)
-                            .width(110.dp)
-                            .clickable { },
+                            .height(120.dp)
+                            .width(112.dp)
+                            .clickable {
+                                selectEPUB.launch("application/epub+zip")
+                            },
                     ) {
 
                     }
@@ -508,9 +511,11 @@ fun InputDataEbook(navController: NavController) {
                     Card(
                         backgroundColor = Color.Gray,
                         modifier = Modifier
-                            .height(116.dp)
-                            .width(110.dp)
-                            .clickable { },
+                            .height(120.dp)
+                            .width(112.dp)
+                            .clickable {
+                                selectMOBI.launch("application/octet-stream")
+                            },
                     ) {
 
                     }
@@ -538,13 +543,9 @@ fun InputDataEbook(navController: NavController) {
                         color = Color.White
                     )
                 }
-                Spacer(modifier = Modifier.height(20.dp))
             }
 
-
-
-
-
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
     }

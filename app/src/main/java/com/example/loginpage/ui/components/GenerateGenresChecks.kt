@@ -10,6 +10,7 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +30,7 @@ fun GenerateGenresCards(){
     }
 
     val checkboxList = listOf(
-        "ACAO", "TERROR", "SUSPENSE"
+        "ACAO", "TERROR", "SUSPENSE", "crônica"
     )
 
     val rows = (checkboxList.size + 2) / 3
@@ -45,13 +46,13 @@ fun GenerateGenresCards(){
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.eulirio_purple_text_color_border),
             modifier = Modifier
-                .padding(start = 15.dp)
+                .padding(start = 12.dp)
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .padding(end = 15.dp)
+                .padding(end = 12.dp)
         ) {
 
             repeat(rows) { rowIndex ->
@@ -62,22 +63,28 @@ fun GenerateGenresCards(){
                 ) {
                     (rowIndex * 3..(rowIndex * 3) + 2).forEachIndexed { colIndex, itemIndex ->
                         if (itemIndex < checkboxList.size) {
+                            var checkGenre by rememberSaveable() {
+                                mutableStateOf(false)
+                            }
+
                             Row(
                                 modifier = Modifier.weight(1f),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
+                                horizontalArrangement = Arrangement.Start
                             ) {
                                 Checkbox(
-                                    checked = false,
-                                    onCheckedChange = { /* MUDAR O CHECKSTATE */ },
+                                    checked = checkGenre,
+                                    onCheckedChange = {
+                                        checkGenre = it
+                                    },
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                                        uncheckedColor = Color.Transparent
+                                        uncheckedColor = colorResource(id = R.color.eulirio_black)
                                     )
 
                                     )
                                 Text(
-                                    text = checkboxList[itemIndex],
+                                    text = checkboxList[itemIndex].uppercase(),
                                     fontWeight = FontWeight.W500,
                                     fontSize = 12.sp
 
