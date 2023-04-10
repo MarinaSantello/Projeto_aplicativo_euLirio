@@ -11,12 +11,13 @@ import retrofit2.Response
 class CallShortStoryAPI {
 
     companion object {
-        fun getShortStories(ShortStoryData: (List<ShortStoryGet>) -> Unit) {
-            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-            val announcementCall = retrofit.create(CallShortStory::class.java) // instância do objeto contact
-            val callAnnouncements = announcementCall.getAllShortStories()
+        val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+        val shortStoryCall = retrofit.create(CallShortStory::class.java) // instância do objeto contact
 
-            callAnnouncements.enqueue(object :
+        fun getShortStories(ShortStoryData: (List<ShortStoryGet>) -> Unit) {
+            val callShortStories = shortStoryCall.getAllShortStories()
+
+            callShortStories.enqueue(object :
                 Callback<List<ShortStoryGet>> {
                 override fun onResponse(
                     call: Call<List<ShortStoryGet>>,
@@ -30,6 +31,27 @@ class CallShortStoryAPI {
                 override fun onFailure(call: Call<List<ShortStoryGet>>, t: Throwable) {
 
                 }
+            })
+        }
+
+        fun getShortStoriesByGenreUser(userID: Int, ShortStoryData: (List<ShortStoryGet>) -> Unit) {
+            val callShortStories = shortStoryCall.getAllShortStoriesByGenreUser(userID)
+
+            callShortStories.enqueue(object :
+                Callback<List<ShortStoryGet>>{
+                override fun onResponse(
+                    call: Call<List<ShortStoryGet>>,
+                    response: Response<List<ShortStoryGet>>
+                ) {
+                    val shortStories = response.body()!!
+
+                    ShortStoryData.invoke(shortStories)
+                }
+
+                override fun onFailure(call: Call<List<ShortStoryGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+
             })
         }
     }

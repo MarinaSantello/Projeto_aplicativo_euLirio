@@ -183,6 +183,7 @@ fun ShortStorysCard(
 
                     Text(
                         text = shortStory.sinopse,
+                        modifier = Modifier.height(60.dp),
                         style = MaterialTheme.typography.subtitle2,
                         maxLines = 5,
                         overflow = TextOverflow.Ellipsis
@@ -193,19 +194,23 @@ fun ShortStorysCard(
                     Row(
                         Modifier
                             .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            Icons.Outlined.ChatBubble,
-                            contentDescription = "balão de comentario"
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Outlined.ChatBubbleOutline,
+                                contentDescription = "balão de comentario",
+                                modifier = Modifier.padding(end = 2.dp)
+                            )
 
-                        Text(
-                            text = "28",
-                            fontSize = 10.sp,
-                            fontFamily = Montserrat2,
-                            fontWeight = FontWeight.W500,
-                        )
+                            Text(
+                                text = "28",
+                                fontSize = 10.sp,
+                                fontFamily = Montserrat2,
+                                fontWeight = FontWeight.W500,
+                            )
+                        }
 
                         Row() {
                             //Linha de curtir

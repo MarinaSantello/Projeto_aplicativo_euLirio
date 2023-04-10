@@ -188,6 +188,7 @@ fun AnnouncementCard(
 
                     Text(
                         text = announcement.sinopse,
+                        modifier = Modifier.height(60.dp),
                         style = MaterialTheme.typography.subtitle2,
                         maxLines = 5,
                         overflow = TextOverflow.Ellipsis

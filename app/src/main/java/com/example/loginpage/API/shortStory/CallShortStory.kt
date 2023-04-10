@@ -13,4 +13,7 @@ interface CallShortStory {
 
     @GET("short-stories")
     fun getAllShortStories(): Call<List<ShortStoryGet>>
+
+    @GET("short-stories/user-id/{id}")
+    fun getAllShortStoriesByGenreUser(@Path("id") idUser: Int): Call<List<ShortStoryGet>>
 }

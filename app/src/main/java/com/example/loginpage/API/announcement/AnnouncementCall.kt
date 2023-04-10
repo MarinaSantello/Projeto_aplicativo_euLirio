@@ -11,4 +11,7 @@ interface AnnouncementCall {
 
     @GET("announcements")
     fun getAllAnnouncements(): Call<List<AnnouncementGet>>
+
+    @GET("announcements/user-id/{id}")
+    fun getAllAnnouncementsByGenresUser(@Path("id") userID: Int): Call<List<AnnouncementGet>>
 }

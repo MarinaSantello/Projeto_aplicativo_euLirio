@@ -397,7 +397,7 @@ fun UserHomePage() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                TabsFiltro()
+                TabsFeed(83, 40.dp)
 
             }
 

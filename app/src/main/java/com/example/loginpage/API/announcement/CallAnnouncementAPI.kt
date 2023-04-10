@@ -12,9 +12,9 @@ import retrofit2.Response
 class CallAnnouncementAPI() {
 
     companion object {
+        val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+        val announcementCall = retrofit.create(AnnouncementCall::class.java) // instância do objeto contact
         fun getAnnouncements(announcementsData: (List<AnnouncementGet>) -> Unit) {
-            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-            val announcementCall = retrofit.create(AnnouncementCall::class.java) // instância do objeto contact
             val callAnnouncements = announcementCall.getAllAnnouncements()
 
             callAnnouncements.enqueue(object :
@@ -35,8 +35,6 @@ class CallAnnouncementAPI() {
         }
 
         fun getAnnouncement(idAnnouncement: Int, announcementData: (AnnouncementGet) -> Unit) {
-            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-            val announcementCall = retrofit.create(AnnouncementCall::class.java) // instância do objeto contact
             val callAnnouncement = announcementCall.getByID(idAnnouncement)
 
             callAnnouncement.enqueue(object :
@@ -54,6 +52,26 @@ class CallAnnouncementAPI() {
 
                 override fun onFailure(call: Call<AnnouncementGet>, t: Throwable) {
 
+                }
+            })
+        }
+
+        fun getAllAnnouncementsByGenresUser(userID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+            val callAnnouncements = announcementCall.getAllAnnouncementsByGenresUser(userID)
+
+            callAnnouncements.enqueue(object :
+                Callback<List<AnnouncementGet>> {
+                override fun onResponse(
+                    call: Call<List<AnnouncementGet>>,
+                    response: Response<List<AnnouncementGet>>
+                ) {
+                    val announcements = response.body()!!
+
+                    announcementsData.invoke(announcements)
+                }
+
+                override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
                 }
             })
         }
