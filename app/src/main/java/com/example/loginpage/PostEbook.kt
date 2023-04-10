@@ -8,11 +8,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,18 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.loginpage.API.genre.GenreCall
-import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.models.EbookGenreCard
 import com.example.loginpage.models.Genero
-import com.example.loginpage.ui.components.GenreCard
-import com.example.loginpage.ui.components.NewGenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat2
 import com.example.loginpage.ui.theme.Spartan
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class PostEbook : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -163,7 +155,15 @@ fun InputDataEbook(navController: NavController) {
     var selectedItem by remember {
         mutableStateOf(0)
     }
-    Column() {
+    val scrollState = rememberScrollState()
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+
+    ) {
 
         Card(
             modifier = Modifier
@@ -454,11 +454,20 @@ fun InputDataEbook(navController: NavController) {
                     .fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
 
-            val genres = listOf<String>("AÇÃO", "TERROR", "SCI-FI", "AVENTURA")
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+            Text(
+                "Gêneros de História",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold
+            )
+            val genres = listOf("AÇÃO", "TERROR", "SCI-FI", "AVENTURA")
+
+
+
+            LazyHorizontalGrid(
+                rows = GridCells.Fixed(4),
 
                 // content padding
                 contentPadding = PaddingValues(
@@ -470,19 +479,19 @@ fun InputDataEbook(navController: NavController) {
             ) {
                 items(
                     items = genres
-                ) {
+                ){
+
                     Card(
                         modifier = Modifier
-                            .widthIn(80.dp)
-                            .height(30.dp),
+                            .width(320.dp)
+                            .height(100.dp),
                         backgroundColor = colorResource(id = R.color.eulirio_grey_background),
-                        elevation = 0.dp,
-                        border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_purple_text_color_border))
+                        elevation = 0.dp
                     ) {
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically
-
-                        ) {
+                        ){
                             Checkbox(
                                 checked = checkState,
                                 modifier = Modifier
@@ -494,17 +503,12 @@ fun InputDataEbook(navController: NavController) {
                                     .width(16.dp)
                                     .height(16.dp)
                                     .padding(start = 2.dp),
-                                onCheckedChange = {
-                                    checkState = it
-
-
-                                },
+                                onCheckedChange = {},
                                 colors = CheckboxDefaults.colors(
-                                    checkedColor = colorResource(id = R.color.eulirio_black),
+                                    checkedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                                     uncheckedColor = Color.Transparent
                                 ),
                             )
-
                             Spacer(modifier = Modifier.width(8.dp))
 
                             Text(
@@ -515,23 +519,81 @@ fun InputDataEbook(navController: NavController) {
                                 color = colorResource(id = R.color.eulirio_black)
                             )
                         }
+                    }
+
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "E-book",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Row(
+                    Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    //Card para importar PDF
+                    Card(
+                        backgroundColor = Color.Gray,
+                        modifier = Modifier
+                            .height(116.dp)
+                            .width(110.dp)
+                            .clickable {  },
+                    ) {
 
                     }
-                }
+                    //Card para importar ePUB
+                    Card(
+                        backgroundColor = Color.Gray,
+                        modifier = Modifier
+                            .height(116.dp)
+                            .width(110.dp)
+                            .clickable {  },
+                    ) {
+
+                    }
+                    //Card para importar MOBI
+                    Card(
+                        backgroundColor = Color.Gray,
+                        modifier = Modifier
+                            .height(116.dp)
+                            .width(110.dp)
+                            .clickable {  },
+                    ) {
+
+                    }
 
                 }
-
 
             }
 
-        }
-    }
 
 
-    @Composable
-    fun DefaultPreview5() {
-        LoginPageTheme {
-            val navController = rememberNavController()
-            InputDataEbook(navController)
+
+
         }
+
     }
+}
+
+
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun DefaultPreview5() {
+    LoginPageTheme {
+        val navController = rememberNavController()
+        InputDataEbook(navController)
+    }
+}

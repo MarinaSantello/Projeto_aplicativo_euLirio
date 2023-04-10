@@ -236,6 +236,8 @@ fun RegisterPageThirdPartFun() {
                                 ) {
                                     GenreCard(it){ state ->
                                         if (state) generos += Genero(it.idGenero)
+
+                                        else generos -= Genero(it.idGenero)
                                     }
                                 }
                             }

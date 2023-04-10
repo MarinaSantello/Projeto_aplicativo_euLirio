@@ -110,10 +110,6 @@ fun UpdatePage() {
         FocusRequester()
     }
 
-    var duplicatedUserName by remember {
-        mutableStateOf(false)
-    }
-
     var biographyState by remember {
         mutableStateOf("")
     }
@@ -417,7 +413,7 @@ fun UpdatePage() {
                                     modifier = Modifier
                                         .border(
                                             1.dp,
-                                            colorValidateCheckBox,
+                                            colorResource(R.color.eulirio_black),
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .width(16.dp)
@@ -454,7 +450,7 @@ fun UpdatePage() {
                                     modifier = Modifier
                                         .border(
                                             1.dp,
-                                            colorValidateCheckBox,
+                                            colorResource(R.color.eulirio_black),
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .width(16.dp)
@@ -486,7 +482,6 @@ fun UpdatePage() {
                                 colorResource(id = R.color.eulirio_light_yellow_background),
                                 shape = RoundedCornerShape(12.dp)
                             )
-                            .border(1.dp, colorValidateCheckedGenres)
                             .fillMaxWidth()
                             .padding(start = 12.dp, top = 8.dp)
                     ) {
@@ -546,6 +541,8 @@ fun UpdatePage() {
                                 ) {
                                     NewGenreCard(it) { state ->
                                         if (state) generos += Genero(it.idGenero)
+
+                                        else generos -= Genero(it.idGenero)
                                     }
                                 }
                             }
@@ -563,8 +560,18 @@ fun UpdatePage() {
                         Button(
                             onClick = {
 
-                                CallAPI.verifyUsername(userNameState) {
-                                    duplicatedUserName = it
+                                if (userNameState != originalUserName) {
+                                    CallAPI.verifyUsername(userNameState) {
+                                        if (it) {
+                                            userNameFocusRequester.requestFocus()
+                                            Toast.makeText(
+                                                context,
+                                                "Este nome de usuário já existe. Por favor utilize um único.",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }
+                                    }
                                 }
 
                                 if (nameState.isEmpty()) {
@@ -597,9 +604,8 @@ fun UpdatePage() {
 
                                 Log.i("testegenero", "${writerCheckState}")
                                 Log.i("testegenero", "${readerCheckState}")
-                                if (!writerCheckState) {
+                                if (!writerCheckState && !readerCheckState) {
                                     tagsValidate = true;
-                                    colorValidateCheckBox = Color.Red
                                     Toast.makeText(
                                         context,
                                         "O campo de sua tag precisa ser preenchido",
@@ -614,7 +620,6 @@ fun UpdatePage() {
                                 Log.i("testegenero", "${generos}")
                                 if (generos.isEmpty()) {
                                     generosValidate = true;
-                                    colorValidateCheckedGenres = Color.Red
                                     Toast.makeText(
                                         context,
                                         "O campo para seus gêneros literários não pode estar vazio",
@@ -623,90 +628,139 @@ fun UpdatePage() {
                                         .show()
                                 }else{
                                     generosValidate = false
-                                    colorValidateCheckedGenres = Color.Black
                                 }
 
-                                if (userNameState != originalUserName) {
-                                    if (duplicatedUserName) {
-                                        userNameFocusRequester.requestFocus()
-                                        colorValidateUserTextField = Color.Red
-                                        Toast.makeText(
-                                            context,
-                                            "Este nome de usuário já existe. Por favor utilize um único.",
-                                            Toast.LENGTH_SHORT
+                                Log.i("update teste1", userNameStateRequired.toString())
+                                Log.i("update teste2", nameStateRequired.toString())
+                                Log.i("update teste3", tagsValidate.toString())
+                                Log.i("update teste4", generosValidate.toString())
+
+                                if (!userNameStateRequired && !nameStateRequired && !tagsValidate && !generosValidate) {
+
+                                    if (iconUri == null) {
+                                        var tag1: Int? = null
+                                        var tag2: Int? = null
+
+                                        if (writerCheckState)
+                                            tag1 = 1
+                                        if (readerCheckState)
+                                            tag2 = 2
+
+                                        val user = UserUpdate(
+                                            foto = photoState,
+                                            nome = nameState,
+                                            userName = userNameState,
+                                            biografia = biographyState,
+                                            tag01 = tag1,
+                                            tag02 = tag2,
+                                            generos = generos
                                         )
-                                            .show()
+
+
+                                        val retrofit =
+                                            RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                        val userCall =
+                                            retrofit.create(UserCall::class.java) // instância do objeto contact
+                                        val callInsertUser =
+                                            userCall.update(userID.idUser, user)
+
+                                        var responseValidate = 0
+
+
+                                        // Excutar a chamada para o End-point
+                                        callInsertUser.enqueue(object :
+                                            Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+                                            override fun onResponse(
+                                                call: Call<String>,
+                                                response: Response<String>
+                                            ) {
+                                                responseValidate = response.code()
+
+                                                Log.i("erro fdp", responseValidate.toString())
+
+                                                if (responseValidate == 200) {
+                                                    val intent =
+                                                        Intent(context, UserPage::class.java)
+                                                    context.startActivity(intent)
+                                                }
+                                                Log.i(
+                                                    "respon post",
+                                                    response.message().toString()
+                                                )
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<String>,
+                                                t: Throwable
+                                            ) {
+                                                Log.i("respon post err", t.message.toString())
+                                            }
+                                        })
                                     }
-                                }
+                                    else iconUri?.let {
+                                        uploadFile(it, "profile", userNameState, context) { url ->
+                                            Log.i("foto url", url)
+
+                                            var tag1: Int? = null
+                                            var tag2: Int? = null
+
+                                            if (writerCheckState)
+                                                tag1 = 1
+                                            if (readerCheckState)
+                                                tag2 = 2
+
+                                            val user = UserUpdate(
+                                                foto = url,
+                                                nome = nameState,
+                                                userName = userNameState,
+                                                biografia = biographyState,
+                                                tag01 = tag1,
+                                                tag02 = tag2,
+                                                generos = generos
+                                            )
 
 
-                                if (!userNameStateRequired && !nameStateRequired && !tagsValidate && !generosValidate && !duplicatedUserName) {
+                                            val retrofit =
+                                                RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                                            val userCall =
+                                                retrofit.create(UserCall::class.java) // instância do objeto contact
+                                            val callInsertUser =
+                                                userCall.update(userID.idUser, user)
 
-//                                    iconUri?.let {
-//                                        uploadFile(it, "profile", userNameState, context) { url ->
-//                                            Log.i("foto url", url)
-//
-//                                            var tag1: Int? = null
-//                                            var tag2: Int? = null
-//
-//                                            if (writerCheckState)
-//                                                tag1 = 1
-//                                            if (readerCheckState)
-//                                                tag2 = 2
-//
-//                                            val user = UserUpdate(
-//                                                foto = url,
-//                                                nome = nameState,
-//                                                userName = userNameState,
-//                                                biografia = biographyState,
-//                                                tag01 = tag1,
-//                                                tag02 = tag2,
-//                                                generos = generos
-//                                            )
-//
-//
-//                                            val retrofit =
-//                                                RetrofitApi.getRetrofit() // pegar a instância do retrofit
-//                                            val userCall =
-//                                                retrofit.create(UserCall::class.java) // instância do objeto contact
-//                                            val callInsertUser =
-//                                                userCall.update(userID.idUser, user)
-//
-//                                            var responseValidate = 0
-//
-//
-//                                            // Excutar a chamada para o End-point
-//                                            callInsertUser.enqueue(object :
-//                                                Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
-//                                                override fun onResponse(
-//                                                    call: Call<String>,
-//                                                    response: Response<String>
-//                                                ) {
-//                                                    responseValidate = response.code()
-//
-//                                                    Log.i("erro fdp", responseValidate.toString())
-//
-//                                                    if (responseValidate == 200) {
-//                                                        val intent =
-//                                                            Intent(context, Home::class.java)
-//                                                        context.startActivity(intent)
-//                                                    }
-//                                                    Log.i(
-//                                                        "respon post",
-//                                                        response.message().toString()
-//                                                    )
-//                                                }
-//
-//                                                override fun onFailure(
-//                                                    call: Call<String>,
-//                                                    t: Throwable
-//                                                ) {
-//                                                    Log.i("respon post err", t.message.toString())
-//                                                }
-//                                            })
-//                                        }
+                                            var responseValidate = 0
 
-//                                    }
+
+                                            // Excutar a chamada para o End-point
+                                            callInsertUser.enqueue(object :
+                                                Callback<String> { // enqueue: usado somente quando o objeto retorna um valor
+                                                override fun onResponse(
+                                                    call: Call<String>,
+                                                    response: Response<String>
+                                                ) {
+                                                    responseValidate = response.code()
+
+                                                    Log.i("erro fdp", responseValidate.toString())
+
+                                                    if (responseValidate == 200) {
+                                                        val intent =
+                                                            Intent(context, UserPage::class.java)
+                                                        context.startActivity(intent)
+                                                    }
+                                                    Log.i(
+                                                        "respon post",
+                                                        response.message().toString()
+                                                    )
+                                                }
+
+                                                override fun onFailure(
+                                                    call: Call<String>,
+                                                    t: Throwable
+                                                ) {
+                                                    Log.i("respon post err", t.message.toString())
+                                                }
+                                            })
+                                        }
+                                    }
                                 }
                             },
                             shape = RoundedCornerShape(10.dp),
