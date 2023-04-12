@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.runtime.*
@@ -45,6 +46,7 @@ import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.Montserrat2
 import com.example.loginpage.ui.theme.Spartan
+import com.example.loginpage.ui.theme.SpartanExtraLight
 
 class PostEbook : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -212,16 +214,24 @@ fun InputDataEbook(navController: NavController) {
                         selectImage.launch("image/*")
                     }, shape = RoundedCornerShape(8.dp), backgroundColor = Color.LightGray
             ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Icon(
+                        Icons.Default.FileOpen, contentDescription = "",
+                       modifier = Modifier.size(38.dp)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.adicionarimagem),
+                        textAlign = TextAlign.Center, 
+                        fontSize =  12.sp,
+                        fontWeight = FontWeight.W400,
+                        fontFamily = SpartanExtraLight
 
-                Icon(
-                    Icons.Default.PermMedia, contentDescription = ""
-                )
-                Text(
-                    text = stringResource(id = R.string.adicionarimagem),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 26.dp),
-                    fontSize = 16.sp
-                )
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -237,7 +247,7 @@ fun InputDataEbook(navController: NavController) {
                     label = {
                         Text(
                             text = stringResource(id = R.string.publicartitulo),
-                            color = Color(0xFF1E1E1E),
+                            color = colorResource(id = R.color.eulirio_purple_text_color_border),
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp
                         )
@@ -249,6 +259,7 @@ fun InputDataEbook(navController: NavController) {
                         backgroundColor = Color.Transparent,
                         cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                         focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                     )
                 )
 
@@ -270,7 +281,7 @@ fun InputDataEbook(navController: NavController) {
                     label = {
                         Text(
                             text = stringResource(id = R.string.precopub),
-                            color = Color(0xFF1E1E1E),
+                            color = colorResource(id = R.color.eulirio_purple_text_color_border),
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp
                         )
@@ -293,6 +304,7 @@ fun InputDataEbook(navController: NavController) {
                         backgroundColor = Color.Transparent,
                         cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                         focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                     )
                 )
 
@@ -314,7 +326,7 @@ fun InputDataEbook(navController: NavController) {
                 label = {
                     Text(
                         text = stringResource(id = R.string.sinopsepub),
-                        color = Color(0xFF1E1E1E),
+                        color = colorResource(id = R.color.eulirio_purple_text_color_border),
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
@@ -326,6 +338,7 @@ fun InputDataEbook(navController: NavController) {
                     backgroundColor = Color.Transparent,
                     cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                 )
             )
 
@@ -410,7 +423,7 @@ fun InputDataEbook(navController: NavController) {
                 label = {
                     Text(
                         text = "Volume",
-                        color = Color(0xFF1E1E1E),
+                        color = colorResource(id = R.color.eulirio_purple_text_color_border),
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
@@ -425,6 +438,7 @@ fun InputDataEbook(navController: NavController) {
                     backgroundColor = Color.Transparent,
                     cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -440,7 +454,7 @@ fun InputDataEbook(navController: NavController) {
                 label = {
                     Text(
                         text = "Páginas",
-                        color = Color(0xFF1E1E1E),
+                        color = colorResource(id = R.color.eulirio_purple_text_color_border),
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
@@ -455,6 +469,7 @@ fun InputDataEbook(navController: NavController) {
                     backgroundColor = Color.Transparent,
                     cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -475,8 +490,9 @@ fun InputDataEbook(navController: NavController) {
             ) {
                 Text(
                     "E-book",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.eulirio_purple_text_color_border)
                 )
                 Row(
                     Modifier.fillMaxSize(),
@@ -487,36 +503,86 @@ fun InputDataEbook(navController: NavController) {
                     Card(
                         backgroundColor = Color.Gray,
                         modifier = Modifier
-                            .height(120.dp)
+                            .height(160.dp)
                             .width(112.dp)
                             .clickable {
                                 selectEPUB.launch("application/pdf")
                             },
                     ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Icon(
+                                Icons.Default.FileOpen, contentDescription = "",
+                                modifier = Modifier.size(38.dp)
+                            )
+                            Text(
+                                text = "Arquivo em PDF",
+                                textAlign = TextAlign.Center,
+                                fontSize =  12.sp,
+                                fontWeight = FontWeight.W400
+
+                            )
+                        }
 
                     }
                     //Card para importar ePUB
                     Card(
                         backgroundColor = Color.Gray,
                         modifier = Modifier
-                            .height(120.dp)
+                            .height(160.dp)
                             .width(112.dp)
                             .clickable {
                                 selectEPUB.launch("application/epub+zip")
                             },
                     ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Icon(
+                                Icons.Default.FileOpen, contentDescription = "",
+                                modifier = Modifier.size(38.dp)
+                            )
+                            Text(
+                                text = "arquivo em ePUB",
+                                textAlign = TextAlign.Center,
+                                fontSize =  12.sp,
+                                fontWeight = FontWeight.W400
 
+                            )
+                        }
                     }
                     //Card para importar MOBI
                     Card(
                         backgroundColor = Color.Gray,
                         modifier = Modifier
-                            .height(120.dp)
+                            .height(160.dp)
                             .width(112.dp)
                             .clickable {
                                 selectMOBI.launch("application/octet-stream")
                             },
                     ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Icon(
+                                Icons.Default.FileOpen, contentDescription = "",
+                                modifier = Modifier.size(38.dp)
+                            )
+                            Text(
+                                text = "Arquivo em MOBI",
+                                textAlign = TextAlign.Center,
+                                fontSize =  12.sp,
+                                fontWeight = FontWeight.W400
+
+                            )
+                        }
 
                     }
 
@@ -545,7 +611,7 @@ fun InputDataEbook(navController: NavController) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(40.dp))
         }
 
     }
