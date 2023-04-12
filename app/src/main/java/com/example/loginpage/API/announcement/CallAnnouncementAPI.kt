@@ -34,27 +34,27 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getAnnouncement(idAnnouncement: Int, announcementData: (AnnouncementGet) -> Unit) {
-            val callAnnouncement = announcementCall.getByID(idAnnouncement)
-
-            callAnnouncement.enqueue(object :
-                Callback<AnnouncementGet> {
-                override fun onResponse(
-                    call: Call<AnnouncementGet>,
-                    response: Response<AnnouncementGet>
-                ) {
-
-                    val announcement = response.body()!!
-
-                    announcementData.invoke(announcement)
-
-                }
-
-                override fun onFailure(call: Call<AnnouncementGet>, t: Throwable) {
-
-                }
-            })
-        }
+//        fun getAnnouncement(idAnnouncement: Int, announcementData: (AnnouncementGet) -> Unit) {
+//            val callAnnouncement = announcementCall.getByID(idAnnouncement)
+//
+//            callAnnouncement.enqueue(object :
+//                Callback<AnnouncementGet> {
+//                override fun onResponse(
+//                    call: Call<AnnouncementGet>,
+//                    response: Response<AnnouncementGet>
+//                ) {
+//
+//                    val announcement = response.body()!!
+//
+//                    announcementData.invoke(announcement)
+//
+//                }
+//
+//                override fun onFailure(call: Call<AnnouncementGet>, t: Throwable) {
+//
+//                }
+//            })
+//        }
 
         fun getAllAnnouncementsByGenresUser(userID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
             val callAnnouncements = announcementCall.getAllAnnouncementsByGenresUser(userID)

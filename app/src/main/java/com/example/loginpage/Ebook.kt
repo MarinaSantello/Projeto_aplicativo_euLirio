@@ -112,9 +112,9 @@ fun ShowEbook(
     bottomBarLength: Dp,
     context: Context
 ) {
-    CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
-        val announcementGet = it
-    }
+//    CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
+//        val announcementGet = it
+//    }
 
     var likeState by remember {
         mutableStateOf(false)

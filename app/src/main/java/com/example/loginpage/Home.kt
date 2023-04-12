@@ -79,7 +79,6 @@ class Home : ComponentActivity() {
 }
 
 //@OptIn(ExperimentalPagerApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeBooks() {
 

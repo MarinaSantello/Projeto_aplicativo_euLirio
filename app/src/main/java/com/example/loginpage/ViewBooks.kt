@@ -204,18 +204,18 @@ fun TabsUserStories(userID: Int, bottomBarLength: Dp) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     text = {
-                        val icons = listOf(Icons.Outlined.MenuBook, Icons.Outlined.FormatAlignCenter, Icons.Outlined.LocalLibrary)
+                        val icons = listOf(Icons.Outlined.MenuBook, Icons.Outlined.FormatAlignCenter)
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                icons[index],
-                                contentDescription = "icone de livro",
-                                modifier = Modifier
-                                    .height(16.dp)
-                                    .padding(end = 8.dp),
-                            )
+//                            Icon(
+//                                icons[index],
+//                                contentDescription = "icone de livro",
+//                                modifier = Modifier
+//                                    .height(16.dp)
+//                                    .padding(end = 8.dp),
+//                            )
                             Text(
                                 title,
                                 maxLines = 2,
@@ -242,15 +242,17 @@ fun TabsUserStories(userID: Int, bottomBarLength: Dp) {
 
                 val items = listOf("Livros", "Pequenas Histórias")
 
-                Box {
-                    Text(
-                        text = items[selectedItem],
-                        modifier = Modifier.clickable(onClick = { expanded = true })
-                    )
+                Box (
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 4.dp),
+                    contentAlignment = Alignment.TopEnd,
+                ) {
                     Card(modifier = Modifier
-                        .height(30.dp)
+                        .height(36.dp)
                         .clickable { expanded = true }
-                        .fillMaxWidth(),
+                        .fillMaxWidth(.6f)
+                        .padding(end = 12.dp),
                         backgroundColor = colorResource(id = R.color.eulirio_grey_background),
                         shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)) {
 
@@ -279,9 +281,7 @@ fun TabsUserStories(userID: Int, bottomBarLength: Dp) {
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                         modifier = Modifier
-                            .height(30.dp)
                             .fillMaxWidth()
-
                     ) {
                         items.forEachIndexed { index, item ->
                             DropdownMenuItem(onClick = {

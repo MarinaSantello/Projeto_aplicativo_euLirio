@@ -30,7 +30,7 @@ class UserStories : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShowUserStories("Android")
+                    ShowUserStories()
                 }
             }
         }
@@ -38,7 +38,7 @@ class UserStories : ComponentActivity() {
 }
 
 @Composable
-fun ShowUserStories(name: String) {
+fun ShowUserStories() {
 
     val context = LocalContext.current
 
@@ -82,6 +82,6 @@ fun ShowUserStories(name: String) {
 @Composable
 fun DefaultPreview4() {
     LoginPageTheme {
-        ShowUserStories("Android")
+        ShowUserStories()
     }
 }
