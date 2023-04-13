@@ -41,7 +41,7 @@ fun GenerateGenresCards(){
     ) {
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            "Gêneros de História",
+            "Gêneros da história",
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.eulirio_purple_text_color_border),

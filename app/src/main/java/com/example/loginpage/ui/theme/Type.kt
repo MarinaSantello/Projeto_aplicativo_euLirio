@@ -24,6 +24,10 @@ val SpartanMedium = FontFamily(
     Font(R.font.spartan_medium)
 )
 
+val SpartanRegular = FontFamily(
+    Font(R.font.spartan_regular)
+)
+
 val SpartanExtraLight = FontFamily(
     Font(R.font.spartan_extralight)
 )
