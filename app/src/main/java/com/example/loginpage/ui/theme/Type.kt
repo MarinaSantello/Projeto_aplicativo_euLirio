@@ -46,6 +46,9 @@ val Montserrat = FontFamily(
 val MontSerratSemiBold = FontFamily(
     Font(R.font.montserrat_semibold)
 )
+val MontSerratBold = FontFamily(
+    Font(R.font.montserrat_bold)
+)
 
 
 //MontSerrat Regular

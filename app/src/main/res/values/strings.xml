@@ -98,4 +98,5 @@
     <string name="title_activity_user_stories">UserStories</string>
     <string name="resenhatilte"> Título da história </string>
     <string name="review">  </string>
+    <string name="title_activity_short_story_reader">ShortStoryReader</string>
 </resources>
