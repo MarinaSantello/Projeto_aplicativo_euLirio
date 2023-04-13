@@ -37,7 +37,6 @@ class CallAnnouncementAPI() {
         fun getAnnouncement(idAnnouncement: Int, announcementData: (String) -> Unit) {
             val callAnnouncement = announcementCall.getByID(idAnnouncement)
 
-            Log.i("id anun", idAnnouncement.toString())
             callAnnouncement.enqueue(object :
                 Callback<AnnouncementGet> {
                 override fun onResponse(

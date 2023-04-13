@@ -22,7 +22,7 @@ import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.LoginPageTheme
 
 class UserStories (navControllerClass: NavController) : ComponentActivity() {
-    private val navControllerClass = navControllerClass
+    private val navController = navControllerClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class UserStories (navControllerClass: NavController) : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShowUserStories(navControllerClass)
+                    ShowUserStories(navController)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.loginpage.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,17 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.constants.Routes
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Genero
-import com.example.loginpage.models.Generos
-import com.example.loginpage.models.Genre
+import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
 
 
 @Composable
 fun AnnouncementCard(
     announcement: AnnouncementGet,
+    userID: Int,
     navController: NavController
 ) {
 
@@ -67,8 +67,9 @@ fun AnnouncementCard(
             .fillMaxWidth()
             .padding(bottom = 2.dp)
             .clickable {
+                Log.i("id anun", announcement.id.toString())
                 navController.navigate("${Routes.Ebook.name}/${announcement.id}")
-                       },
+            },
         backgroundColor = Color.White,
         elevation = 0.dp
     ){
@@ -226,7 +227,29 @@ fun AnnouncementCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
-                                    .clickable { likeState = !likeState }
+                                    .clickable {
+                                        likeState = !likeState
+
+                                        if(!likeState) {
+//                                            likeState = !likeState
+                                            var announcementDislike = LikeAnnouncement (
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+
+                                            CallLikeAPI.dislikeAnnouncement(announcementDislike)
+                                            likeState = false
+                                        } else {
+//                                            likeState = false
+                                            val announcementLike = LikeAnnouncement (
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+
+                                            CallLikeAPI.likeAnnouncement(announcementLike)
+                                            likeState = true
+                                        }
+                                    }
                             ){
 
                                 //Verificação se o usuário curtiu a publicação

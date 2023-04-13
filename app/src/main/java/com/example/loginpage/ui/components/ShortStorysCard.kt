@@ -26,15 +26,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Generos
-import com.example.loginpage.models.ShortStoryGet
+import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
 
 
 @Composable
 fun ShortStorysCard(
-    shortStory: ShortStoryGet
+    shortStory: ShortStoryGet,
+    userID: Int
 ) {
 
     var likeState by remember {
@@ -218,7 +219,15 @@ fun ShortStorysCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
-                                    .clickable { likeState = !likeState }
+                                    .clickable {
+                                        likeState = !likeState
+                                        var shortStorieLike = LikeShortStorie (
+                                            idHistoriaCurta = shortStory.id,
+                                            idUsuario = userID
+                                        )
+
+                                        CallLikeAPI.likeShortStorie(shortStorieLike)
+                                    }
                             ){
 
                                 //Verificação se o usuário curtiu a publicação

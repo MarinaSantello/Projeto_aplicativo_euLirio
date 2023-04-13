@@ -84,7 +84,7 @@ fun EbookView(idAnnouncement: Int) {
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-    val navController = rememberNavController()
+    //val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier

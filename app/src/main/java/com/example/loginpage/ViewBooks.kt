@@ -45,8 +45,10 @@ import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-class ViewBooks : ComponentActivity() {
-//    @OptIn(ExperimentalPagerApi::class)
+class ViewBooks (navControllerClass: NavController) : ComponentActivity() {
+    private val navController = navControllerClass
+
+    //    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,8 +58,6 @@ class ViewBooks : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val navController = rememberNavController()
-
                     ShowBooks(0, 40.dp, 1, navController)
                 }
             }
@@ -166,7 +166,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it, navController)
+                        AnnouncementCard(it, userID, navController)
                     }
                 }
             }
@@ -182,7 +182,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
-                        ShortStorysCard(it)
+                        ShortStorysCard(it, userID)
                     }
                 }
             }
