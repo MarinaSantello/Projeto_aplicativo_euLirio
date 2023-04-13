@@ -14,25 +14,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginPage"
         tools:targetApi="31">
+<!--        <activity-->
+<!--            android:name=".ShortStories"-->
+<!--            android:exported="false"-->
+<!--            android:label="@string/title_activity_short_stories"-->
+<!--            android:theme="@style/Theme.LoginPage" />-->
+        <activity
+            android:name=".ViewEbook"
+            android:exported="false"
+            android:label="@string/title_activity_view_ebook"
+            android:theme="@style/Theme.LoginPage" />
         <activity
             android:name=".UserStories"
             android:exported="false"
             android:label="@string/title_activity_user_stories"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".Ebook"
-            android:exported="false"
-            android:label="@string/title_activity_ebook"
-            android:theme="@style/Theme.LoginPage" />
-        <activity
             android:name=".PostEbook"
             android:exported="false"
             android:label="@string/title_activity_post_ebook"
-            android:theme="@style/Theme.LoginPage" />
-        <activity
-            android:name=".ViewBooks"
-            android:exported="false"
-            android:label="@string/title_activity_view_books"
             android:theme="@style/Theme.LoginPage" />
         <activity
             android:name=".Home"
@@ -85,7 +85,7 @@
             android:label="@string/title_activity_register_page"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ShortStories"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LoginPage">

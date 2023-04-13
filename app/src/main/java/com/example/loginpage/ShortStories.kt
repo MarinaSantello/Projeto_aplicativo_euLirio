@@ -1,7 +1,6 @@
 package com.example.loginpage
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,20 +19,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.ChevronLeft
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.Calendar
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,25 +38,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
-import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
-import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.resources.DrawerDesign
+import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.*
-import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-class Ebook : ComponentActivity() {
+class ShortStories : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             LoginPageTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    EbookView(1)
+
                 }
             }
         }
@@ -70,7 +61,8 @@ class Ebook : ComponentActivity() {
 }
 
 @Composable
-fun EbookView(idAnnouncement: Int) {
+fun SStories(name: String) {
+
     val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
@@ -82,7 +74,7 @@ fun EbookView(idAnnouncement: Int) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    //val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
     val navController = rememberNavController()
 
@@ -98,23 +90,22 @@ fun EbookView(idAnnouncement: Int) {
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, false, context) },
+        topBar = { TopBar(userID, scaffoldState, topBarState) },
+        drawerContent = {
+            DrawerDesign(userID, context, scaffoldState)
+        },
+//
+//        drawerGesturesEnabled = true,
     ) {
-        ShowEbook(idAnnouncement, false, it.calculateBottomPadding(), context)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 3)
     }
 }
 
+
 @Composable
-fun ShowEbook(
-    idAnnouncement: Int,
+fun ShowStories(
     userAuthor: Boolean,
-    bottomBarLength: Dp,
-    context: Context
-) {
-    CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
-        val announcementGet = it
-    }
+    context: Context) {
 
     var likeState by remember {
         mutableStateOf(false)
@@ -123,20 +114,7 @@ fun ShowEbook(
     var saveState by remember {
         mutableStateOf(false)
     }
-
     var viewState by remember {
-        mutableStateOf(false)
-    }
-
-    var pageState by remember {
-        mutableStateOf(false)
-    }
-
-    var vendaState by remember {
-        mutableStateOf(false)
-    }
-
-    var volumeState by remember {
         mutableStateOf(false)
     }
 
@@ -144,18 +122,6 @@ fun ShowEbook(
         mutableStateOf(false)
     }
 
-    var sinopseState by remember {
-        mutableStateOf("")
-    }
-
-    var reviewState by remember {
-        mutableStateOf("")
-    }
-    var selectedDate by remember {
-        mutableStateOf("")
-    }
-
-    //Card de informações do usuario
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -425,74 +391,7 @@ fun ShowEbook(
             }
         }
 
-        if (!userAuthor) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp),
-                shape = RoundedCornerShape(bottomEnd = 40.dp, bottomStart = 40.dp),
-                elevation = 0.dp
-            ) {
-                Row(Modifier.fillMaxSize()) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth(.5f)
-                            .fillMaxHeight(),
-                        backgroundColor = Color(0xDFBDB5A),
-                        shape = RoundedCornerShape(bottomStart = 40.dp),
-                        border = BorderStroke(
-                            .5.dp,
-                            colorResource(id = R.color.eulirio_yellow_card_background)
-                        ),
-                        elevation = 0.dp
-                    ) {
-                        Row(
-                            Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "R$ 20,00",
-                                modifier = Modifier.fillMaxWidth(),
-                                color = colorResource(id = R.color.eulirio_yellow_card_background),
-                                textAlign = TextAlign.Center,
-                                fontSize = 28.sp,
-                                fontFamily = Spartan
-                            )
-                        }
-                    }
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clickable {
-                                Toast
-                                    .makeText(context, "oi", Toast.LENGTH_SHORT)
-                                    .show()
-                            },
-                        shape = RoundedCornerShape(0.dp),
-                        backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                        elevation = 0.dp
-                    ) {
-                        Row(
-                            Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(R.string.ebook_buy).uppercase(),
-                                modifier = Modifier.fillMaxWidth(),
-                                color = Color.White,
-                                textAlign = TextAlign.Center,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.ExtraLight,
-                                style = MaterialTheme.typography.h2
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Column(Modifier.height(1000.dp)) {
+        Column(modifier = Modifier.height(1000.dp)) {
             Row {
                 Image(
                     painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
@@ -502,7 +401,8 @@ fun ShowEbook(
                         .padding(start = 8.dp, top = 8.dp)
                         .width(30.dp)
                         .clip(
-                            RoundedCornerShape(15.dp))
+                            RoundedCornerShape(15.dp)
+                        )
                 )
 
                 Spacer(modifier = Modifier.padding(horizontal = 8.dp))
@@ -520,147 +420,33 @@ fun ShowEbook(
                         fontFamily = Spartan
                     )
                 }
+                Icon(
+                    Icons.Outlined.CalendarMonth,
+                    contentDescription = "icone de publicacoes",
+                    modifier = Modifier
+                        .clickable {postState = !postState},
+                    tint = Color.Black
+                )
+
+                Text(
+                    text = "publicação",
+                    fontSize = 10.sp,
+                    fontFamily = QuickSand,
+                    fontWeight = FontWeight.W500,
+
+                    )
+                Text(
+                    text = "12 Jun.2022",
+                    fontSize = 12.sp,
+                    fontFamily = MontSerratSemiBold,
+                    fontWeight = FontWeight.Bold
+                )
             }
-            Spacer(modifier = Modifier.width(15.dp))
-            Spacer(modifier = Modifier.height(15.dp))
-
-            //row dos icones
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-
-
-                //coluna de páginas
-                Column() {
-
-                    Icon(
-                        Icons.Outlined.Description,
-                        contentDescription = "icone de páginas",
-                        modifier = Modifier
-                            .clickable { pageState = !pageState },
-                        tint = Color.Black
-                    )
-                    Text(
-                        text = "páginas",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-
-                        )
-                    Text(
-                        text = "41",
-                        fontSize = 20.sp,
-                        fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                //coluna de volumes
-                Column() {
-
-                    Icon(
-                        Icons.Outlined.LibraryBooks,
-                        contentDescription = "icone de volume",
-                        modifier = Modifier
-                            .clickable { volumeState = !volumeState },
-                        tint = Color.Black
-                    )
-                    Text(
-                        text = "volume",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-                    )
-                    Text(
-                        text = "2",
-                        fontSize = 20.sp,
-                        fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                //coluna de vendas
-                Column() {
-
-                    Icon(
-                        Icons.Outlined.ShoppingBag,
-                        contentDescription = "icone de vendas",
-                        modifier = Modifier
-                            .clickable { vendaState = !vendaState },
-                        tint = Color.Black
-                    )
-
-                    Text(
-                        text = "vendas",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-
-                        )
-                    Text(
-                        text = "1,2k",
-                        fontSize = 20.sp,
-                        fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
-                    )
-
-
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                //coluns de publicaçao
-                Column() {
-
-                    Icon(
-                        Icons.Outlined.CalendarMonth,
-                        contentDescription = "icone de publicacoes",
-                        modifier = Modifier
-                            .clickable { postState = !postState },
-                        tint = Color.Black
-                    )
-
-                    Text(
-                        text = "publicação",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-
-                        )
-                    Text(
-                        text = "12 Jun.2022",
-                        fontSize = 12.sp,
-                        fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                }
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Divider(
-                color = Color.Gray,
-                thickness = 1.dp,
-                modifier = Modifier.fillMaxWidth()
-            )
 
             //sinopse
             Column() {
-
-                Text(
-                    text = stringResource(id = R.string.review),
-                    fontSize = 12.sp,
-                    fontFamily = QuickSand,
-                    modifier = Modifier.padding(start = 4.dp)
-
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-
+//            Text(
+//                text = stringResource(id = R.string.review))
                 Divider(
                     color = Color.LightGray,
                     thickness = 1.dp,
@@ -670,212 +456,29 @@ fun ShowEbook(
                 Row() {
                     Text(
                         text = "Classificação indicativa:",
-                    fontFamily = Spartan,
-                        modifier = Modifier.padding(start = 8.dp))
+                        fontFamily = Spartan,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                     Text(
                         text = "Livre",
                         fontFamily = SpartanBold,
-                    modifier = Modifier.padding(start = 4.dp))
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                    Divider(
+                        color = Color.LightGray,
+                        thickness = 1.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
-            Column() {
-                Row(modifier= Modifier.fillMaxWidth()){ Text(text = "Disponível em: ",
-                    fontFamily = Spartan,
-                    modifier = Modifier.padding(start = 8.dp))
-                    Text(text = "PDF e ePUB ",
-                        fontFamily = SpartanBold)
-                }
-            }
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
         }
     }
 }
 
-
-@Composable
-fun BottomBarEbook(
-    bottomBarState: MutableState<Boolean>,
-    userAuthor: Boolean,
-    context: Context
-) {
-    AnimatedVisibility(
-        visible = bottomBarState.value,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it }),
-        content = {
-            if (userAuthor) {
-                BottomAppBar(
-                    modifier = Modifier.clickable {
-                        Toast.makeText(context, "oi", Toast.LENGTH_SHORT).show()
-                    },
-                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
-                ) {
-                    Text(
-                        text = stringResource(R.string.ebook_edit).uppercase(),
-                        modifier = Modifier
-                            .fillMaxWidth(),
-//                                .padding(end = 44.dp),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.ExtraLight,
-                        style = MaterialTheme.typography.h2
-                    )
-                }
-            } else {
-                BottomAppBar(
-                    contentPadding = PaddingValues(0.dp),
-                    elevation = 0.dp
-//                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
-                ) {
-                    Row(Modifier.fillMaxSize()) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth(.5f)
-                                .fillMaxHeight()
-                                .clickable {
-                                    Toast
-                                        .makeText(context, "oi", Toast.LENGTH_SHORT)
-                                        .show()
-                                },
-                            shape = RoundedCornerShape(0.dp),
-                            backgroundColor = Color.White,
-                            elevation = 0.dp
-                        ) {
-                            Row(
-                                Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.ebook_bag).uppercase(),
-                                    color = colorResource(id = R.color.eulirio_yellow_card_background),
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.ExtraLight,
-                                    style = MaterialTheme.typography.h2
-                                )
-                            }
-                        }
-
-                        Card(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable {
-                                    Toast
-                                        .makeText(context, "oi", Toast.LENGTH_SHORT)
-                                        .show()
-                                },
-                            shape = RoundedCornerShape(0.dp),
-                            backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                            elevation = 0.dp
-                        ) {
-                            Row(
-                                Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.ebook_buy).uppercase(),
-                                    modifier = Modifier.fillMaxWidth(),
-                                    color = Color.White,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.ExtraLight,
-                                    style = MaterialTheme.typography.h2
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    )
-
-}
-
-@Composable
-fun TopBarEbook(
-    scaffoldState: ScaffoldState,
-    topBarState: MutableState<Boolean>,
-    context: Context,
-    userAuthor: Boolean
-) {
-
-    val coroutineScope = rememberCoroutineScope()
-    AnimatedVisibility(
-        visible = topBarState.value,
-        modifier = Modifier.background(Color.Red),
-        enter = slideInVertically(initialOffsetY = { -it }),
-        exit = slideOutVertically(targetOffsetY = { -it }),
-        content = {
-            TopAppBar(
-                title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(R.string.title_ebook).uppercase(),
-                            modifier = Modifier
-                                .fillMaxWidth(.8f),
-//                                .padding(end = 44.dp),
-                            color = colorResource(id = R.color.eulirio_black),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h2
-                        )
-
-                        Icon(
-                            Icons.Rounded.MoreVert,
-                            contentDescription = "botao de menu",
-                            modifier = Modifier
-                                .padding(end = 16.dp)
-                                .fillMaxHeight()
-                                .width(32.dp)
-                                .clip(RoundedCornerShape(100.dp))
-                                .clickable { },
-                            tint = if (userAuthor) Color.Transparent else colorResource(
-                                id = R.color.eulirio_black
-                            )
-                        )
-
-                    }
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                val intent = Intent(context, Home::class.java)
-                                context.startActivity(intent)
-                            }
-                        }
-                    ) {
-                        Icon(
-                            Icons.Rounded.ChevronLeft,
-                            contentDescription = "botao para voltar",
-                            modifier = Modifier
-                                .fillMaxSize(.8f)
-                                .padding(start = 12.dp)
-                                .clip(RoundedCornerShape(100.dp)),
-                            tint = colorResource(id = R.color.eulirio_black)
-                        )
-                    }
-                },
-                backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-                elevation = 0.dp
-            )
-        }
-    )
-}
-
-
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview6() {
+fun DefaultPreview7() {
     LoginPageTheme {
-        EbookView(1)
+
     }
 }
