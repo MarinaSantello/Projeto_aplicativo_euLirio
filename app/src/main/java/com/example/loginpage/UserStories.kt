@@ -21,24 +21,24 @@ import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.LoginPageTheme
 
-class UserStories (navControllerClass: NavController) : ComponentActivity() {
-    private val navController = navControllerClass
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    ShowUserStories(navController)
-                }
-            }
-        }
-    }
-}
+//class UserStories (navControllerClass: NavController) : ComponentActivity() {
+//    private val navController = navControllerClass
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    ShowUserStories(navController)
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ShowUserStories(navController: NavController) {
@@ -70,7 +70,7 @@ fun ShowUserStories(navController: NavController) {
         scaffoldState = scaffoldState,
         topBar = { TopBar(userID, scaffoldState, topBarState) },
         drawerContent = {
-            DrawerDesign(userID, context, scaffoldState)
+            DrawerDesign(userID, context, scaffoldState, navController)
         },
 //
 //        drawerGesturesEnabled = true,

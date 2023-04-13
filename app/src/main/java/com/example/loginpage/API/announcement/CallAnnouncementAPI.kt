@@ -34,7 +34,7 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getAnnouncement(idAnnouncement: Int, announcementData: (String) -> Unit) {
+        fun getAnnouncement(idAnnouncement: Int, announcementData: (AnnouncementGet) -> Unit) {
             val callAnnouncement = announcementCall.getByID(idAnnouncement)
 
             callAnnouncement.enqueue(object :
@@ -44,9 +44,9 @@ class CallAnnouncementAPI() {
                     response: Response<AnnouncementGet>
                 ) {
 
-//                    val announcement = response.body()!!
-//
-                    announcementData.invoke(".")
+                    val announcement = response.body()!!
+
+                    announcementData.invoke(announcement)
 
                 }
 

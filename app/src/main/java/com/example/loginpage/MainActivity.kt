@@ -1,6 +1,7 @@
 package com.example.loginpage
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -69,11 +70,16 @@ fun Greeting() {
             HomeBooks(navController)
         }
 
+        composable(Routes.UserStories.name) {
+            ShowUserStories(navController)
+        }
+
         composable(
             "${Routes.Ebook.name}/{itemId}",
-            //arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
         ) {
             val announcementId = it.arguments!!.getInt("itemId")
+
             EbookView(announcementId)
         }
 

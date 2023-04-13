@@ -67,7 +67,6 @@ fun AnnouncementCard(
             .fillMaxWidth()
             .padding(bottom = 2.dp)
             .clickable {
-                Log.i("id anun", announcement.id.toString())
                 navController.navigate("${Routes.Ebook.name}/${announcement.id}")
             },
         backgroundColor = Color.White,

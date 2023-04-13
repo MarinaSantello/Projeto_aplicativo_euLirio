@@ -120,7 +120,7 @@ fun HomeBooks(navController: NavController) {
             }
         },
         drawerContent = {
-            DrawerDesign(userID, context, scaffoldState)
+            DrawerDesign(userID, context, scaffoldState, navController)
         },
 //
 //        drawerGesturesEnabled = true,
