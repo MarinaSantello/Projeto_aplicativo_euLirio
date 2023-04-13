@@ -30,7 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Genero
 import com.example.loginpage.models.Generos
@@ -40,7 +42,8 @@ import com.example.loginpage.ui.theme.*
 
 @Composable
 fun AnnouncementCard(
-    announcement: AnnouncementGet
+    announcement: AnnouncementGet,
+    navController: NavController
 ) {
 
     var likeState by remember {
@@ -62,7 +65,10 @@ fun AnnouncementCard(
         modifier = Modifier
             .height(204.dp)
             .fillMaxWidth()
-            .padding(bottom = 2.dp),
+            .padding(bottom = 2.dp)
+            .clickable {
+                navController.navigate("${Routes.Ebook.name}/${announcement.id}")
+                       },
         backgroundColor = Color.White,
         elevation = 0.dp
     ){

@@ -656,7 +656,8 @@ fun InputDataEbook(navController: NavController) {
             }
 
 
-        }          Spacer(modifier = Modifier.height(40.dp))
+        }
+            Spacer(modifier = Modifier.height(40.dp))
         }
 
     }

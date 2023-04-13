@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
@@ -54,7 +56,9 @@ class ViewBooks : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShowBooks(0, 40.dp, 1)
+                    val navController = rememberNavController()
+
+                    ShowBooks(0, 40.dp, 1, navController)
                 }
             }
         }
@@ -63,7 +67,12 @@ class ViewBooks : ComponentActivity() {
 
 //@ExperimentalPagerApi
 @Composable
-fun ShowBooks(userID: Int, bottomBarLength: Dp, type: Int) {
+fun ShowBooks(
+    userID: Int,
+    bottomBarLength: Dp,
+    type: Int,
+    navController: NavController
+) {
 
     Column(
         modifier = Modifier
@@ -73,13 +82,13 @@ fun ShowBooks(userID: Int, bottomBarLength: Dp, type: Int) {
     ) {
         //Layout do perfil
         when (type) {
-            1 -> TabsFeed(userID, bottomBarLength)
+            1 -> TabsFeed(userID, bottomBarLength, navController)
 
             //Layout do feed
-            2 -> TabsFeed(userID, bottomBarLength)
+            2 -> TabsFeed(userID, bottomBarLength, navController)
 
             //Layout das obras do usuario
-            3 -> TabsUserStories(userID, bottomBarLength)
+            3 -> TabsUserStories(userID, bottomBarLength, navController)
         }
     }
 
@@ -89,7 +98,11 @@ fun ShowBooks(userID: Int, bottomBarLength: Dp, type: Int) {
 @OptIn(ExperimentalUnitApi::class)
 //@ExperimentalPagerApi
 @Composable
-fun TabsFeed(userID: Int, bottomBarLength: Dp) {
+fun TabsFeed(
+    userID: Int,
+    bottomBarLength: Dp,
+    navController: NavController
+) {
     var tabIndex by remember { mutableStateOf(0) }
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -153,7 +166,7 @@ fun TabsFeed(userID: Int, bottomBarLength: Dp) {
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it)
+                        AnnouncementCard(it, navController)
                     }
                 }
             }
@@ -179,7 +192,11 @@ fun TabsFeed(userID: Int, bottomBarLength: Dp) {
 }
 
 @Composable
-fun TabsUserStories(userID: Int, bottomBarLength: Dp) {
+fun TabsUserStories(
+    userID: Int,
+    bottomBarLength: Dp,
+    navController: NavController
+) {
     var tabIndex by remember { mutableStateOf(0) }
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -187,12 +204,10 @@ fun TabsUserStories(userID: Int, bottomBarLength: Dp) {
     var expanded by remember {
         mutableStateOf(false)
     }
-    var selectedItem by remember {
-        mutableStateOf(0)
-    }
 
     val tabs = listOf("Publicadas", "Desativadas")
 
+    val items = listOf("Livros", "Pequenas Histórias")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ScrollableTabRow(
@@ -239,92 +254,155 @@ fun TabsUserStories(userID: Int, bottomBarLength: Dp) {
 //        when (tabIndex.currentPage) {
         when (tabIndex) {
             0 -> {
-
-                val items = listOf("Livros", "Pequenas Histórias")
+                var selectedItem by remember {
+                    mutableStateOf(0)
+                }
 
                 Box (
                     Modifier
                         .fillMaxWidth()
-                        .padding(0.dp, 4.dp),
-                    contentAlignment = Alignment.TopEnd,
+                        .padding(12.dp, 4.dp),
+                    contentAlignment = Alignment.TopStart,
                 ) {
                     Card(modifier = Modifier
                         .height(36.dp)
                         .clickable { expanded = true }
-                        .fillMaxWidth(.6f)
-                        .padding(end = 12.dp),
-                        backgroundColor = colorResource(id = R.color.eulirio_grey_background),
-                        shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)) {
-
-
+                        .fillMaxWidth(.6f),
+                        backgroundColor = Color.White,
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
                         Row(
                             modifier = Modifier
-                                .padding(start = 13.dp, end = 13.dp)
+                                .padding(start = 12.dp, end = 12.dp)
                                 .fillMaxSize(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = items[selectedItem],
-                                fontSize = 10.sp,
+                                fontSize = 12.sp,
                             )
                             Icon(
                                 Icons.Rounded.ExpandMore,
                                 contentDescription = "Mostrar mais",
-                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                                tint = colorResource(id = R.color.eulirio_black)
                             )
                         }
-
-
                     }
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(.56f)
                     ) {
                         items.forEachIndexed { index, item ->
-                            DropdownMenuItem(onClick = {
-                                selectedItem = index
-                                expanded = false
-                            }) {
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedItem = index
+
+                                    expanded = false
+                                }
+                            ) {
                                 Text(text = item)
                             }
                         }
                     }
                 }
 
-                var announcements by remember {
-                    mutableStateOf(listOf<AnnouncementGet>())
-                }
 
-                //CallAnnouncementAPI.getAnnouncements {
-                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
-                    announcements = it
-                }
+                if (selectedItem == 0) Text(text = "livros")
+                else if (selectedItem == 1) Text(text = "curtas")
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-                    items(announcements) {
-                        AnnouncementCard(it)
-                    }
-                }
+//                var announcements by remember {
+//                    mutableStateOf(listOf<AnnouncementGet>())
+//                }
+//
+//                //CallAnnouncementAPI.getAnnouncements {
+//                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
+//                    announcements = it
+//                }
+//
+//                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+//                    items(announcements) {
+//                        AnnouncementCard(it)
+//                    }
+//                }
 
             }
             1 -> {
-                var shortStory by remember {
-                    mutableStateOf(listOf<ShortStoryGet>())
+                var selectedItem by remember {
+                    mutableStateOf(0)
                 }
 
-                //CallShortStoryAPI.getShortStories {
-                CallShortStoryAPI.getShortStoriesByGenreUser(userID) {
-                    shortStory = it
-                }
+                Box (
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp, 4.dp),
+                    contentAlignment = Alignment.TopStart,
+                ) {
+                    Card(modifier = Modifier
+                        .height(36.dp)
+                        .clickable { expanded = true }
+                        .fillMaxWidth(.6f),
+                        backgroundColor = Color.White,
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 12.dp)
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = items[selectedItem],
+                                fontSize = 12.sp,
+                            )
+                            Icon(
+                                Icons.Rounded.ExpandMore,
+                                contentDescription = "Mostrar mais",
+                                tint = colorResource(id = R.color.eulirio_black)
+                            )
+                        }
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .fillMaxWidth(.56f)
+                    ) {
+                        items.forEachIndexed { index, item ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedItem = index
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-                    items(shortStory) {
-                        ShortStorysCard(it)
+                                    expanded = false
+                                }
+                            ) {
+                                Text(text = item)
+                            }
+                        }
                     }
                 }
+
+
+                if (selectedItem == 0) Text(text = "livros")
+                else if (selectedItem == 1) Text(text = "curtas")
+
+//                var shortStory by remember {
+//                    mutableStateOf(listOf<ShortStoryGet>())
+//                }
+//
+//                //CallShortStoryAPI.getShortStories {
+//                CallShortStoryAPI.getShortStoriesByGenreUser(userID) {
+//                    shortStory = it
+//                }
+//
+//                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+//                    items(shortStory) {
+//                        ShortStorysCard(it)
+//                    }
+//                }
             }
         }
     }

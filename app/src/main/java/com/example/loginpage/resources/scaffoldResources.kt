@@ -71,7 +71,7 @@ fun TopBar(
                         contentDescription = "logo aplicativo",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 44.dp),
+                            .padding(end = 56.dp),
                         alignment = Alignment.Center
 //                        modifier = Modifier
 //                            .height(90.dp)

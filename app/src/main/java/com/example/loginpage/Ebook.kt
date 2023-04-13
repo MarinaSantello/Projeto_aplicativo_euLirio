@@ -82,7 +82,7 @@ fun EbookView(idAnnouncement: Int) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    //val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
     val navController = rememberNavController()
 
@@ -112,9 +112,9 @@ fun ShowEbook(
     bottomBarLength: Dp,
     context: Context
 ) {
-//    CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
-//        val announcementGet = it
-//    }
+    CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
+        val announcementGet = it
+    }
 
     var likeState by remember {
         mutableStateOf(false)

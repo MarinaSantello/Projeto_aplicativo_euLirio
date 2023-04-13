@@ -71,7 +71,9 @@ class Home : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    HomeBooks()
+                    val navController = rememberNavController()
+
+                    HomeBooks(navController)
                 }
             }
         }
@@ -80,7 +82,7 @@ class Home : ComponentActivity() {
 
 //@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HomeBooks() {
+fun HomeBooks(navController: NavController) {
 
     val context = LocalContext.current
 
@@ -94,8 +96,6 @@ fun HomeBooks() {
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
-
-    val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -125,7 +125,7 @@ fun HomeBooks() {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1, navController)
     }
 
     if(!fabState.value) ButtonsPost(navController, context) {
@@ -137,7 +137,8 @@ fun HomeBooks() {
 fun ButtonsPost (
     navController: NavController,
     context: Context,
-    onChecked: (Boolean) -> Unit ) {
+    onChecked: (Boolean) -> Unit
+) {
 
     Box (
         Modifier
@@ -243,13 +244,5 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
         }
     ) {
         Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LoginPageTheme {
-        HomeBooks()
     }
 }

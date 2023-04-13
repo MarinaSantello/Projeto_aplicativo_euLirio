@@ -8,12 +8,15 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavType
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.constants.Routes
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.ui.components.AnnouncementCard
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -63,12 +66,20 @@ fun Greeting() {
         }
 
         composable(Routes.Home.name) {
-            EbookView(1)
+            HomeBooks(navController)
         }
 
-        composable(Routes.PostEbook.name) {
-            InputDataEbook(navController)
+        composable(
+            "${Routes.Ebook.name}/{itemId}",
+            //arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val announcementId = it.arguments!!.getInt("itemId")
+            EbookView(announcementId)
         }
+
+//        composable(Routes.PostEbook.name) {
+//            InputDataEbook(navController)
+//        }
     }
 }
 

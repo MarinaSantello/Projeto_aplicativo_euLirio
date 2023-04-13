@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
@@ -20,7 +21,9 @@ import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.LoginPageTheme
 
-class UserStories : ComponentActivity() {
+class UserStories (navControllerClass: NavController) : ComponentActivity() {
+    private val navControllerClass = navControllerClass
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -30,7 +33,7 @@ class UserStories : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShowUserStories()
+                    ShowUserStories(navControllerClass)
                 }
             }
         }
@@ -38,7 +41,7 @@ class UserStories : ComponentActivity() {
 }
 
 @Composable
-fun ShowUserStories() {
+fun ShowUserStories(navController: NavController) {
 
     val context = LocalContext.current
 
@@ -52,8 +55,6 @@ fun ShowUserStories() {
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
-
-    val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -74,14 +75,6 @@ fun ShowUserStories() {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 3)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview4() {
-    LoginPageTheme {
-        ShowUserStories()
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 3, navController)
     }
 }
