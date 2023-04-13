@@ -101,7 +101,6 @@ fun SStories(name: String) {
     }
 }
 
-
 @Composable
 fun ShowStories(
     userAuthor: Boolean,
