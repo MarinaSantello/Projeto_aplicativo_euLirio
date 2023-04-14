@@ -99,4 +99,5 @@
     <string name="resenhatilte"> Título da história </string>
     <string name="review">  </string>
     <string name="title_activity_short_story_reader">ShortStoryReader</string>
+    <string name="title_activity_edit_ebook">EditEbook</string>
 </resources>

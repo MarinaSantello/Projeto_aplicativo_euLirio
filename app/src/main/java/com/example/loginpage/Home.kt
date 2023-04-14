@@ -154,36 +154,18 @@ fun ButtonsPost (
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Card(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(.6f)
+                        .padding(end = 8.dp),
                     shape = RoundedCornerShape(16.dp),
                     backgroundColor = Color(0x80000000),
                     elevation = 0.dp
                 ) {
                     Text(
-                        text = "Recomendação",
+                        text = "Deseja publicar uma narrativa mais curta, como conto, crônica ou poema, para deixar em seu perfil como degustação? Faça isso pela nossa [plataforma web]. Lembrando que recomendamos a escrita e publicação de pequenas histórias utilizando dispositvos desktop.",
                         modifier = Modifier.padding(8.dp),
                         color = Color.White
                     )
-                }
-                FloatingActionButton(onClick = { /* do something */ }) {
-                    Icon(Icons.Default.Edit, contentDescription = "plus", tint = Color.White)
-                }
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Card(
-                    modifier = Modifier.padding(end = 8.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    backgroundColor = Color(0x80000000),
-                    elevation = 0.dp
-                ) {
-                    Text(
-                        text = "Pequena história",
-                        modifier = Modifier.padding(8.dp),
-                        color = Color.White
-                    )
-                }
-                FloatingActionButton(onClick = { /* do something */ }, modifier = Modifier.padding(top = 8.dp)) {
-                    Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -201,11 +183,6 @@ fun ButtonsPost (
                 }
                 FloatingActionButton(
                     onClick = {
-//                        navController.navigate(Routes.PostEbook.name) {
-//                            popUpTo(Routes.PostEbook.name) {
-//                                inclusive = true
-//                            }
-//                        }
                         val intent = Intent(context, PostEbook::class.java)
                         context.startActivity(intent)
 

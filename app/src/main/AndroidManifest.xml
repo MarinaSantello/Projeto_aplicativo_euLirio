@@ -15,6 +15,11 @@
         android:theme="@style/Theme.LoginPage"
         tools:targetApi="31">
         <activity
+            android:name=".EditEbook"
+            android:exported="false"
+            android:label="@string/title_activity_edit_ebook"
+            android:theme="@style/Theme.LoginPage" />
+        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:label="@string/title_activity_short_story_reader"
