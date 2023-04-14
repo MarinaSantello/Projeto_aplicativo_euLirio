@@ -9,12 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -28,6 +23,8 @@ import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -140,7 +137,26 @@ fun EditDataEbook(navController: NavController) {
         mutableStateOf(false)
     }
 
+    var checkFoto by remember{
+        mutableStateOf(false)
+    }
 
+    //Focus Requesters
+    var titleFocusRequester = remember{
+        FocusRequester()
+    }
+
+    var priceFocusRequester = remember{
+        FocusRequester()
+    }
+
+    var volFocusRequester = remember{
+        FocusRequester()
+    }
+
+    var pagesFocusRequester = remember{
+        FocusRequester()
+    }
 
     var capaUri by remember {
         mutableStateOf<Uri?>(null)
@@ -245,7 +261,7 @@ fun EditDataEbook(navController: NavController) {
                             })
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(id = R.string.publicar),
+                        text = "Edite o seu E-book",
                         Modifier.fillMaxWidth(),
                         fontFamily = Spartan,
                         fontWeight = FontWeight.SemiBold,
@@ -279,7 +295,7 @@ fun EditDataEbook(navController: NavController) {
 
 
 
-                val items1 = listOf("Desativar Ebook")
+                val items1 = listOf("Desativar Ebook", "Apagar Ebook")
 
                 DropdownMenu(
                     expanded = expandedTopBar,
@@ -331,7 +347,11 @@ fun EditDataEbook(navController: NavController) {
                     Icon(
                         Icons.Outlined.FileOpen, contentDescription = "",
                         modifier = Modifier.size(38.dp),
-                        tint = Color(0xff381871)
+                        tint = if(!checkFoto) {
+                            Color(0xff381871)
+                        }else {
+                            Color.Red
+                        }
                     )
                     Text(
                         text = stringResource(id = R.string.adicionarimagem),
@@ -339,9 +359,16 @@ fun EditDataEbook(navController: NavController) {
                         fontSize =  12.sp,
                         fontWeight = FontWeight.W400,
                         fontFamily = SpartanRegular,
-                        color = Color(0xCC1E1E1E)
+                        color = if(!checkFoto) {
+                            Color(0xCC1E1E1E)
+                        }else{
+                            Color.Red
+                        }
 
                     )
+
+
+
                 }
             }
 
@@ -351,6 +378,8 @@ fun EditDataEbook(navController: NavController) {
             Column() {
 
                 TextField(
+                    modifier = Modifier
+                        .focusRequester(titleFocusRequester),
                     value = titleState,
                     onValueChange = {
                         titleState = it
@@ -375,7 +404,7 @@ fun EditDataEbook(navController: NavController) {
                     trailingIcon = {
                         Icon(
                             Icons.Outlined.Error, contentDescription = "",
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(15.dp),
                             tint = if(checkTitle){
                                 Color.Red
                             }else{
@@ -386,6 +415,8 @@ fun EditDataEbook(navController: NavController) {
                 )
 
                 TextField(
+                    modifier = Modifier
+                        .focusRequester(priceFocusRequester),
                     value = priceState,
                     onValueChange = {
                         // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
@@ -431,7 +462,7 @@ fun EditDataEbook(navController: NavController) {
                     trailingIcon = {
                         Icon(
                             Icons.Outlined.Error, contentDescription = "",
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(15.dp),
                             tint = if(checkPrice){
                                 Color.Red
                             }else{
@@ -482,7 +513,7 @@ fun EditDataEbook(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 13.dp)
+                    .padding(end = 15.dp)
             ){
                 Text(
                     text = "Classificação indicativa",
@@ -494,7 +525,7 @@ fun EditDataEbook(navController: NavController) {
 
                 Icon(
                     Icons.Outlined.Error, contentDescription = "",
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(15.dp),
                     tint = if(checkClassification){
                         Color.Red
                     }else{
@@ -573,7 +604,7 @@ fun EditDataEbook(navController: NavController) {
             Spacer(modifier = Modifier.height(12.dp))
 
             TextField(
-                value = titleState,
+                value = volumeState,
                 onValueChange = {
                     volumeState = it
                 },
@@ -600,7 +631,7 @@ fun EditDataEbook(navController: NavController) {
                 trailingIcon = {
                     Icon(
                         Icons.Outlined.Error, contentDescription = "",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(15.dp),
                         tint = if(checkVol){
                             Color.Red
                         }else{
@@ -610,12 +641,13 @@ fun EditDataEbook(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .focusRequester(volFocusRequester)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             TextField(
-                value = titleState,
+                value = pagesState,
                 onValueChange = {
                     pagesState = it
                 },
@@ -642,7 +674,7 @@ fun EditDataEbook(navController: NavController) {
                 trailingIcon = {
                     Icon(
                         Icons.Outlined.Error, contentDescription = "",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(15.dp),
                         tint = if(checkPages){
                             Color.Red
                         }else{
@@ -653,6 +685,7 @@ fun EditDataEbook(navController: NavController) {
 
                 modifier = Modifier
                     .fillMaxWidth()
+                .focusRequester(pagesFocusRequester)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -685,7 +718,7 @@ fun EditDataEbook(navController: NavController) {
                             .height(200.dp)
                             .width(112.dp)
                             .clickable {
-                                selectEPUB.launch("application/pdf")
+                                selectPDF.launch("application/pdf")
                             },
                         border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_purple_text_color_border)),
                         shape = RoundedCornerShape(8.dp), backgroundColor = Color(0xD381871),
@@ -841,6 +874,7 @@ fun EditDataEbook(navController: NavController) {
                         //Verificação se o titulo está vazio
                         if(titleState.isEmpty()) {
                             checkTitle = true
+                            titleFocusRequester.requestFocus()
                         }else {
                             checkTitle = false
                         }
@@ -848,23 +882,56 @@ fun EditDataEbook(navController: NavController) {
                         //Verificação se o preço esta vazio
                         if(priceState.isEmpty()) {
                             checkPrice = true
+                            priceFocusRequester.requestFocus()
                         }else {
                             checkPrice = false
                         }
 
-                        //Verificação se o volume esta vazio
+                        //Verificação se classificação indicativa esta vazio
                         if(selectedItem == null){
                             checkClassification = true
                         }else{
                             checkClassification = false
                         }
 
-                        //Verificação se o preço esta vazio
+                        //Verificação se o volume esta vazio
                         if(volumeState.isEmpty()) {
                             checkVol = true
+                            volFocusRequester.requestFocus()
                         }else {
                             checkVol = false
                         }
+
+                        //Verificação se o campo de páginas esta vazio
+                        if(pagesState.isEmpty()) {
+                            checkPages = true
+                            pagesFocusRequester.requestFocus()
+                        }else {
+                            checkPages = false
+                        }
+
+
+                        //Verificação se o campo de inserção de PDF esta vazio
+                        if(pdfUri == null) {
+                            checkPDF = true
+                        }else {
+                            checkPDF = false
+                        }
+
+                        //Verificação se o campo de inserção de ePUB esta vazio
+                        if(epubUri == null) {
+                            checkEPUB = true
+                        }else {
+                            checkEPUB = false
+                        }
+
+                        //Verificação se o campo de inserção da capa do ebook esta vazio
+                        if(capaUri == null) {
+                            checkFoto = true
+                        }else {
+                            checkFoto = false
+                        }
+
 
 
 
