@@ -462,17 +462,6 @@ fun PostDataEbook(navController: NavController) {
                     color = colorResource(id = R.color.eulirio_purple_text_color_border)
                 )
 
-                Icon(
-                    Icons.Outlined.Error, contentDescription = "",
-                    modifier = Modifier.size(15.dp),
-                    tint = if(checkClassification){
-                        Color.Red
-                    }else{
-                        colorResource(id = R.color.eulirio_purple_text_color_border)
-                    }
-                )
-
-
             }
 
 
@@ -870,17 +859,6 @@ fun PostDataEbook(navController: NavController) {
                         }else {
                             checkFoto = false
                         }
-
-
-
-
-
-
-
-
-
-
-
 
                     }
             ){

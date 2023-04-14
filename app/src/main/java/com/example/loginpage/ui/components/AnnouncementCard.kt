@@ -46,8 +46,12 @@ fun AnnouncementCard(
     navController: NavController
 ) {
 
+    val likeStateAPI = CallLikeAPI.verifyAnnouncementLike(announcement.id!!, userID)
+
+    announcement.curtido = likeStateAPI
+
     var likeState by remember {
-        mutableStateOf(false)
+        mutableStateOf(announcement.curtido!!)
     }
 
     var saveState by remember{
@@ -229,24 +233,24 @@ fun AnnouncementCard(
                                     .clickable {
                                         likeState = !likeState
 
-                                        if(!likeState) {
+                                        if (!likeState) {
 //                                            likeState = !likeState
-                                            var announcementDislike = LikeAnnouncement (
+                                            val announcementDislike = LikeAnnouncement(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
                                             )
 
                                             CallLikeAPI.dislikeAnnouncement(announcementDislike)
-                                            likeState = false
+//                                            likeState = false
                                         } else {
 //                                            likeState = false
-                                            val announcementLike = LikeAnnouncement (
+                                            val announcementLike = LikeAnnouncement(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
                                             )
 
                                             CallLikeAPI.likeAnnouncement(announcementLike)
-                                            likeState = true
+//                                            likeState = true
                                         }
                                     }
                             ){

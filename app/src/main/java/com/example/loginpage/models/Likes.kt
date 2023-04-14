@@ -33,11 +33,3 @@ data class CountShortStorieLikes (
     @SerializedName("quantidade_curtidas")
     var qtdeCurtidas: String
 )
-
-data class DislikeAnnouncement(
-    @SerializedName("id_anuncio")
-    var idAnuncio: Int?,
-
-    @SerializedName("id_usuario")
-    var idUsuario: Int?
-)

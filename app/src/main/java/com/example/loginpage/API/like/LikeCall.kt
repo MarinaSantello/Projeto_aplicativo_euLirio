@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 const val contentType = Constant.CONTENT_TYPE
 
@@ -33,4 +34,7 @@ interface LikeCall {
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("dislike-short-storie")
     fun dislikeShortStorie(@Body dislike: LikeShortStorie): Call<String>
+
+    @GET("verify-announcement-like")
+    fun verifyAnnouncementLike(@Query("announcementID") announcementID: Int, @Query("userId") userID: Int): Call<Boolean>
 }

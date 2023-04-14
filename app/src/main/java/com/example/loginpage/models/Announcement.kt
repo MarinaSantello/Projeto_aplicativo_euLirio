@@ -24,7 +24,8 @@ data class AnnouncementGet(
     var tipo: List<Tipo>,
     var titulo: String = "",
     var usuario: List<Usuario>,
-    var volume: Int?
+    var volume: Int?,
+    var curtido: Boolean?
 ){
     override fun toString(): String {
         return super.toString()

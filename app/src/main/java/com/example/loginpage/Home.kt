@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -29,10 +30,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -153,6 +160,39 @@ fun ButtonsPost (
             horizontalAlignment = Alignment.End
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                // Creating an annonated string
+                val mAnnotatedLinkString = buildAnnotatedString {
+
+                    // creating a string to display in the Text
+                    val mStr = stringResource(id = R.string.texto_publicacao_curta)
+
+                    // word and span to be hyperlinked
+                    val mStartIndex = mStr.indexOf("plataforma web")
+                    val mEndIndex = mStartIndex + 14
+
+                    append(mStr)
+                    addStyle(
+                        style = SpanStyle(
+                            color = colorResource(id = R.color.eulirio_yellow_card_background),
+                            textDecoration = TextDecoration.Underline
+                        ), start = mStartIndex, end = mEndIndex
+                    )
+
+                    // attach a string annotation that
+                    // stores a URL to the text "link"
+                    addStringAnnotation(
+                        tag = "URL",
+                        annotation = "https://github.com/rafaeloliveira3/eu-lirio-project-front",
+                        start = mStartIndex,
+                        end = mEndIndex
+                    )
+
+                }
+
+                // UriHandler parse and opens URI inside
+                // AnnotatedString Item in Browse
+                val mUriHandler = LocalUriHandler.current
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(.6f)
@@ -161,11 +201,23 @@ fun ButtonsPost (
                     backgroundColor = Color(0x80000000),
                     elevation = 0.dp
                 ) {
-                    Text(
-                        text = "Deseja publicar uma narrativa mais curta, como conto, crônica ou poema, para deixar em seu perfil como degustação? Faça isso pela nossa [plataforma web]. Lembrando que recomendamos a escrita e publicação de pequenas histórias utilizando dispositvos desktop.",
+                    ClickableText(
+                        text = mAnnotatedLinkString,
+                        onClick = {
+                            mAnnotatedLinkString
+                                .getStringAnnotations("URL", it, it)
+                                .firstOrNull()?.let { stringAnnotation ->
+                                    mUriHandler.openUri(stringAnnotation.item)
+                                }
+                        },
                         modifier = Modifier.padding(8.dp),
-                        color = Color.White
-                    )
+                        style = TextStyle(Color.White),
+                )
+//                    Text(
+//                        text = stringResource(id = R.string.texto_publicacao_curta),
+//                        modifier = Modifier.padding(8.dp),
+//                        color = Color.White
+//                    )
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -183,6 +235,11 @@ fun ButtonsPost (
                 }
                 FloatingActionButton(
                     onClick = {
+//                        navController.navigate(Routes.PostEbook.name) {
+//                            popUpTo(Routes.PostEbook.name) {
+//                                inclusive = true
+//                            }
+//                        }
                         val intent = Intent(context, PostEbook::class.java)
                         context.startActivity(intent)
 

@@ -126,7 +126,7 @@ fun UserHomePage() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-            ) {
+        ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,7 +134,7 @@ fun UserHomePage() {
                 shape = RoundedCornerShape(bottomEnd = 50.dp, bottomStart = 50.dp),
                 backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
                 elevation = 5.dp
-                ) {
+            ) {
                 Column(
                 ) {
                     Row(
@@ -424,29 +424,29 @@ fun TabsPerfil() {
                     icon = {
                         when (index) {
                             0 -> Icon(
-                                    Icons.Outlined.MenuBook,
-                                    contentDescription = "icone de livro",
-                                    modifier = Modifier
-                                        .height(12.dp)
-                                        .padding(end = 8.dp),
-                                    //tint = if (booksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-                                )
+                                Icons.Outlined.MenuBook,
+                                contentDescription = "icone de livro",
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .padding(end = 8.dp),
+                                //tint = if (booksOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                            )
                             1 -> Icon(
-                                    Icons.Outlined.FormatAlignCenter,
-                                    contentDescription = "icone de texto",
-                                    modifier = Modifier
-                                        .height(12.dp)
-                                        .padding(end = 8.dp),
-                                    //tint = if (curtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-                                )
+                                Icons.Outlined.FormatAlignCenter,
+                                contentDescription = "icone de texto",
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .padding(end = 8.dp),
+                                //tint = if (curtasOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                            )
                             2 -> Icon(
-                                    Icons.Outlined.LocalLibrary,
-                                    contentDescription = "icone de pessoa lendo um livro",
-                                    modifier = Modifier
-                                        .height(12.dp)
-                                        .padding(end = 8.dp),
-                                    //tint = if (recomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
-                                )
+                                Icons.Outlined.LocalLibrary,
+                                contentDescription = "icone de pessoa lendo um livro",
+                                modifier = Modifier
+                                    .height(12.dp)
+                                    .padding(end = 8.dp),
+                                //tint = if (recomendationOnClickState) colorResource(id = R.color.eulirio_yellow_card_background) else Color.Black
+                            )
                         }
                     }
                 )

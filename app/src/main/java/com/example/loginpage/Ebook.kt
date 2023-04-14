@@ -3,7 +3,6 @@ package com.example.loginpage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -53,7 +52,6 @@ import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-<<<<<<< HEAD
 class Ebook : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,24 +68,6 @@ class Ebook : ComponentActivity() {
         }
     }
 }
-=======
-//class ViewEbook : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            LoginPageTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-//                    EbookView(1)
-//                }
-//            }
-//        }
-//    }
-//}
->>>>>>> origin/main
 
 @Composable
 fun EbookView(idAnnouncement: Int) {
@@ -102,9 +82,9 @@ fun EbookView(idAnnouncement: Int) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    //val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-    //val navController = rememberNavController()
+    val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -690,21 +670,21 @@ fun ShowEbook(
                 Row() {
                     Text(
                         text = "Classificação indicativa:",
-                    fontFamily = Spartan,
+                        fontFamily = Spartan,
                         modifier = Modifier.padding(start = 8.dp))
                     Text(
                         text = "Livre",
                         fontFamily = SpartanBold,
-                    modifier = Modifier.padding(start = 4.dp))
+                        modifier = Modifier.padding(start = 4.dp))
                 }
-            Column() {
-                Row(modifier= Modifier.fillMaxWidth()){ Text(text = "Disponível em: ",
-                    fontFamily = Spartan,
-                    modifier = Modifier.padding(start = 8.dp))
-                    Text(text = "PDF e ePUB ",
-                        fontFamily = SpartanBold)
+                Column() {
+                    Row(modifier= Modifier.fillMaxWidth()){ Text(text = "Disponível em: ",
+                        fontFamily = Spartan,
+                        modifier = Modifier.padding(start = 8.dp))
+                        Text(text = "PDF e ePUB ",
+                            fontFamily = SpartanBold)
+                    }
                 }
-            }
                 Divider(
                     color = Color.LightGray,
                     thickness = 1.dp,

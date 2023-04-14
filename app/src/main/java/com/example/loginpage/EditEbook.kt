@@ -685,7 +685,7 @@ fun EditDataEbook(navController: NavController) {
 
                 modifier = Modifier
                     .fillMaxWidth()
-                .focusRequester(pagesFocusRequester)
+                    .focusRequester(pagesFocusRequester)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -931,17 +931,6 @@ fun EditDataEbook(navController: NavController) {
                         }else {
                             checkFoto = false
                         }
-
-
-
-
-
-
-
-
-
-
-
 
                     }
             ){
