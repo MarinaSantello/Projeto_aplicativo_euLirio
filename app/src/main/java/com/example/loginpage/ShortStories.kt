@@ -76,7 +76,7 @@ fun SStories(name: String) {
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-    val navController = rememberNavController()
+   val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -474,10 +474,10 @@ fun ShowStories(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview7() {
-    LoginPageTheme {
-
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview7() {
+//    LoginPageTheme {
+//
+//    }
+//}

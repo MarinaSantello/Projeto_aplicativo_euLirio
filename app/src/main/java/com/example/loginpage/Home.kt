@@ -71,7 +71,9 @@ class Home : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    HomeBooks()
+                    val navController = rememberNavController()
+
+                    HomeBooks(navController)
                 }
             }
         }
@@ -79,9 +81,8 @@ class Home : ComponentActivity() {
 }
 
 //@OptIn(ExperimentalPagerApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeBooks() {
+fun HomeBooks(navController: NavController) {
 
     val context = LocalContext.current
 
@@ -95,8 +96,6 @@ fun HomeBooks() {
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
-
-    val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -121,12 +120,12 @@ fun HomeBooks() {
             }
         },
         drawerContent = {
-            DrawerDesign(userID, context, scaffoldState)
+            DrawerDesign(userID, context, scaffoldState, navController)
         },
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1, navController)
     }
 
     if(!fabState.value) ButtonsPost(navController, context) {
@@ -138,7 +137,8 @@ fun HomeBooks() {
 fun ButtonsPost (
     navController: NavController,
     context: Context,
-    onChecked: (Boolean) -> Unit ) {
+    onChecked: (Boolean) -> Unit
+) {
 
     Box (
         Modifier
@@ -154,36 +154,18 @@ fun ButtonsPost (
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Card(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(.6f)
+                        .padding(end = 8.dp),
                     shape = RoundedCornerShape(16.dp),
                     backgroundColor = Color(0x80000000),
                     elevation = 0.dp
                 ) {
                     Text(
-                        text = "Recomendação",
+                        text = "Deseja publicar uma narrativa mais curta, como conto, crônica ou poema, para deixar em seu perfil como degustação? Faça isso pela nossa [plataforma web]. Lembrando que recomendamos a escrita e publicação de pequenas histórias utilizando dispositvos desktop.",
                         modifier = Modifier.padding(8.dp),
                         color = Color.White
                     )
-                }
-                FloatingActionButton(onClick = { /* do something */ }) {
-                    Icon(Icons.Default.Edit, contentDescription = "plus", tint = Color.White)
-                }
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Card(
-                    modifier = Modifier.padding(end = 8.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    backgroundColor = Color(0x80000000),
-                    elevation = 0.dp
-                ) {
-                    Text(
-                        text = "Pequena história",
-                        modifier = Modifier.padding(8.dp),
-                        color = Color.White
-                    )
-                }
-                FloatingActionButton(onClick = { /* do something */ }, modifier = Modifier.padding(top = 8.dp)) {
-                    Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -201,11 +183,6 @@ fun ButtonsPost (
                 }
                 FloatingActionButton(
                     onClick = {
-//                        navController.navigate(Routes.PostEbook.name) {
-//                            popUpTo(Routes.PostEbook.name) {
-//                                inclusive = true
-//                            }
-//                        }
                         val intent = Intent(context, PostEbook::class.java)
                         context.startActivity(intent)
 
@@ -244,13 +221,5 @@ fun FloatingActionButton( onChecked: (Boolean) -> Unit ) {
         }
     ) {
         Icon(Icons.Default.Add, contentDescription = "plus", tint = Color.White)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LoginPageTheme {
-        HomeBooks()
     }
 }

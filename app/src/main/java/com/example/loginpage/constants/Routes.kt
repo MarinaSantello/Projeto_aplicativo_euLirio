@@ -5,6 +5,9 @@ enum class Routes {
     Introduction,
     Login,
     Home,
+    Ebook,
+    UserStories,
+    CardEbook,
     Feed,
     PostEbook
 }

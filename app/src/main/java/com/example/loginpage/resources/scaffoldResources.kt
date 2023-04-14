@@ -2,6 +2,8 @@ package com.example.loginpage.resources
 
 import android.content.Context
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -23,19 +25,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.LoginPage
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.UserPage
-import com.example.loginpage.UserStories
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Tag
 import com.example.loginpage.ui.theme.Montserrat
 import com.example.loginpage.ui.theme.Montserrat2
@@ -71,7 +75,7 @@ fun TopBar(
                         contentDescription = "logo aplicativo",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 44.dp),
+                            .padding(end = 56.dp),
                         alignment = Alignment.Center
 //                        modifier = Modifier
 //                            .height(90.dp)
@@ -114,7 +118,8 @@ fun TopBar(
 fun DrawerDesign(
     userID: UserID,
     context: Context,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    navController: NavController
 ){
 
     val coroutineScope = rememberCoroutineScope()
@@ -143,7 +148,7 @@ fun DrawerDesign(
     val clickUserPage = remember { mutableStateOf(false) }
 
     val intentUserPage = Intent(context, UserPage::class.java)
-    val intentUserStories = Intent(context, UserStories::class.java)
+    //val intentUserStories = Intent(context, UserStories(navController)::class.java)
     val intentLogin = Intent(context, LoginPage::class.java)
 
     Column(
@@ -393,7 +398,7 @@ fun DrawerDesign(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            context.startActivity(intentUserStories)
+                            navController.navigate(Routes.UserStories.name)
 
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()

@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_EXPRESSION")
-
 package com.example.loginpage
 
 import android.content.Intent
@@ -22,8 +20,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.FileUpload
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,25 +45,25 @@ import com.example.loginpage.models.Genero
 import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.*
 
-class PostEbook : ComponentActivity() {
+class EditEbook : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             LoginPageTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    InputDataEbook(navController)
+                    EditDataEbook(navController)
                 }
             }
         }
     }
 }
-
 @Composable
-fun InputDataEbook(navController: NavController) {
+fun EditDataEbook(navController: NavController) {
     val context = LocalContext.current
 
     var capaState by remember {
@@ -106,6 +106,41 @@ fun InputDataEbook(navController: NavController) {
     var showDialog by remember {
         mutableStateOf(false)
     }
+
+    //Variaveis de estado para tratar os erros
+    var checkTitle  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkPrice  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkClassification  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkVol  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkPages  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkGenres  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkPDF  by remember {
+        mutableStateOf(false)
+    }
+
+    var checkEPUB  by remember {
+        mutableStateOf(false)
+    }
+
+
 
     var capaUri by remember {
         mutableStateOf<Uri?>(null)
@@ -154,6 +189,15 @@ fun InputDataEbook(navController: NavController) {
     var expanded by remember {
         mutableStateOf(false)
     }
+
+    var expandedTopBar by remember {
+        mutableStateOf(false)
+    }
+
+    var expandedTopBarState by remember {
+        mutableStateOf(false)
+    }
+
     var selectedItem by remember {
         mutableStateOf(0)
     }
@@ -177,27 +221,89 @@ fun InputDataEbook(navController: NavController) {
             elevation = 0.dp
         ) {
             Row(
-                modifier = Modifier.padding(start = 24.dp),
-                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.padding(start = 24.dp, end = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Default.Close,
-                    contentDescription = "icone para fechar",
+            ){
+
+
+
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(top = 2.dp)
-                        .clickable {
-                            val intent = Intent(context, Home::class.java)
-                            context.startActivity(intent)
-                        })
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(id = R.string.publicar),
-                    Modifier.fillMaxWidth(),
-                    fontFamily = Spartan,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
-                )
+                        .width(199.dp)
+
+                ){
+                    Icon(Icons.Default.Close,
+                        contentDescription = "icone para fechar",
+                        modifier = Modifier
+                            .padding(top = 2.dp)
+                            .clickable {
+                                val intent = Intent(context, Home::class.java)
+                                context.startActivity(intent)
+                            })
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(id = R.string.publicar),
+                        Modifier.fillMaxWidth(),
+                        fontFamily = Spartan,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp
+                    )
+                }
+
+                if(!expandedTopBarState){
+                    Card(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .clickable {
+                                expandedTopBar = true
+                                expandedTopBarState = true
+                            }
+                            .width(40.dp),
+                        backgroundColor = Color.Transparent,
+                        elevation = 0.dp,
+
+                        ){
+                        Icon(
+                            Icons.Outlined.MoreVert, contentDescription = "",
+                            modifier = Modifier.size(30.dp),
+                            tint = Color(0xff381871)
+                        )
+                    }
+                }
+
+
+
+
+
+
+                val items1 = listOf("Desativar Ebook")
+
+                DropdownMenu(
+                    expanded = expandedTopBar,
+                    onDismissRequest = {
+                        expandedTopBar = false
+                        expandedTopBarState = false
+                    },
+                    modifier = Modifier.fillMaxWidth(.85f)
+                ) {
+                    items1.forEachIndexed { index, item ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedItem = index
+                                expandedTopBar = false
+                                expandedTopBarState = false
+                            }
+                        ) {
+                            Text(text = item)
+                        }
+                    }
+                }
             }
+
+
         }
 
 
@@ -224,12 +330,12 @@ fun InputDataEbook(navController: NavController) {
                 ) {
                     Icon(
                         Icons.Outlined.FileOpen, contentDescription = "",
-                       modifier = Modifier.size(38.dp),
+                        modifier = Modifier.size(38.dp),
                         tint = Color(0xff381871)
                     )
                     Text(
                         text = stringResource(id = R.string.adicionarimagem),
-                        textAlign = TextAlign.Center, 
+                        textAlign = TextAlign.Center,
                         fontSize =  12.sp,
                         fontWeight = FontWeight.W400,
                         fontFamily = SpartanRegular,
@@ -265,7 +371,18 @@ fun InputDataEbook(navController: NavController) {
                         cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                         focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                         unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-                    )
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            Icons.Outlined.Error, contentDescription = "",
+                            modifier = Modifier.size(20.dp),
+                            tint = if(checkTitle){
+                                Color.Red
+                            }else{
+                                colorResource(id = R.color.eulirio_purple_text_color_border)
+                            }
+                        )
+                    }
                 )
 
                 TextField(
@@ -309,8 +426,19 @@ fun InputDataEbook(navController: NavController) {
                         backgroundColor = Color.Transparent,
                         cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                         focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-                    )
+                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            Icons.Outlined.Error, contentDescription = "",
+                            modifier = Modifier.size(20.dp),
+                            tint = if(checkPrice){
+                                Color.Red
+                            }else{
+                                colorResource(id = R.color.eulirio_purple_text_color_border)
+                            }
+                        )
+                    }
                 )
 
             }
@@ -349,13 +477,35 @@ fun InputDataEbook(navController: NavController) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = "Classificação indicativa",
-                fontFamily = Spartan,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp,
-                color = colorResource(id = R.color.eulirio_purple_text_color_border)
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 13.dp)
+            ){
+                Text(
+                    text = "Classificação indicativa",
+                    fontFamily = Spartan,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 20.sp,
+                    color = colorResource(id = R.color.eulirio_purple_text_color_border)
+                )
+
+                Icon(
+                    Icons.Outlined.Error, contentDescription = "",
+                    modifier = Modifier.size(20.dp),
+                    tint = if(checkClassification){
+                        Color.Red
+                    }else{
+                        colorResource(id = R.color.eulirio_purple_text_color_border)
+                    }
+                )
+
+
+            }
+
+
 
             val items = listOf("Opção 1", "Opção 2")
 
@@ -409,7 +559,9 @@ fun InputDataEbook(navController: NavController) {
                         }
                     }
                 }
-        }
+            }
+
+
 
             Card(
                 modifier = Modifier
@@ -445,6 +597,17 @@ fun InputDataEbook(navController: NavController) {
                     focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                 ),
+                trailingIcon = {
+                    Icon(
+                        Icons.Outlined.Error, contentDescription = "",
+                        modifier = Modifier.size(20.dp),
+                        tint = if(checkVol){
+                            Color.Red
+                        }else{
+                            colorResource(id = R.color.eulirio_purple_text_color_border)
+                        }
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -476,6 +639,18 @@ fun InputDataEbook(navController: NavController) {
                     focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                 ),
+                trailingIcon = {
+                    Icon(
+                        Icons.Outlined.Error, contentDescription = "",
+                        modifier = Modifier.size(20.dp),
+                        tint = if(checkPages){
+                            Color.Red
+                        }else{
+                            colorResource(id = R.color.eulirio_purple_text_color_border)
+                        }
+                    )
+                },
+
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -521,7 +696,7 @@ fun InputDataEbook(navController: NavController) {
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxSize(),
 
-                        ) {
+                            ) {
                             Icon(
                                 Icons.Outlined.FileUpload, contentDescription = "",
                                 modifier = Modifier.size(38.dp),
@@ -541,12 +716,22 @@ fun InputDataEbook(navController: NavController) {
                             horizontalAlignment = Alignment.End,
                             verticalArrangement = Arrangement.Bottom
                         ){
-                            Icon(
-                                Icons.Default.Error, contentDescription = "",
-                                modifier = Modifier
-                                    .size(25.dp)
-                                    .padding(end = 10.dp, bottom = 6.dp)
-                            )
+                            if(checkPDF){
+                                Icon(
+                                    Icons.Default.Error, contentDescription = "",
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .padding(end = 10.dp, bottom = 6.dp),
+                                    tint = Color.Red
+                                )
+                            }else {
+                                Icon(
+                                    Icons.Default.Error, contentDescription = "",
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .padding(end = 10.dp, bottom = 6.dp)
+                                )
+                            }
                         }
 
                     }
@@ -586,12 +771,22 @@ fun InputDataEbook(navController: NavController) {
                             horizontalAlignment = Alignment.End,
                             verticalArrangement = Arrangement.Bottom
                         ){
-                            Icon(
-                                Icons.Default.Error, contentDescription = "",
-                                modifier = Modifier
-                                    .size(25.dp)
-                                    .padding(end = 10.dp, bottom = 6.dp)
-                            )
+                            if(checkEPUB){
+                                Icon(
+                                    Icons.Default.Error, contentDescription = "",
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .padding(end = 10.dp, bottom = 6.dp),
+                                    tint = Color.Red
+                                )
+                            }else {
+                                Icon(
+                                    Icons.Default.Error, contentDescription = "",
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .padding(end = 10.dp, bottom = 6.dp)
+                                )
+                            }
                         }
                     }
                     //Card para importar MOBI
@@ -624,7 +819,7 @@ fun InputDataEbook(navController: NavController) {
                                 fontFamily = SpartanRegular,
 
 
-                            )
+                                )
                         }
 
 
@@ -637,11 +832,52 @@ fun InputDataEbook(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Card(
+                backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp),
-                backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-                    ){
+                    .height(40.dp)
+                    .clickable {
+
+                        //Verificação se o titulo está vazio
+                        if(titleState.isEmpty()) {
+                            checkTitle = true
+                        }else {
+                            checkTitle = false
+                        }
+
+                        //Verificação se o preço esta vazio
+                        if(priceState.isEmpty()) {
+                            checkPrice = true
+                        }else {
+                            checkPrice = false
+                        }
+
+                        //Verificação se o volume esta vazio
+                        if(selectedItem == null){
+                            checkClassification = true
+                        }else{
+                            checkClassification = false
+                        }
+
+                        //Verificação se o preço esta vazio
+                        if(volumeState.isEmpty()) {
+                            checkVol = true
+                        }else {
+                            checkVol = false
+                        }
+
+
+
+
+
+
+
+
+
+
+
+                    }
+            ){
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
@@ -653,10 +889,9 @@ fun InputDataEbook(navController: NavController) {
                         color = Color.White,
                         fontFamily = SpartanBold
                     )
+                }
             }
 
-
-        }
             Spacer(modifier = Modifier.height(40.dp))
         }
 
@@ -667,9 +902,9 @@ fun InputDataEbook(navController: NavController) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun DefaultPreview5() {
+fun DefaultPreview8() {
     LoginPageTheme {
         val navController = rememberNavController()
-        InputDataEbook(navController)
+        EditDataEbook(navController)
     }
 }

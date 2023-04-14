@@ -3,6 +3,7 @@ package com.example.loginpage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -52,6 +53,7 @@ import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+<<<<<<< HEAD
 class Ebook : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +70,24 @@ class Ebook : ComponentActivity() {
         }
     }
 }
+=======
+//class ViewEbook : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    EbookView(1)
+//                }
+//            }
+//        }
+//    }
+//}
+>>>>>>> origin/main
 
 @Composable
 fun EbookView(idAnnouncement: Int) {
@@ -82,9 +102,9 @@ fun EbookView(idAnnouncement: Int) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    //val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-    val navController = rememberNavController()
+    //val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier

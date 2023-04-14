@@ -24,6 +24,10 @@ val SpartanMedium = FontFamily(
     Font(R.font.spartan_medium)
 )
 
+val SpartanRegular = FontFamily(
+    Font(R.font.spartan_regular)
+)
+
 val SpartanExtraLight = FontFamily(
     Font(R.font.spartan_extralight)
 )
@@ -47,6 +51,9 @@ val MontSerratSemiBold = FontFamily(
     Font(R.font.montserrat_semibold)
 )
 
+val MontSerratBold = FontFamily(
+    Font(R.font.montserrat_bold)
+)
 
 //MontSerrat Regular
 val Montserrat2 = FontFamily(

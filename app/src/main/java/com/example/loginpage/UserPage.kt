@@ -397,7 +397,8 @@ fun UserHomePage() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                TabsFeed(83, 40.dp)
+                Text(text = "minhas histórias")
+                //TabsFeed(83, 40.dp)
 
             }
 
