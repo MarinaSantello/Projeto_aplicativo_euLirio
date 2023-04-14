@@ -40,11 +40,6 @@
             android:label="@string/title_activity_post_ebook"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".ViewBooks"
-            android:exported="false"
-            android:label="@string/title_activity_view_books"
-            android:theme="@style/Theme.LoginPage" />
-        <activity
             android:name=".Home"
             android:exported="false"
             android:label="@string/title_activity_home"

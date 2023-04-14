@@ -53,6 +53,24 @@ import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+<<<<<<< HEAD
+class Ebook : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            LoginPageTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    EbookView(1)
+                }
+            }
+        }
+    }
+}
+=======
 //class ViewEbook : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
@@ -69,6 +87,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 //        }
 //    }
 //}
+>>>>>>> origin/main
 
 @Composable
 fun EbookView(idAnnouncement: Int) {
@@ -500,28 +519,30 @@ fun ShowEbook(
                     contentDescription = "foto da pessoa",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .width(12.dp)
-                        .clip(RoundedCornerShape(12.dp)
-
-                        )
+                        .padding(start = 8.dp, top = 8.dp)
+                        .width(30.dp)
+                        .clip(
+                            RoundedCornerShape(15.dp))
                 )
 
                 Spacer(modifier = Modifier.padding(horizontal = 8.dp))
 
-                Column() {
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Noah Sebastian",
-                        fontSize = 12.sp
+                        fontSize = 16.sp,
+                        fontFamily = SpartanMedium,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                     Text(
                         text = "@n.sebastian",
-                        fontSize = 8.sp
+                        fontSize = 14.sp,
+                        fontFamily = Spartan
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(20.dp))
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.width(15.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             //row dos icones
             Row(modifier = Modifier.fillMaxWidth(),
@@ -640,83 +661,57 @@ fun ShowEbook(
 
                 }
             }
-        }
+            Spacer(modifier = Modifier.height(10.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Divider(
+                color = Color.Gray,
+                thickness = 1.dp,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        //sinopse
-        Column(Modifier.fillMaxSize()) {
-//                    Divider(
-//                        color = Color.Black,
-//                        thickness = 1.dp,
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
-            Text(text = "Classificação indicativa: Livre")
-            Text(text = "Disponível em: PDB e PUB")
-        }
+            //sinopse
+            Column() {
 
-    }
-    Divider(
-        color = Color.Black,
-        thickness = 1.dp,
-        modifier = Modifier.fillMaxWidth()
-    )
+                Text(
+                    text = stringResource(id = R.string.review),
+                    fontSize = 12.sp,
+                    fontFamily = QuickSand,
+                    modifier = Modifier.padding(start = 4.dp)
 
-    @Composable
-    fun Avaliacoes(context: Context) {
+                )
+                Spacer(modifier = Modifier.height(10.dp))
 
-        // column principal
-        Column(modifier = Modifier.fillMaxSize()) {
-            Card() {
+                Divider(
+                    color = Color.LightGray,
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 Row() {
-                    Icon(
-                        Icons.Outlined.ChatBubble,
-                        contentDescription = "conversa",
-                        tint = Color.Black
-                    )
                     Text(
-                        text = "Avaliações do livro (2)",
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Button(
-                        onClick = { },
-                    ) {
-                        Text(text = "AVALIAR")
-                    }
+                        text = "Classificação indicativa:",
+                    fontFamily = Spartan,
+                        modifier = Modifier.padding(start = 8.dp))
+                    Text(
+                        text = "Livre",
+                        fontFamily = SpartanBold,
+                    modifier = Modifier.padding(start = 4.dp))
                 }
-
-                //perfil
-                Row() {
-                    Image(
-                        painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
-                        contentDescription = "foto da pessoa",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .width(12.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                    )
-                    Column() {
-                        //estrelas
-
-                        Text(text = "@n.sebastian")
-                    }
-
+            Column() {
+                Row(modifier= Modifier.fillMaxWidth()){ Text(text = "Disponível em: ",
+                    fontFamily = Spartan,
+                    modifier = Modifier.padding(start = 8.dp))
+                    Text(text = "PDF e ePUB ",
+                        fontFamily = SpartanBold)
                 }
-
-                Text(
-                    text = stringResource(id = R.string.resenhatilte)
+            }
+                Divider(
+                    color = Color.LightGray,
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Text(
-                    text = stringResource(id = R.string.review)
-                )
-
             }
         }
-
-
-
-
     }
 }
 

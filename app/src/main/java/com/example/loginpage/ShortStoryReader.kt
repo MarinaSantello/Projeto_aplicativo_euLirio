@@ -78,9 +78,9 @@ fun ScreenBuilder() {
                 "\n" +
                 "<p><strong>Negrito</strong> | <em>Italico </em> | <span style=\"text-decoration: underline;\">Underline</span></p>\n" +
                 "\n" +
-                "<p>Esquerda</p>\n" +
-                "<p style=\"text-align: center;\">Centro</p>\n" +
-                "<p style=\"text-align: right;\">Direita kn cfkjn kfjn kjn knk vnfkjgnfd sjkdfcjsdjfcv sdjfh jdhdjf bds fvghjdsdf gvjhsdfjvhsdfjvch vjvj dfjvjdf vjdfjngikejn ifn d ldsfvdsl.</p>\n" +
+                "<p>Esquerda jds bfxcjsdvfdsfvddjsbfzvbdszfjhesbjhfbc sdjbcjhbs dvcsdjch bdxjc akjd aoisdjaoij dpojdaopjdfajd fjajofjdkjclxkmvkxcnvmnxcmvn xcmnv mxc vmn xmnv xvcj</p>\n" +
+                "<p style=\"text-align: center;\">Centro  cf nhcfx cvjh vcnv cv vcvc cv xv cmv xjcv cxjv cxjv xjv xmn jchvb jncv</p>\n" +
+                "<p style=\"text-align: right;\">Direita kn cfkjn kfjn kjn knk vnf sjbfcmjbdxn xjd jdx  d fdj df dxvd xvmnd xvnd xvn dxvn sdk esfjebowjfdskjgnfd sjkdfcjsdjfcv sdjfh jdhdjf bds fvghjdsdf gvjhsdfjvhsdfjvch vjvj dfjvjdf vjdfjngikejn ifn d ldsfvdsl.</p>\n" +
                 "<p style=\"text-align: justify;\">Justificado jhsbdfcjs dhb dsbfjhgfbcsghefv fbhghwe fvfdsghwef vwfdc ebghvfdesw wsdefgc wwedsfvgws </p>\n" +
                 "<p style=\"padding-left: 120px; text-align: center;\"><span style=\"text-decoration: underline; font-size: 18pt;\"><em><strong>Exemplo de Tudo Junto</strong></em></span></p>" +
                 "<p style=\"text-align: justify; padding-left: 40px;\">Identado</p>"
@@ -402,55 +402,85 @@ fun WebViewComponent(htmlCode: String, onTap: (Boolean) -> Unit) {
         mutableStateOf(false)
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        AndroidView(
-            modifier = Modifier
-                .size(200.dp),
-            factory = { context ->
-                val webView = WebView(context)
-
-                webView.apply {
-                    loadData(htmlCode, "text/html", "utf-8")
-                }
-
-                webView.settings.javaScriptEnabled = true
-                webView.setOnTouchListener { view, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        visibility.value = !visibility.value
-                    }
-                    // Forward touch events to parent view
-                    view.parent?.requestDisallowInterceptTouchEvent(false)
-                    false
-                }
-                webView
-            }
-        )
-    }
-//
-//    AndroidView(
+//    Column(
 //        modifier = Modifier
 //            .fillMaxSize()
-//            .padding(20.dp, 0.dp)
+//            .zIndex(0f),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//        AndroidView(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(20.dp, 0.dp),
+////                .size(400.dp),
+//            factory = { context ->
+//                val webView = WebView(context)
+//
+//                webView.apply {
+//                    loadData(htmlCode, "text/html", "utf-8")
+//                }
+//
+//                webView.settings.javaScriptEnabled = true
+//                webView.setOnTouchListener { view, event ->
+//                    if (event.actionMasked == MotionEvent.ACTION_UP) {
+//                        visibility.value = !visibility.value
+//                    }
+//                    // Forward touch events to parent view
+//                    view.parent?.requestDisallowInterceptTouchEvent(false)
+//                    false
+//                }
+////                webView.isClickable
+////                webView.setOnClickListener {
+////                    visibility.value = !visibility.value
+////                }
+//                webView
+//            }
+//        )
+
+//        AndroidView(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(20.dp, 0.dp),
 ////            .onGloballyPositioned {
 ////                offset.value += it.positionInParent().y
 ////            }
-//            .pointerInteropFilter { true },
+////                .pointerInteropFilter { true },
 ////            .pointerInput(Unit) {
 ////                detectTapGestures(
 ////                    onTap = {
 ////                    }
 ////                )
 ////            },
-//        factory = { context ->
-//            WebView(context).apply {
-//                loadData(htmlCode, "text/html", "utf-8")
+//            factory = { context ->
+//                WebView(context).apply {
+//                    loadData(htmlCode, "text/html", "utf-8")
+//                }
 //            }
-//        }
-//    )
+//        )
+//    }
+
+    AndroidView(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(0f)
+            .padding(20.dp, 0.dp),
+//            .onGloballyPositioned {
+//                offset.value += it.positionInParent().y
+//            }
+//            .pointerInteropFilter { true },
+//            .pointerInput(Unit) {
+//                detectTapGestures(
+//                    onTap = {
+//                    }
+//                )
+//            },
+        factory = { context ->
+            WebView(context).apply {
+                loadData(htmlCode, "text/html", "utf-8")
+            }
+        }
+    )
 
     if (visibility.value) Box(
         Modifier
