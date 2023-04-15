@@ -22,6 +22,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.outlined.Spa
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +59,7 @@ import com.example.loginpage.models.Genero
 import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
 import com.example.loginpage.models.User
+import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.LoginPageTheme
@@ -117,7 +121,7 @@ fun HomeBooks(navController: NavController) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBar(userID, scaffoldState, topBarState) },
-        bottomBar = { BottomBar(bottomBarState) },
+        bottomBar = { BottomBarScaffold(bottomBarState, navController, 1) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value) {
@@ -251,18 +255,6 @@ fun ButtonsPost (
             }
         }
     }
-}
-
-@Composable
-fun BottomBar(state: MutableState<Boolean>) {
-    AnimatedVisibility(
-        visible = state.value,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it }),
-        content = {
-            BottomAppBar{Text("Bottom Bar")}
-        }
-    )
 }
 
 @Composable

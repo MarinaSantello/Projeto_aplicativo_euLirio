@@ -18,6 +18,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.outlined.Spa
 import androidx.compose.runtime.*
 import androidx.compose.runtime.R
 import androidx.compose.ui.Alignment
@@ -499,4 +502,50 @@ fun DrawerDesign(
         }
 
     }
+}
+
+@Composable
+fun BottomBarScaffold(
+    state: MutableState<Boolean>,
+    navController: NavController,
+    activity: Int
+) {
+    AnimatedVisibility(
+        visible = state.value,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
+        content = {
+            BottomAppBar (
+                backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_beige_color_background),
+                elevation = 0.dp
+            ) {
+                Row(
+                    Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        if (activity == 1) Icons.Default.Spa else Icons.Outlined.Spa,
+                        "",
+                        modifier = Modifier.size(if (activity == 1) 32.dp else 28.dp),
+                        tint = if (activity == 1) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
+                    )
+
+                    Icon(
+                        if (activity == 2) Icons.Default.Search else Icons.Outlined.Search,
+                        "",
+                        modifier = Modifier.size(if (activity == 2) 32.dp else 28.dp),
+                        tint = if (activity == 2) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
+                    )
+
+                    Icon(
+                        if (activity == 3) Icons.Default.ShoppingCart else Icons.Outlined.ShoppingCart,
+                        "",
+                        modifier = Modifier.size(if (activity == 3) 34.dp else 28.dp),
+                        tint = if (activity == 3) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
+                    )
+                }
+            }
+        }
+    )
 }

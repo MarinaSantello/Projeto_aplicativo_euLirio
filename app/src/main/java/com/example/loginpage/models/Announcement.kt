@@ -6,6 +6,30 @@ data class Announcements (
     val announcements: List<AnnouncementGet>
 )
 
+data class AnnouncementPost (
+    var titulo: String,
+    var volume: Int = 1,
+    var capa: String,
+    var sinopse: String = "",
+    @SerializedName("quantidade_paginas")
+    var qunatidadePaginas: Int,
+    var preco: Float,
+    @SerializedName("id_classificacao")
+    var idClassificacao: Int,
+    @SerializedName("id_usuario")
+    var idUsuario: Int,
+    @SerializedName("id_tipo_publicacao")
+    var idTipoPublicacao: Int,
+    var epub: String,
+    var pdf: String,
+    var mobi: String = "",
+    val generos: List<Generos>,
+){
+    override fun toString(): String {
+        return super.toString()
+    }
+}
+
 data class AnnouncementGet(
     var capa: String = "",
     var classificacao: List<Classificacao>,
@@ -43,7 +67,7 @@ data class Classificacao(
 data class Generos(
     @SerializedName("id_genero")
     var idGenero: Int?,
-    var nome: String
+    var nome: String = ""
 )
 
 data class Tipo(

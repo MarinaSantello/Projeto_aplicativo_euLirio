@@ -155,20 +155,21 @@ fun TabsFeed(
 //        when (tabIndex.currentPage) {
         when (tabIndex) {
             0 -> {
-                var announcements by remember {
-                    mutableStateOf(listOf<AnnouncementGet>())
-                }
-
-                //CallAnnouncementAPI.getAnnouncements {
-                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
-                    announcements = it
-                }
-
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-                    items(announcements) {
-                        AnnouncementCard(it, userID, navController)
-                    }
-                }
+//                var announcements by remember {
+//                    mutableStateOf(listOf<AnnouncementGet>())
+//                }
+//
+//                //CallAnnouncementAPI.getAnnouncements {
+//                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
+//                    announcements = it
+//                }
+//
+//                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+//                    items(announcements) {
+//                        AnnouncementCard(it, userID, navController)
+//                    }
+//                }
+                Text(text = "api deu b.o.")
             }
             1 -> {
                 var shortStory by remember {

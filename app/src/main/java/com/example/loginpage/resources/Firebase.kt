@@ -111,11 +111,11 @@ fun uploadFile(file: Uri, folder: String, fileName: String, context: Context, ur
                 .addOnSuccessListener {
                     uri.invoke(it.toString())
                 }
-            Log.i("firebase update", p0.toString())
+            Log.i("firebase upload", p0.toString())
         }
         .addOnFailureListener { p0 ->
             Toast.makeText(context, p0.message, Toast.LENGTH_LONG).show()
-            Log.i("firebase update", p0.toString())
+            Log.i("firebase upload", p0.toString())
         }
         .addOnProgressListener { p0 ->
             var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount

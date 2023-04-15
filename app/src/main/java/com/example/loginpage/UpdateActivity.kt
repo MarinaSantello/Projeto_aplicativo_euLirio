@@ -62,10 +62,6 @@ import retrofit2.Response
 import java.time.LocalDateTime
 
 class UpdateActivity : ComponentActivity() {
-
-    //lateinit var progressBar: ProgressBar
-    lateinit var filePath: Uri
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

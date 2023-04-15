@@ -13,7 +13,7 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Eulirio_light_yellow_background,
+    primary = EuLirio_purpleTextColorBorder,
     primaryVariant = Purple700,
     secondary = Eulirio_yellow_card_background
 
