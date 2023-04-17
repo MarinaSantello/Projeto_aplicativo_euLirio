@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
@@ -284,7 +285,24 @@ fun AnnouncementCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
-                                    .clickable { saveState = !saveState }
+                                    .clickable {
+                                        saveState = !saveState
+
+                                        if(!saveState){
+                                            val announcementUnFavorite = FavoriteAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+                                            CallFavoriteAPI.unfavoriteAnnouncement(announcementUnFavorite)
+
+                                        }else{
+                                            val announcementFavorite = FavoriteAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+                                            CallFavoriteAPI.favoriteAnnouncement(announcementFavorite)
+                                        }
+                                    }
                             ){
 
                                 //Verificação se o favoritou a publicação
