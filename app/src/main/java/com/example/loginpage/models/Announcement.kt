@@ -6,6 +6,7 @@ data class Announcements (
     val announcements: List<AnnouncementGet>
 )
 
+
 data class AnnouncementPost (
     var titulo: String,
     var volume: Int = 1,
@@ -19,11 +20,11 @@ data class AnnouncementPost (
     @SerializedName("id_usuario")
     var idUsuario: Int,
     @SerializedName("id_tipo_publicacao")
-    var idTipoPublicacao: Int,
+    var idTipoPublicacao: Int = 1,
     var epub: String,
     var pdf: String,
-    var mobi: String = "",
-    val generos: List<Generos>,
+    var mobi: String?,
+    val generos: List<Genero>,
 ){
     override fun toString(): String {
         return super.toString()

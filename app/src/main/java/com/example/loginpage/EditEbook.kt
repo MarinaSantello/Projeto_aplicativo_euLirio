@@ -730,7 +730,11 @@ fun EditDataEbook(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            GenerateGenresCards()
+            GenerateGenresCards() { state, idGenero ->
+                if (state) generos += Genero(idGenero)
+
+                else generos -= Genero(idGenero)
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 

@@ -50,6 +50,7 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.models.AnnouncementPost
 import com.example.loginpage.models.Classificacao
 import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Generos
 import com.example.loginpage.resources.uploadFile
 import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.*
@@ -752,9 +753,9 @@ fun PostDataEbook() {
             Spacer(modifier = Modifier.height(12.dp))
 
             GenerateGenresCards() { state, idGenero ->
-                if (state) generos += Genero(idGenero)
+                if (state) generos += Genero(idGenero, "")
 
-                else generos -= Genero(idGenero)
+                else generos -= Genero(idGenero, "")
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -1045,7 +1046,7 @@ fun PostDataEbook() {
                                                             epub = epubStorage,
                                                             pdf = pdfStorage,
                                                             mobi = if (mobiStorage.isNotEmpty()) mobiStorage else null,
-                                                            generos = generos
+                                                            generos = generos,
                                                         )
 
                                                         CallAnnouncementAPI.postAnnouncement(announcement) {
