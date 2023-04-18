@@ -17,7 +17,8 @@ data class User(
     var uid: String = "",
 
     var tags: List<Tag>,
-    var generos: List<Genero>
+    var generos: List<Genero>,
+    var anuncios: List<Anuncios>?
 ) {
     override fun toString(): String {
         return super.toString()
@@ -56,6 +57,11 @@ data class Genero (
     var idGenero: Int = 0,
     @SerializedName("nome_genero")
     var nomeGenero: String = ""
+)
+
+data class Anuncios (
+    var id: Int,
+    var titulo: String
 )
 
 data class UserName (

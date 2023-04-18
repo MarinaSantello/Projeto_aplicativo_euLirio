@@ -112,7 +112,7 @@ fun PostDataEbook() {
         mutableStateOf(listOf<Classificacao>())
     }
     var idParentalRatings by remember {
-        mutableStateOf(0)
+        mutableStateOf(13)
     }
 
     var showDialog by remember {
@@ -124,7 +124,11 @@ fun PostDataEbook() {
         mutableStateOf(false)
     }
 
-    var checkPrice  by remember {
+    var checkPrice by remember {
+        mutableStateOf(false)
+    }
+
+    var checkSinopse by remember {
         mutableStateOf(false)
     }
 
@@ -162,6 +166,10 @@ fun PostDataEbook() {
     }
 
     var priceFocusRequester = remember{
+        FocusRequester()
+    }
+
+    var sinopseFocusRequester = remember{
         FocusRequester()
     }
 
@@ -518,7 +526,8 @@ fun PostDataEbook() {
                 },
                 modifier = Modifier
                     .heightIn(120.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .focusRequester(sinopseFocusRequester),
                 label = {
                     Text(
                         text = stringResource(id = R.string.sinopsepub),
@@ -528,6 +537,7 @@ fun PostDataEbook() {
                     )
                 },
                 singleLine = false,
+                isError = checkSinopse,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
@@ -951,6 +961,12 @@ fun PostDataEbook() {
                             checkPrice = false
                         }
 
+                        if (sinopseState.isEmpty()) {
+                            checkSinopse = true
+                            sinopseFocusRequester.requestFocus()
+                        }
+                        else checkSinopse = false
+
                         //Verificação se o volume esta vazio
 //                        if (volumeState.isEmpty()) {
 //                            checkVol = true
@@ -989,7 +1005,7 @@ fun PostDataEbook() {
                             checkFoto = false
                         }
 
-                        if (!checkTitle && !checkPrice && !checkClassification && !checkPages && !checkPDF && !checkEPUB && !checkFoto) {
+                        if (!checkTitle && !checkPrice && !checkSinopse && !checkClassification && !checkPages && !checkPDF && !checkEPUB && !checkFoto) {
 
                             var pdfStorage = ""
                             var epubStorage = ""
@@ -1035,7 +1051,7 @@ fun PostDataEbook() {
                                                         val announcement = AnnouncementPost(
                                                             titulo = titleState,
                                                             volume = volumeState.toInt() ?: 1,
-                                                            capa = capaState,
+                                                            capa = capaStorage,
                                                             sinopse = sinopseState,
                                                             qunatidadePaginas = pagesState.toInt(),
                                                             preco = priceState
@@ -1049,6 +1065,7 @@ fun PostDataEbook() {
                                                             generos = generos,
                                                         )
 
+                                                        Log.i("post anun", announcement.toString())
                                                         CallAnnouncementAPI.postAnnouncement(announcement) {
                                                             if (it == 201) {
                                                                 Log.i("retorno api", "parabens pelo minimo")

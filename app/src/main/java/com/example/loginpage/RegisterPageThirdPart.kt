@@ -306,7 +306,8 @@ fun accountCreate(context: Context,
                 email = email,
                 uid = it.user!!.uid,
                 tags = tags,
-                generos = generos
+                generos = generos,
+                anuncios = null
             )
 
             val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
