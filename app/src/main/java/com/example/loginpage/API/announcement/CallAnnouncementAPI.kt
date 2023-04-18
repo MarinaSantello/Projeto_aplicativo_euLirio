@@ -3,6 +3,7 @@ package com.example.loginpage.API.announcement
 import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.AnnouncementPost
 import com.example.loginpage.models.Announcements
 import retrofit2.Call
 import retrofit2.Callback
@@ -72,6 +73,22 @@ class CallAnnouncementAPI() {
 
                 override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
                     //TODO("Not yet implemented")
+                }
+            })
+        }
+        fun postAnnouncement(announcementPost: AnnouncementPost, statusCode: (Int) -> Unit) {
+            val callAnnouncement = announcementCall.postAnnouncement(announcementPost)
+
+            callAnnouncement.enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+                    Log.i("retorno api", response.message().toString())
+
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Log.i("retorno api err", t.message.toString())
                 }
             })
         }

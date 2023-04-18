@@ -43,6 +43,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.genre.CallGenreAPI
+import com.example.loginpage.API.parentalRatings.CallParentalRatingsListAPI
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.models.AnnouncementPost
+import com.example.loginpage.models.Classificacao
 import com.example.loginpage.models.Genero
 import com.example.loginpage.resources.uploadFile
 import com.example.loginpage.ui.components.GenerateGenresCards
@@ -69,6 +75,10 @@ class PostEbook : ComponentActivity() {
 fun PostDataEbook() {
     val context = LocalContext.current
 
+    // registrando o id do usuário no sqlLite
+    val userIDRepository = UserIDrepository(context)
+    val users = userIDRepository.getAll()
+
     var capaState by remember {
         mutableStateOf("")
     }
@@ -92,6 +102,16 @@ fun PostDataEbook() {
     }
     var pagesState by remember {
         mutableStateOf("")
+    }
+
+    var generos by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+    var parentalRatings by remember {
+        mutableStateOf(listOf<Classificacao>())
+    }
+    var idParentalRatings by remember {
+        mutableStateOf(0)
     }
 
     var showDialog by remember {
@@ -152,6 +172,9 @@ fun PostDataEbook() {
         FocusRequester()
     }
 
+    var capaStorage by remember {
+        mutableStateOf("")
+    }
     var capaUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -516,6 +539,10 @@ fun PostDataEbook() {
 
             Spacer(modifier = Modifier.height(4.dp))
 
+            CallParentalRatingsListAPI.getClassificacoes {
+                parentalRatings = it
+            }
+
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -533,16 +560,7 @@ fun PostDataEbook() {
 
             }
 
-
-
-            val items = listOf("Opção 1", "Opção 2")
-
-            Box (Modifier.padding(top = 8.dp)) {
-                Text(
-                    text = items[selectedItem],
-                    modifier = Modifier
-                        .clickable(onClick = { expanded = true })
-                )
+            if (parentalRatings.isNotEmpty()) Box (Modifier.padding(top = 8.dp)) {
                 Card(modifier = Modifier
                     .clickable { expanded = true }
                     .fillMaxWidth(),
@@ -557,7 +575,7 @@ fun PostDataEbook() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = items[selectedItem],
+                            text = parentalRatings[selectedItem].classificacao,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(4.dp, 10.dp)
                         )
@@ -567,8 +585,6 @@ fun PostDataEbook() {
                             tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                         )
                     }
-
-
                 }
 
                 DropdownMenu(
@@ -576,15 +592,45 @@ fun PostDataEbook() {
                     onDismissRequest = { expanded = false },
                     modifier = Modifier.fillMaxWidth(.85f)
                 ) {
-                    items.forEachIndexed { index, item ->
+                    parentalRatings.forEachIndexed { index, item ->
                         DropdownMenuItem(
                             onClick = {
                                 selectedItem = index
                                 expanded = false
+
+                                idParentalRatings = parentalRatings[index].idClassificacao!!
                             }
                         ) {
-                            Text(text = item)
+                            Text(text = item.classificacao)
                         }
+                    }
+                }
+            }
+            else Box (Modifier.padding(top = 8.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    backgroundColor = colorResource(id = R.color.eulirio_grey_background),
+                    shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 12.dp, end = 12.dp)
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Livre",
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(4.dp, 10.dp)
+                        )
+                        Icon(
+                            Icons.Rounded.ExpandMore,
+                            contentDescription = "Mostrar mais",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
                     }
                 }
             }
@@ -603,7 +649,16 @@ fun PostDataEbook() {
             TextField(
                 value = volumeState,
                 onValueChange = {
-                    volumeState = it
+                    // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
+                    val lastChar = if (it.isEmpty()) it
+                    else it.get(it.length - 1) // '.get': recupera um caracter de acordo com a posição do vetor que é passada no argumento da função
+
+                    // verifica se o último caracter é indesejado
+                    val newValue =
+                        if (lastChar == ' ' || lastChar == '-' || lastChar == "," || lastChar == ".") it.dropLast(1)  // se sim, remove 1 caracter 'do final para o começo'
+                        else it // se não, o valor digitado é mantido intacto
+
+                    volumeState = newValue // valor desejado, porque recebeu o valor do 'it'
                 },
                 label = {
                     Text(
@@ -646,7 +701,16 @@ fun PostDataEbook() {
             TextField(
                 value = pagesState,
                 onValueChange = {
-                    pagesState = it
+                    // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
+                    val lastChar = if (it.isEmpty()) it
+                    else it.get(it.length - 1) // '.get': recupera um caracter de acordo com a posição do vetor que é passada no argumento da função
+
+                    // verifica se o último caracter é indesejado
+                    val newValue =
+                        if (lastChar == ' ' || lastChar == '-' || lastChar == "," || lastChar == ".") it.dropLast(1)  // se sim, remove 1 caracter 'do final para o começo'
+                        else it // se não, o valor digitado é mantido intacto
+
+                    pagesState = newValue // valor desejado, porque recebeu o valor do 'it'
                 },
                 label = {
                     Text(
@@ -687,7 +751,11 @@ fun PostDataEbook() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            GenerateGenresCards()
+            GenerateGenresCards() { state, idGenero ->
+                if (state) generos += Genero(idGenero)
+
+                else generos -= Genero(idGenero)
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -883,12 +951,12 @@ fun PostDataEbook() {
                         }
 
                         //Verificação se o volume esta vazio
-                        if (volumeState.isEmpty()) {
-                            checkVol = true
-                            volFocusRequester.requestFocus()
-                        } else {
-                            checkVol = false
-                        }
+//                        if (volumeState.isEmpty()) {
+//                            checkVol = true
+//                            volFocusRequester.requestFocus()
+//                        } else {
+//                            checkVol = false
+//                        }
 
                         //Verificação se o campo de páginas esta vazio
                         if (pagesState.isEmpty()) {
@@ -920,42 +988,82 @@ fun PostDataEbook() {
                             checkFoto = false
                         }
 
-                        //if (!checkTitle && !checkPrice && !checkClassification && !checkVol && !checkPages && !checkPDF && !checkEPUB && !checkFoto) {
+                        if (!checkTitle && !checkPrice && !checkClassification && !checkPages && !checkPDF && !checkEPUB && !checkFoto) {
 
-                        var capaStorage = ""
-                        var pdfStorage = ""
-                        var epubStorage = ""
-                        var mobiStorage = ""
+                            var pdfStorage = ""
+                            var epubStorage = ""
+                            var mobiStorage = ""
 
-                        capaUri?.let {
-                            uploadFile(it, "cover", titleState, context) { storage ->
-                                capaStorage = storage
+                            if (mobiUri != null) mobiUri?.let {
+                                uploadFile(
+                                    it,
+                                    "file",
+                                    "$titleState-mobi",
+                                    context
+                                ) { storageMOBI ->
+                                    mobiStorage = storageMOBI
+                                }
+                            }
+
+                            capaUri?.let { uriCapa ->
+                                uploadFile(uriCapa, "cover", titleState, context) { storageCapa ->
+
+                                    pdfUri?.let { uriPDF ->
+                                        uploadFile(
+                                            uriPDF,
+                                            "file",
+                                            "$titleState-pdf",
+                                            context
+                                        ) { storagePDF ->
+                                            pdfStorage = storagePDF
+
+                                            epubUri?.let {uriEPUB ->
+                                                uploadFile(
+                                                    uriEPUB,
+                                                    "file",
+                                                    "$titleState-epub",
+                                                    context
+                                                ) { storageEPUB ->
+                                                    epubStorage = storageEPUB
+
+                                                    capaStorage = storageCapa
+
+                                                    if (capaStorage != "") {
+                                                        Log.i("teste post", "vsfdkk")
+
+                                                        val announcement = AnnouncementPost(
+                                                            titulo = titleState,
+                                                            volume = volumeState.toInt() ?: 1,
+                                                            capa = capaState,
+                                                            sinopse = sinopseState,
+                                                            qunatidadePaginas = pagesState.toInt(),
+                                                            preco = priceState
+                                                                .replace(',', '.')
+                                                                .toFloat(),
+                                                            idClassificacao = idParentalRatings,
+                                                            idUsuario = users[0].idUser,
+                                                            epub = epubStorage,
+                                                            pdf = pdfStorage,
+                                                            mobi = if (mobiStorage.isNotEmpty()) mobiStorage else null,
+                                                            generos = generos
+                                                        )
+
+                                                        CallAnnouncementAPI.postAnnouncement(announcement) {
+                                                            if (it == 201) {
+                                                                Log.i("retorno api", "parabens pelo minimo")
+                                                            }
+
+                                                            Log.i("retorno api", it.toString())
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-
-                        pdfUri?.let {
-                            uploadFile(it, "file", "$titleState-pdf", context) { storage ->
-                                pdfStorage = storage
-                            }
-                        }
-
-                        epubUri?.let {
-                            uploadFile(it, "file", "$titleState-epub", context) { storage ->
-                                epubStorage = storage
-                            }
-                        }
-
-                        if (mobiUri != null) mobiUri?.let {
-                            uploadFile(it, "file", "$titleState-mobi", context) { storage ->
-                                mobiStorage = storage
-                            }
-                        }
-
-                        Log.i("upload firebase", capaStorage)
-                        Log.i("upload firebase", pdfStorage)
-                        Log.i("upload firebase", epubStorage)
-                        Log.i("upload firebase", mobiStorage)
-                        //}
 
                     }
             ){

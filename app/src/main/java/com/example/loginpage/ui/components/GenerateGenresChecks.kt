@@ -21,21 +21,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import com.example.loginpage.API.genre.CallGenreAPI
 import com.example.loginpage.R
+import com.example.loginpage.models.Genero
 import com.example.loginpage.ui.theme.Montserrat2
 
 @Composable
-fun GenerateGenresCards(){
+fun GenerateGenresCards(onChecked: (Boolean, Int) -> Unit){
+
+    var generos by remember {
+        mutableStateOf(listOf<Genero>())
+    }
+
+    CallGenreAPI.callGetGenre {
+        generos = it
+    }
 
     var checkState by remember {
         mutableStateOf(false)
     }
 
-    val checkboxList = listOf(
-        "ACAO", "TERROR", "SUSPENSE", "crônica"
-    )
-
-    val rows = (checkboxList.size + 2) / 3
+    val rows = (generos.size + 2) / 3
 
     Column(
         modifier = Modifier
@@ -64,7 +70,7 @@ fun GenerateGenresCards(){
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     (rowIndex * 3..(rowIndex * 3) + 2).forEachIndexed { colIndex, itemIndex ->
-                        if (itemIndex < checkboxList.size) {
+                        if (itemIndex < generos.size) {
                             var checkGenre by rememberSaveable() {
                                 mutableStateOf(false)
                             }
@@ -78,15 +84,17 @@ fun GenerateGenresCards(){
                                     checked = checkGenre,
                                     onCheckedChange = {
                                         checkGenre = it
+
+                                        onChecked.invoke(checkGenre, generos[itemIndex].idGenero)
                                     },
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                                         uncheckedColor = colorResource(id = R.color.eulirio_black)
                                     )
 
-                                    )
+                                )
                                 Text(
-                                    text = checkboxList[itemIndex].uppercase(),
+                                    text = generos[itemIndex].nomeGenero.uppercase(),
                                     fontWeight = FontWeight.W500,
                                     fontSize = 12.sp
 

@@ -1,8 +1,10 @@
 package com.example.loginpage
 
+import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -169,12 +171,26 @@ fun EditDataEbook(navController: NavController) {
         Log.i("uri image", uri.toString())
     }
 
+    val contentResolver: ContentResolver = context.contentResolver
+
     var pdfUri by remember {
         mutableStateOf<Uri?>(null)
+    }
+    var pdfName by remember {
+        mutableStateOf("Arquivo em PDF")
     }
     val selectPDF = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
+        val cursor = uri?.let { contentResolver.query(it, null, null, null, null) }
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val nameIndex = it.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val fileName = it.getString(nameIndex)
+
+                pdfName = fileName
+            }
+        }
         pdfUri = uri
 
         Log.i("uri pdf", uri.toString())
@@ -183,9 +199,21 @@ fun EditDataEbook(navController: NavController) {
     var epubUri by remember {
         mutableStateOf<Uri?>(null)
     }
+    var epubName by remember {
+        mutableStateOf("Arquivo em ePUB")
+    }
     val selectEPUB = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
+        val cursor = uri?.let { contentResolver.query(it, null, null, null, null) }
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val nameIndex = it.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val fileName = it.getString(nameIndex)
+
+                epubName = fileName
+            }
+        }
         epubUri = uri
 
         Log.i("uri epub", uri.toString())
@@ -194,9 +222,21 @@ fun EditDataEbook(navController: NavController) {
     var mobiUri by remember {
         mutableStateOf<Uri?>(null)
     }
+    var mobiName by remember {
+        mutableStateOf("Arquivo em MOBI")
+    }
     val selectMOBI = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
+        val cursor = uri?.let { contentResolver.query(it, null, null, null, null) }
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val nameIndex = it.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val fileName = it.getString(nameIndex)
+
+                mobiName = fileName
+            }
+        }
         mobiUri = uri
 
         Log.i("uri mobi", uri.toString())
