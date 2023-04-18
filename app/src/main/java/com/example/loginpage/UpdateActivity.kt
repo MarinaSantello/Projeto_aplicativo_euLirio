@@ -156,7 +156,7 @@ fun UpdatePage() {
     var colorValidateCheckBox = colorResource(id = R.color.eulirio_black)
     var colorValidateCheckedGenres = Color.Transparent
 
-    CallAPI.getUser(userID) {
+    CallAPI.getUser(userID.idUser.toLong()) {
         photoState = it.foto
         nameState = it.nome
         userNameState = it.userName

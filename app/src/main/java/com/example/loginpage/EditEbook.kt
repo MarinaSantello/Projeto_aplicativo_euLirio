@@ -40,7 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.parentalRatings.CallParentalRatingsListAPI
+import com.example.loginpage.models.Classificacao
 import com.example.loginpage.models.Genero
+import com.example.loginpage.resources.updateStorage
 import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.*
 
@@ -55,14 +59,17 @@ class EditEbook : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    EditDataEbook(navController)
+                    EditDataEbook(0, navController)
                 }
             }
         }
     }
 }
 @Composable
-fun EditDataEbook(navController: NavController) {
+fun EditDataEbook(
+    announcementID: Int,
+    navController: NavController
+) {
     val context = LocalContext.current
 
     var capaState by remember {
@@ -118,6 +125,12 @@ fun EditDataEbook(navController: NavController) {
     var checkClassification  by remember {
         mutableStateOf(false)
     }
+    var parentalRatings by remember {
+        mutableStateOf(listOf<Classificacao>())
+    }
+    var idParentalRatings by remember {
+        mutableStateOf(13)
+    }
 
     var checkVol  by remember {
         mutableStateOf(false)
@@ -160,6 +173,16 @@ fun EditDataEbook(navController: NavController) {
         FocusRequester()
     }
 
+    CallAnnouncementAPI.getAnnouncement(announcementID) {
+        capaState = it.capa
+        titleState = it.titulo
+        priceState = it.preco.toString()
+        sinopseState = it.sinopse
+        volumeState = it.volume.toString()
+        pagesState = it.qunatidadePaginas.toString()
+        idParentalRatings = it.classificacao[0].idClassificacao!!
+    }
+
     var capaUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -168,6 +191,7 @@ fun EditDataEbook(navController: NavController) {
     ) { uri: Uri? ->
         capaUri = uri
 
+        updateStorage(capaState)
         Log.i("uri image", uri.toString())
     }
 
@@ -193,6 +217,7 @@ fun EditDataEbook(navController: NavController) {
         }
         pdfUri = uri
 
+        updateStorage(pdfState)
         Log.i("uri pdf", uri.toString())
     }
 
@@ -258,7 +283,6 @@ fun EditDataEbook(navController: NavController) {
         mutableStateOf(0)
     }
     val scrollState = rememberScrollState()
-
 
     Column(
         modifier = Modifier
@@ -548,6 +572,10 @@ fun EditDataEbook(navController: NavController) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
+            CallParentalRatingsListAPI.getClassificacoes {
+                parentalRatings = it
+            }
+
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -576,16 +604,7 @@ fun EditDataEbook(navController: NavController) {
 
             }
 
-
-
-            val items = listOf("Opção 1", "Opção 2")
-
-            Box (Modifier.padding(top = 8.dp)) {
-                Text(
-                    text = items[selectedItem],
-                    modifier = Modifier
-                        .clickable(onClick = { expanded = true })
-                )
+            if (parentalRatings.isNotEmpty()) Box (Modifier.padding(top = 8.dp)) {
                 Card(modifier = Modifier
                     .clickable { expanded = true }
                     .fillMaxWidth(),
@@ -600,7 +619,7 @@ fun EditDataEbook(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = items[selectedItem],
+                            text = parentalRatings[idParentalRatings - 13].classificacao,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(4.dp, 10.dp)
                         )
@@ -610,8 +629,6 @@ fun EditDataEbook(navController: NavController) {
                             tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                         )
                     }
-
-
                 }
 
                 DropdownMenu(
@@ -619,19 +636,48 @@ fun EditDataEbook(navController: NavController) {
                     onDismissRequest = { expanded = false },
                     modifier = Modifier.fillMaxWidth(.85f)
                 ) {
-                    items.forEachIndexed { index, item ->
+                    parentalRatings.forEachIndexed { index, item ->
                         DropdownMenuItem(
                             onClick = {
                                 selectedItem = index
                                 expanded = false
+
+                                idParentalRatings = parentalRatings[index].idClassificacao!!
                             }
                         ) {
-                            Text(text = item)
+                            Text(text = item.classificacao)
                         }
                     }
                 }
             }
+            else Box (Modifier.padding(top = 8.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    backgroundColor = colorResource(id = R.color.eulirio_grey_background),
+                    shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                ) {
 
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 12.dp, end = 12.dp)
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Livre",
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(4.dp, 10.dp)
+                        )
+                        Icon(
+                            Icons.Rounded.ExpandMore,
+                            contentDescription = "Mostrar mais",
+                            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
+                    }
+                }
+            }
 
 
             Card(
@@ -1005,6 +1051,6 @@ fun EditDataEbook(navController: NavController) {
 fun DefaultPreview8() {
     LoginPageTheme {
         val navController = rememberNavController()
-        EditDataEbook(navController)
+        EditDataEbook(0, navController)
     }
 }

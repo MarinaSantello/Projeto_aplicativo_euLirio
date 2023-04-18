@@ -35,7 +35,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.shortStory.CallShortStory
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
+import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.Anuncios
 import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.ShortStorysCard
@@ -241,18 +243,12 @@ fun TabsUserStories(
                     },
                     selectedContentColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     unselectedContentColor = Color.Black,
-//                    selected = tabIndex.currentPage == index,
                     selected = tabIndex == index,
                     onClick = { tabIndex = index },
-//                    onClick = {
-//                        coroutineScope.launch {
-//                            tabIndex.animateScrollToPage(index)
-//                        }
-//                    },
                 )
             }
         }
-//        when (tabIndex.currentPage) {
+
         when (tabIndex) {
             0 -> {
                 var selectedItem by remember {
@@ -310,9 +306,36 @@ fun TabsUserStories(
                     }
                 }
 
+                var announcementSize by remember {
+                    mutableStateOf(0)
+                }
+                var announcementsUser by remember {
+                    mutableStateOf(listOf<Anuncios>())
+                }
 
-                if (selectedItem == 0) Text(text = "livros")
-                else if (selectedItem == 1) Text(text = "curtas")
+                if (selectedItem == 0) CallAPI.getUser(userID.toLong()) {
+                    announcementSize = (it.anuncios!!.size - 1) ?: 0
+                    announcementsUser = it.anuncios!!                }
+
+                if (announcementsUser.isNotEmpty()) Column() {
+                    for (i in 0..announcementSize) {
+                        var announcement by remember {
+                            mutableStateOf(listOf<AnnouncementGet>())
+                        }
+
+                        CallAnnouncementAPI.getAnnouncement(announcementsUser[i].id) { it ->
+                            announcement += it
+                        }
+
+                        if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController)
+                    }
+
+                    for (i in 0..announcementSize) {
+                        Text(text = announcementsUser[i].titulo ?: "ai é foda")
+                    }
+                }
+
+//                else if (selectedItem == 1) Text(text = "curtas")
 
 //                var announcements by remember {
 //                    mutableStateOf(listOf<AnnouncementGet>())

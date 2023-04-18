@@ -107,7 +107,7 @@ fun UserHomePage() {
         mutableStateOf(listOf<Genero>())
     }
 
-    CallAPI.getUser(userID){
+    CallAPI.getUser(userID.idUser.toLong()){
         foto = it.foto
         nome = it.nome
         userName = it.userName
