@@ -25,9 +25,11 @@ import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -40,8 +42,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.parentalRatings.CallParentalRatingsListAPI
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.models.Classificacao
 import com.example.loginpage.models.Genero
 import com.example.loginpage.resources.updateStorage
@@ -173,7 +177,9 @@ fun EditDataEbook(
         FocusRequester()
     }
 
-    CallAnnouncementAPI.getAnnouncement(announcementID) {
+    val userIDRepository = UserIDrepository(context).getAll()
+
+    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
         capaState = it.capa
         titleState = it.titulo
         priceState = it.preco.toString()
@@ -291,7 +297,6 @@ fun EditDataEbook(
             .background(colorResource(id = R.color.eulirio_beige_color_background))
 
     ) {
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -375,11 +380,40 @@ fun EditDataEbook(
                                 selectedItem = index
                                 expandedTopBar = false
                                 expandedTopBarState = false
+
+                                if (index == 1) showDialog = true
                             }
                         ) {
                             Text(text = item)
                         }
                     }
+                }
+
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        title = { Text(text = "Deseja mesmo excluir a sua conta?") },
+                        text = { Text(text = "Essa ação é irreversível e resultará na exclusão completa da publicação na plataforma.",
+                            fontFamily = Spartan,
+                            fontSize = 14.sp) },
+                        confirmButton = {
+                            TextButton(onClick = { showDialog = false }) {
+                                Text(text = "Cancelar",
+                                    fontFamily = Spartan
+                                )
+                            }
+                            Button(
+                                onClick = { showDialog = false },
+                                colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
+                                elevation = ButtonDefaults.elevation(0.dp)
+                            ) {
+                                Text("Apagar",
+                                    fontFamily = Spartan,
+                                    color = Color.Red)
+
+                            }
+                        }
+                    )
                 }
             }
 
@@ -391,50 +425,21 @@ fun EditDataEbook(
             Modifier.padding(20.dp, 12.dp)
         ) {
 
-            Card(
+
+            Image(
+                painter = rememberAsyncImagePainter(capaState),
+                contentDescription = "capa do seu livro",
                 modifier = Modifier
                     .height(160.dp)
                     .width(120.dp)
                     .padding(start = 8.dp, top = 8.dp)
                     .clickable {
                         selectImage.launch("image/*")
-                    },
-                shape = RoundedCornerShape(8.dp), backgroundColor = Color(0xD381871),
-                border = BorderStroke(1.dp, colorResource(id = R.color.eulirio_purple_text_color_border)),
-                elevation = 0.dp
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Icon(
-                        Icons.Outlined.FileOpen, contentDescription = "",
-                        modifier = Modifier.size(38.dp),
-                        tint = if(!checkFoto) {
-                            Color(0xff381871)
-                        }else {
-                            Color.Red
-                        }
-                    )
-                    Text(
-                        text = stringResource(id = R.string.adicionarimagem),
-                        textAlign = TextAlign.Center,
-                        fontSize =  12.sp,
-                        fontWeight = FontWeight.W400,
-                        fontFamily = SpartanRegular,
-                        color = if(!checkFoto) {
-                            Color(0xCC1E1E1E)
-                        }else{
-                            Color.Red
-                        }
-
-                    )
-
-
-
-                }
-            }
+                    }
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(1.dp, colorResource(id = R.color.eulirio_purple_text_color_border), RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -962,63 +967,63 @@ fun EditDataEbook(
                     .clickable {
 
                         //Verificação se o titulo está vazio
-                        if(titleState.isEmpty()) {
+                        if (titleState.isEmpty()) {
                             checkTitle = true
                             titleFocusRequester.requestFocus()
-                        }else {
+                        } else {
                             checkTitle = false
                         }
 
                         //Verificação se o preço esta vazio
-                        if(priceState.isEmpty()) {
+                        if (priceState.isEmpty()) {
                             checkPrice = true
                             priceFocusRequester.requestFocus()
-                        }else {
+                        } else {
                             checkPrice = false
                         }
 
                         //Verificação se classificação indicativa esta vazio
-                        if(selectedItem == null){
+                        if (selectedItem == null) {
                             checkClassification = true
-                        }else{
+                        } else {
                             checkClassification = false
                         }
 
                         //Verificação se o volume esta vazio
-                        if(volumeState.isEmpty()) {
+                        if (volumeState.isEmpty()) {
                             checkVol = true
                             volFocusRequester.requestFocus()
-                        }else {
+                        } else {
                             checkVol = false
                         }
 
                         //Verificação se o campo de páginas esta vazio
-                        if(pagesState.isEmpty()) {
+                        if (pagesState.isEmpty()) {
                             checkPages = true
                             pagesFocusRequester.requestFocus()
-                        }else {
+                        } else {
                             checkPages = false
                         }
 
 
                         //Verificação se o campo de inserção de PDF esta vazio
-                        if(pdfUri == null) {
+                        if (pdfUri == null) {
                             checkPDF = true
-                        }else {
+                        } else {
                             checkPDF = false
                         }
 
                         //Verificação se o campo de inserção de ePUB esta vazio
-                        if(epubUri == null) {
+                        if (epubUri == null) {
                             checkEPUB = true
-                        }else {
+                        } else {
                             checkEPUB = false
                         }
 
                         //Verificação se o campo de inserção da capa do ebook esta vazio
-                        if(capaUri == null) {
+                        if (capaUri == null) {
                             checkFoto = true
-                        }else {
+                        } else {
                             checkFoto = false
                         }
 

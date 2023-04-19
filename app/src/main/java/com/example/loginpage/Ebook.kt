@@ -112,7 +112,11 @@ fun ShowEbook(
     bottomBarLength: Dp,
     context: Context
 ) {
-    CallAnnouncementAPI.getAnnouncement(idAnnouncement) {
+
+    val userIDRepository = UserIDrepository(context)
+    val users = userIDRepository.getAll()
+
+    CallAnnouncementAPI.getAnnouncement(idAnnouncement, users[0].idUser) {
         val announcementGet = it
     }
 
