@@ -46,9 +46,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.parentalRatings.CallParentalRatingsListAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.constants.Routes
+import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.AnnouncementPost
 import com.example.loginpage.models.Classificacao
 import com.example.loginpage.models.Genero
+import com.example.loginpage.resources.getName
 import com.example.loginpage.resources.updateStorage
+import com.example.loginpage.resources.uploadFile
 import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.*
 
@@ -104,13 +109,13 @@ fun EditDataEbook(
         mutableStateOf(listOf<Genero>())
     }
     var pdfState by remember {
-        mutableStateOf(listOf<Genero>())
+        mutableStateOf("")
     }
     var epubState by remember {
-        mutableStateOf(listOf<Genero>())
+        mutableStateOf("")
     }
     var mobiState by remember {
-        mutableStateOf(listOf<Genero>())
+        mutableStateOf("")
     }
 
     var showDialog by remember {
@@ -160,33 +165,25 @@ fun EditDataEbook(
         mutableStateOf(false)
     }
 
+    var checkSinopse by remember {
+        mutableStateOf(false)
+    }
+
     //Focus Requesters
-    var titleFocusRequester = remember{
+    val titleFocusRequester = remember{
         FocusRequester()
     }
-
-    var priceFocusRequester = remember{
+    val priceFocusRequester = remember{
         FocusRequester()
     }
-
-    var volFocusRequester = remember{
+    val sinopseFocusRequester = remember{
         FocusRequester()
     }
-
-    var pagesFocusRequester = remember{
+    val volFocusRequester = remember{
         FocusRequester()
     }
-
-    val userIDRepository = UserIDrepository(context).getAll()
-
-    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
-        capaState = it.capa
-        titleState = it.titulo
-        priceState = it.preco.toString()
-        sinopseState = it.sinopse
-        volumeState = it.volume.toString()
-        pagesState = it.qunatidadePaginas.toString()
-        idParentalRatings = it.classificacao[0].idClassificacao!!
+    val pagesFocusRequester = remember{
+        FocusRequester()
     }
 
     var capaUri by remember {
@@ -223,7 +220,7 @@ fun EditDataEbook(
         }
         pdfUri = uri
 
-//        updateStorage(pdfState)
+        updateStorage(pdfState)
         Log.i("uri pdf", uri.toString())
     }
 
@@ -247,6 +244,7 @@ fun EditDataEbook(
         }
         epubUri = uri
 
+        updateStorage(epubState)
         Log.i("uri epub", uri.toString())
     }
 
@@ -270,8 +268,28 @@ fun EditDataEbook(
         }
         mobiUri = uri
 
+        updateStorage(mobiState)
         Log.i("uri mobi", uri.toString())
     }
+
+    val userIDRepository = UserIDrepository(context).getAll()
+
+//    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
+//        capaState = it.capa
+//        pdfState = it.pdf
+//        epubState = it.epub
+//        mobiState = it.mobi ?: ""
+//        titleState = it.titulo
+//        priceState = it.preco.toString()
+//        sinopseState = it.sinopse
+//        volumeState = it.volume.toString()
+//        pagesState = it.qunatidadePaginas.toString()
+//        idParentalRatings = it.classificacao[0].idClassificacao!!
+//
+//        if (getName(pdfState) != "0") pdfName = "${getName(pdfState).split(".pdf-")[0]}.pdf"
+//        if (getName(epubState) != "0") epubName = "${getName(epubState).split(".epub-")[0]}.epub"
+//        if (getName(mobiState) != "0") mobiName = "${getName(mobiState).split(".mobi-")[0]}.mobi"
+//    }
 
     var expanded by remember {
         mutableStateOf(false)
@@ -359,11 +377,6 @@ fun EditDataEbook(
                     }
                 }
 
-
-
-
-
-
                 val items1 = listOf("Desativar Ebook", "Apagar Ebook")
 
                 DropdownMenu(
@@ -392,8 +405,8 @@ fun EditDataEbook(
                 if (showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },
-                        title = { Text(text = "Deseja mesmo excluir a sua conta?") },
-                        text = { Text(text = "Essa ação é irreversível e resultará na exclusão completa da publicação na plataforma.",
+                        title = { Text(text = "Deseja mesmo excluir essa publicação?") },
+                        text = { Text(text = "Essa ação é irreversível e resultará na exclusão completa da publicação dentro da plataforma.",
                             fontFamily = Spartan,
                             fontSize = 14.sp) },
                         confirmButton = {
@@ -403,7 +416,19 @@ fun EditDataEbook(
                                 )
                             }
                             Button(
-                                onClick = { showDialog = false },
+                                onClick = {
+                                    CallAnnouncementAPI.deleteAnnouncement(announcementID) {
+                                        if (it == 200) {
+                                            updateStorage(capaState)
+
+                                            updateStorage(pdfState)
+                                            updateStorage(epubState)
+                                            if (mobiState.isNotEmpty()) updateStorage(mobiState)
+
+                                            navController.navigate(Routes.UserStories.name)
+                                        }
+                                    }
+                                },
                                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)),
                                 elevation = ButtonDefaults.elevation(0.dp)
                             ) {
@@ -437,7 +462,11 @@ fun EditDataEbook(
                         selectImage.launch("image/*")
                     }
                     .clip(RoundedCornerShape(8.dp))
-                    .border(1.dp, colorResource(id = R.color.eulirio_purple_text_color_border), RoundedCornerShape(8.dp)),
+                    .border(
+                        1.dp,
+                        colorResource(id = R.color.eulirio_purple_text_color_border),
+                        RoundedCornerShape(8.dp)
+                    ),
                 contentScale = ContentScale.Crop
             )
 
@@ -555,7 +584,8 @@ fun EditDataEbook(
                 },
                 modifier = Modifier
                     .heightIn(120.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .focusRequester(sinopseFocusRequester),
                 label = {
                     Text(
                         text = stringResource(id = R.string.sinopsepub),
@@ -565,6 +595,7 @@ fun EditDataEbook(
                     )
                 },
                 singleLine = false,
+                isError = checkSinopse,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
@@ -595,18 +626,6 @@ fun EditDataEbook(
                     fontSize = 20.sp,
                     color = colorResource(id = R.color.eulirio_purple_text_color_border)
                 )
-
-                Icon(
-                    Icons.Outlined.Error, contentDescription = "",
-                    modifier = Modifier.size(15.dp),
-                    tint = if(checkClassification){
-                        Color.Red
-                    }else{
-                        colorResource(id = R.color.eulirio_purple_text_color_border)
-                    }
-                )
-
-
             }
 
             if (parentalRatings.isNotEmpty()) Box (Modifier.padding(top = 8.dp)) {
@@ -831,7 +850,7 @@ fun EditDataEbook(
                                 tint = Color(0xff381871)
                             )
                             Text(
-                                text = "Arquivo em PDF",
+                                text = pdfName,
                                 textAlign = TextAlign.Center,
                                 fontSize =  12.sp,
                                 fontWeight = FontWeight.W400,
@@ -886,7 +905,7 @@ fun EditDataEbook(
                                 tint = Color(0xff381871)
                             )
                             Text(
-                                text = "arquivo em ePUB",
+                                text = epubName,
                                 textAlign = TextAlign.Center,
                                 fontSize =  12.sp,
                                 fontWeight = FontWeight.W400,
@@ -940,14 +959,12 @@ fun EditDataEbook(
                                 tint = Color(0xff381871)
                             )
                             Text(
-                                text = "Arquivo em MOBI",
+                                text = mobiName,
                                 textAlign = TextAlign.Center,
                                 fontSize =  12.sp,
                                 fontWeight = FontWeight.W400,
                                 fontFamily = SpartanRegular,
-
-
-                                )
+                            )
                         }
 
 
@@ -959,13 +976,26 @@ fun EditDataEbook(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+
+            var capaCheck by remember {
+                mutableStateOf(true)
+            }
+            var pdfCheck by remember {
+                mutableStateOf(true)
+            }
+            var epubCheck by remember {
+                mutableStateOf(true)
+            }
+            var mobiCheck by remember {
+                mutableStateOf(true)
+            }
+
             Card(
                 backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp)
                     .clickable {
-
                         //Verificação se o titulo está vazio
                         if (titleState.isEmpty()) {
                             checkTitle = true
@@ -982,12 +1012,10 @@ fun EditDataEbook(
                             checkPrice = false
                         }
 
-                        //Verificação se classificação indicativa esta vazio
-                        if (selectedItem == null) {
-                            checkClassification = true
-                        } else {
-                            checkClassification = false
-                        }
+                        if (sinopseState.isEmpty()) {
+                            checkSinopse = true
+                            sinopseFocusRequester.requestFocus()
+                        } else checkSinopse = false
 
                         //Verificação se o volume esta vazio
                         if (volumeState.isEmpty()) {
@@ -1005,26 +1033,82 @@ fun EditDataEbook(
                             checkPages = false
                         }
 
+                        if (!checkTitle && !checkPrice && !checkSinopse && !checkClassification && !checkPages && !checkPDF && !checkEPUB && !checkFoto) {
+                            if (capaUri != null) {
+                                capaCheck = false
 
-                        //Verificação se o campo de inserção de PDF esta vazio
-                        if (pdfUri == null) {
-                            checkPDF = true
-                        } else {
-                            checkPDF = false
-                        }
+                                uploadFile(
+                                    capaUri!!,
+                                    "cover",
+                                    titleState,
+                                    context
+                                ) {
+                                    capaState = it
+                                    capaCheck = true
+                                }
+                            }
 
-                        //Verificação se o campo de inserção de ePUB esta vazio
-                        if (epubUri == null) {
-                            checkEPUB = true
-                        } else {
-                            checkEPUB = false
-                        }
+                            if (pdfUri != null) {
+                                pdfCheck = false
 
-                        //Verificação se o campo de inserção da capa do ebook esta vazio
-                        if (capaUri == null) {
-                            checkFoto = true
-                        } else {
-                            checkFoto = false
+                                uploadFile(pdfUri!!, "file", "$pdfName-", context) {
+                                    pdfState = it
+                                    pdfCheck = true
+                                }
+                            }
+
+                            if (epubUri != null) {
+                                epubCheck = false
+
+                                uploadFile(
+                                    epubUri!!,
+                                    "file",
+                                    "$epubName-",
+                                    context
+                                ) {
+                                    epubState = it
+                                    epubCheck = true
+                                }
+                            }
+
+                            if (mobiUri != null) {
+                                mobiCheck = false
+
+                                uploadFile(
+                                    mobiUri!!,
+                                    "file",
+                                    "$mobiName-",
+                                    context
+                                ) {
+                                    mobiState = it
+                                    mobiCheck = true
+                                }
+                            }
+
+                            if (capaCheck && pdfCheck && epubCheck && mobiCheck) {
+                                val announcement = AnnouncementPost (
+                                    titulo = titleState,
+                                    volume = volumeState.toInt(),
+                                    capa = capaState,
+                                    sinopse = sinopseState,
+                                    qunatidadePaginas = pagesState.toInt(),
+                                    preco = priceState
+                                        .replace(',', '.')
+                                        .toFloat(),
+                                    idClassificacao = idParentalRatings,
+                                    idUsuario = userIDRepository[0].idUser,
+                                    epub = epubState,
+                                    pdf = pdfState,
+                                    mobi = if (mobiState.isNotEmpty()) mobiState else null,
+                                    generos = generos,
+                                )
+
+                                CallAnnouncementAPI.updateAnnouncement(announcementID, announcement) {
+                                    if(it == 200) {
+                                        navController.navigate(Routes.Home.name)
+                                    }
+                                }
+                            }
                         }
 
                     }
@@ -1034,7 +1118,7 @@ fun EditDataEbook(
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "PUBLICAR",
+                        text = "SALVAR ALTERAÇÕES",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White,

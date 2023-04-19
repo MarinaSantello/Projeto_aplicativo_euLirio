@@ -47,6 +47,7 @@ import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.genre.CallGenreAPI
 import com.example.loginpage.API.parentalRatings.CallParentalRatingsListAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementPost
 import com.example.loginpage.models.Classificacao
 import com.example.loginpage.models.Genero
@@ -65,7 +66,8 @@ class PostEbook : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    PostDataEbook()
+                    val navController = rememberNavController()
+                    PostDataEbook(navController)
                 }
             }
         }
@@ -73,7 +75,7 @@ class PostEbook : ComponentActivity() {
 }
 @SuppressLint("InvalidColorHexValue")
 @Composable
-fun PostDataEbook() {
+fun PostDataEbook(navController: NavController) {
     val context = LocalContext.current
 
     // registrando o id do usuário no sqlLite
@@ -161,23 +163,23 @@ fun PostDataEbook() {
     }
 
     //Focus Requesters
-    var titleFocusRequester = remember{
+    val titleFocusRequester = remember{
         FocusRequester()
     }
 
-    var priceFocusRequester = remember{
+    val priceFocusRequester = remember{
         FocusRequester()
     }
 
-    var sinopseFocusRequester = remember{
+    val sinopseFocusRequester = remember{
         FocusRequester()
     }
 
-    var volFocusRequester = remember{
+    val volFocusRequester = remember{
         FocusRequester()
     }
 
-    var pagesFocusRequester = remember{
+    val pagesFocusRequester = remember{
         FocusRequester()
     }
 
@@ -964,8 +966,7 @@ fun PostDataEbook() {
                         if (sinopseState.isEmpty()) {
                             checkSinopse = true
                             sinopseFocusRequester.requestFocus()
-                        }
-                        else checkSinopse = false
+                        } else checkSinopse = false
 
                         //Verificação se o volume esta vazio
 //                        if (volumeState.isEmpty()) {
@@ -1015,7 +1016,7 @@ fun PostDataEbook() {
                                 uploadFile(
                                     it,
                                     "file",
-                                    "$titleState-mobi",
+                                    "$mobiName-",
                                     context
                                 ) { storageMOBI ->
                                     mobiStorage = storageMOBI
@@ -1029,16 +1030,16 @@ fun PostDataEbook() {
                                         uploadFile(
                                             uriPDF,
                                             "file",
-                                            "$titleState-pdf",
+                                            "$pdfName-",
                                             context
                                         ) { storagePDF ->
                                             pdfStorage = storagePDF
 
-                                            epubUri?.let {uriEPUB ->
+                                            epubUri?.let { uriEPUB ->
                                                 uploadFile(
                                                     uriEPUB,
                                                     "file",
-                                                    "$titleState-epub",
+                                                    "$epubName-",
                                                     context
                                                 ) { storageEPUB ->
                                                     epubStorage = storageEPUB
@@ -1066,9 +1067,11 @@ fun PostDataEbook() {
                                                         )
 
                                                         Log.i("post anun", announcement.toString())
-                                                        CallAnnouncementAPI.postAnnouncement(announcement) {
+                                                        CallAnnouncementAPI.postAnnouncement(
+                                                            announcement
+                                                        ) {
                                                             if (it == 201) {
-                                                                Log.i("retorno api", "parabens pelo minimo")
+                                                                navController.navigate(Routes.Home.name)
                                                             }
 
                                                             Log.i("retorno api", it.toString())
@@ -1102,15 +1105,5 @@ fun PostDataEbook() {
             Spacer(modifier = Modifier.height(40.dp))
         }
 
-    }
-}
-
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun DefaultPreview5() {
-    LoginPageTheme {
-        PostDataEbook()
     }
 }

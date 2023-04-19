@@ -866,6 +866,8 @@ fun UpdatePage() {
                                                     val auth = FirebaseAuth.getInstance()
                                                     auth.currentUser?.delete()
 
+                                                    updateStorage(photoState)
+
                                                     val intent = Intent(context, Home::class.java)
                                                     context.startActivity(intent)
                                                 }

@@ -23,4 +23,12 @@ interface AnnouncementCall {
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("announcement")
     fun postAnnouncement(@Body announcementPost: AnnouncementPost): Call<String>
+
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @DELETE("announcement/id/{id}")
+    fun deleteAnnouncement(@Path("id") userID: Int): Call<String>
+
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @PUT("announcement/id/{id}")
+    fun updateAnnouncement(@Path("id") userID: Int, @Body announcementPost: AnnouncementPost): Call<String>
 }

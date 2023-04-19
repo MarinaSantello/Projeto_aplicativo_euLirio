@@ -74,6 +74,10 @@ fun Greeting() {
             ShowUserStories(navController)
         }
 
+        composable(Routes.PostEbook.name) {
+            PostDataEbook(navController)
+        }
+
         composable(
             "${Routes.Ebook.name}/{itemId}",
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })

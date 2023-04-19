@@ -239,13 +239,7 @@ fun ButtonsPost (
                 }
                 FloatingActionButton(
                     onClick = {
-//                        navController.navigate(Routes.PostEbook.name) {
-//                            popUpTo(Routes.PostEbook.name) {
-//                                inclusive = true
-//                            }
-//                        }
-                        val intent = Intent(context, PostEbook::class.java)
-                        context.startActivity(intent)
+                        navController.navigate(Routes.PostEbook.name)
 
                         onChecked.invoke(true)
                     },

@@ -91,6 +91,16 @@ fun updateStorage(photoState: String) {
     }
 }
 
+
+fun getName(fileStorage: String): String {
+    return if ("firebase" in fileStorage) FirebaseStorage
+            .getInstance()
+            .getReferenceFromUrl(fileStorage)
+            .name
+
+    else "0"
+}
+
 fun uploadFile(file: Uri, folder: String, fileName: String, context: Context, uri: (String) -> Unit) {
 
     val datetime = LocalDateTime.now().toString()

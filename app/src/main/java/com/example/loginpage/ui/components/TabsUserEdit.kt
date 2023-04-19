@@ -143,10 +143,17 @@ fun TabsUserStories(
                 var announcementsUser by remember {
                     mutableStateOf(listOf<Anuncios>())
                 }
+                var announcementIsNull by remember {
+                    mutableStateOf(false)
+                }
 
                 if (selectedItem == 0) CallAPI.getUser(userID.toLong()) {
-                    announcementSize = (it.anuncios!!.size - 1) ?: 0
-                    announcementsUser = it.anuncios!!
+                    if (it.anuncios.isNullOrEmpty()) announcementIsNull = true
+
+                    else {
+                        announcementSize = (it.anuncios!!.size - 1) ?: 0
+                        announcementsUser = it.anuncios!!
+                    }
                 }
 
                 var announcement by remember {
@@ -163,28 +170,9 @@ fun TabsUserStories(
 //
                         if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2)
                     }
-
-                    for (i in 0..announcementSize) {
-                        Text(text = announcementsUser[i].titulo ?: "ai é foda")
-                    }
                 }
 
-//                else if (selectedItem == 1) Text(text = "curtas")
-
-//                var announcements by remember {
-//                    mutableStateOf(listOf<AnnouncementGet>())
-//                }
-//
-//                //CallAnnouncementAPI.getAnnouncements {
-//                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
-//                    announcements = it
-//                }
-//
-//                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-//                    items(announcements) {
-//                        AnnouncementCard(it)
-//                    }
-//                }
+                if (announcementIsNull) Text(text = "Você não possui livros publicados.")
 
             }
             1 -> {

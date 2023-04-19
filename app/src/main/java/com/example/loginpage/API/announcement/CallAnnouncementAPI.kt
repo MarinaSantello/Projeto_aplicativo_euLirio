@@ -118,5 +118,41 @@ class CallAnnouncementAPI() {
                 }
             })
         }
+
+        fun deleteAnnouncement(announcementID: Int, statusCode: (Int) -> Unit) {
+            val callAnnouncement = announcementCall.deleteAnnouncement(announcementID)
+
+            callAnnouncement.enqueue(object :
+            Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
+
+        fun updateAnnouncement(announcementID: Int, announcement: AnnouncementPost, statusCode: (Int) -> Unit) {
+            val callAnnouncement = announcementCall.updateAnnouncement(announcementID, announcement)
+
+            callAnnouncement.enqueue(object :
+                Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    Log.i("teste update", status.toString())
+
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
     }
 }
