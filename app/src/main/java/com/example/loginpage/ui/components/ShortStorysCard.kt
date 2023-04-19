@@ -222,12 +222,20 @@ fun ShortStorysCard(
                                     .padding(end = 12.dp)
                                     .clickable {
                                         likeState = !likeState
+                                        if(likeState){
                                         var shortStorieLike = LikeShortStorie (
                                             idHistoriaCurta = shortStory.id,
                                             idUsuario = userID
                                         )
-
                                         CallLikeAPI.likeShortStorie(shortStorieLike)
+
+                                        }else{
+                                            var shortStorieUnLike = LikeShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
+                                        }
                                     }
                             ){
 
