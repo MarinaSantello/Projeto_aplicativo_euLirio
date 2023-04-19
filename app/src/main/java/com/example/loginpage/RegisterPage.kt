@@ -231,7 +231,7 @@ fun registerPage() {
                                     )
                                 },
 
-                                isError = userErrorRequiredInput,
+                                isError = false,
 
                                 keyboardOptions =  KeyboardOptions(
                                     imeAction = ImeAction.Next
@@ -436,22 +436,22 @@ fun registerPage() {
                             Button(
                                 onClick = {
                                     clickButton = true
-                                    CallAPI.verifyUsername(userValue) {
-                                        usernameInvalid = it
-                                    }
-
+//                                    CallAPI.verifyUsername(userValue) {
+//                                        usernameInvalid = it
+//                                    }
+//
                                     if(userValue.isEmpty()) {
                                         userErrorRequiredInput = true
                                         colorIconUser = Color(0xFFB00020)
                                         userFocusRequester.requestFocus()
                                     }
-                                    else if (usernameInvalid) {
-                                        userErrorRequiredInput = true
-                                        colorIconUser = Color(0xFFB00020)
-                                        userFocusRequester.requestFocus()
-                                        Toast.makeText(context, "Este nome de usuário já existe. Por favor utilize um único.", Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
+//                                    else if (usernameInvalid) {
+//                                        userErrorRequiredInput = true
+//                                        colorIconUser = Color(0xFFB00020)
+//                                        userFocusRequester.requestFocus()
+//                                        Toast.makeText(context, "Este nome de usuário já existe. Por favor utilize um único.", Toast.LENGTH_SHORT)
+//                                            .show()
+//                                    }
                                     else userErrorRequiredInput = false
 
                                     if(emailValue.isEmpty()) {

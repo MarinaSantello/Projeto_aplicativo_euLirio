@@ -169,7 +169,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it, userID, navController)
+                        AnnouncementCard(it, userID, navController, 1)
                     }
                 }
 //                Text(text = "api deu b.o.")

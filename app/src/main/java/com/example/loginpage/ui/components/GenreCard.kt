@@ -53,7 +53,7 @@ fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = "",
+                text = genre.nomeGenero.uppercase(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.eulirio_purple)

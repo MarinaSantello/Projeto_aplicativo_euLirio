@@ -211,10 +211,10 @@ fun RegisterPageThirdPartFun() {
                                 override fun onResponse(call: Call<List<Genero>>, response: Response<List<Genero>>) {
                                     genres = response.body()!!
 
-                                    Log.i("teste gen", genres.toString())
                                 }
 
                                 override fun onFailure(call: Call<List<Genero>>, t: Throwable) {
+                                    Log.i("teste gen", genres.toString())
                                 }
                             })
 

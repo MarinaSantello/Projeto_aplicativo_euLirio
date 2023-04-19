@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.*
@@ -259,7 +260,23 @@ fun ShortStorysCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
-                                    .clickable { saveState = !saveState }
+                                    .clickable {
+                                        saveState = !saveState
+
+                                        if(!saveState){
+                                            val favoriteShortStorieUnCheck = FavoriteShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallFavoriteAPI.unfavoriteShortStorie(favoriteShortStorieUnCheck)
+                                        }else{
+                                            val favoriteShortStorieCheck = FavoriteShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallFavoriteAPI.favoriteShortStorie(favoriteShortStorieCheck)
+                                        }
+                                    }
                             ){
 
                                 //Verificação se o favoritou a publicação
