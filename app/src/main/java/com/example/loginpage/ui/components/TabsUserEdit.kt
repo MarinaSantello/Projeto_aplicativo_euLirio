@@ -1,5 +1,6 @@
 package com.example.loginpage.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -145,19 +146,22 @@ fun TabsUserStories(
 
                 if (selectedItem == 0) CallAPI.getUser(userID.toLong()) {
                     announcementSize = (it.anuncios!!.size - 1) ?: 0
-                    announcementsUser = it.anuncios!!                }
+                    announcementsUser = it.anuncios!!
+                }
+
+                var announcement by remember {
+                    mutableStateOf(listOf<AnnouncementGet>())
+                }
 
                 if (announcementsUser.isNotEmpty()) Column() {
                     for (i in 0..announcementSize) {
-                        var announcement by remember {
-                            mutableStateOf(listOf<AnnouncementGet>())
-                        }
+                        Log.i("id anuncio $i", announcementsUser[i].id.toString())
 
-                        CallAnnouncementAPI.getAnnouncement(announcementsUser[i].id) { it ->
+                        CallAnnouncementAPI.getAnnouncmentsByUserActivated(userID) {
                             announcement += it
                         }
-
-                        if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController)
+//
+                        if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2)
                     }
 
                     for (i in 0..announcementSize) {

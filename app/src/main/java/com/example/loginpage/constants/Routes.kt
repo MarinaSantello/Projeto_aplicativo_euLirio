@@ -9,5 +9,6 @@ enum class Routes {
     UserStories,
     CardEbook,
     Feed,
-    PostEbook
+    PostEbook,
+    EditEbook
 }

@@ -83,6 +83,15 @@ fun Greeting() {
             EbookView(announcementId)
         }
 
+        composable(
+            "${Routes.EditEbook.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val announcementId = it.arguments!!.getInt("itemId")
+
+            EditDataEbook(announcementId, navController)
+        }
+
 //        composable(Routes.PostEbook.name) {
 //            InputDataEbook(navController)
 //        }

@@ -15,6 +15,10 @@ interface AnnouncementCall {
 
     @GET("announcements/user-id/{id}")
     fun getAllAnnouncementsByGenresUser(@Path("id") userID: Int): Call<List<AnnouncementGet>>
+
+    @GET("activated-announcement/user-id/{id}")
+    fun getAllAnnouncementsByUserActivated(@Path("id") userID: Int): Call<List<AnnouncementGet>>
+
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("announcement")
     fun postAnnouncement(@Body announcementPost: AnnouncementPost): Call<String>

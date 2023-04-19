@@ -44,7 +44,8 @@ import com.example.loginpage.ui.theme.*
 fun AnnouncementCard(
     announcement: AnnouncementGet,
     userID: Int,
-    navController: NavController
+    navController: NavController,
+    type: Int
 ) {
 
     val likeStateAPI = CallLikeAPI.verifyAnnouncementLike(announcement.id!!, userID)
@@ -72,7 +73,9 @@ fun AnnouncementCard(
             .fillMaxWidth()
             .padding(bottom = 2.dp)
             .clickable {
-                navController.navigate("${Routes.Ebook.name}/${announcement.id}")
+                if (type == 1) navController.navigate("${Routes.Ebook.name}/${announcement.id}")
+
+                if (type == 2) navController.navigate("${Routes.EditEbook.name}/${announcement.id}")
             },
         backgroundColor = Color.White,
         elevation = 0.dp

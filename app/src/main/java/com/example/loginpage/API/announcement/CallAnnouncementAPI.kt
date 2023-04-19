@@ -76,6 +76,30 @@ class CallAnnouncementAPI() {
                 }
             })
         }
+
+        fun getAnnouncmentsByUserActivated(announcementID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+            val callAnnouncements = announcementCall.getAllAnnouncementsByUserActivated(announcementID)
+
+            Log.i("id anuncio", announcementID.toString())
+            callAnnouncements.enqueue(object :
+            Callback<List<AnnouncementGet>> {
+                override fun onResponse(
+                    call: Call<List<AnnouncementGet>>,
+                    response: Response<List<AnnouncementGet>>
+                ) {
+                    val announcements = response.body()!!
+
+                    Log.i("anuncios usuario", announcements[0].titulo)
+                    announcementsData.invoke(announcements)
+                }
+
+                override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            }
+            )
+        }
+
         fun postAnnouncement(announcementPost: AnnouncementPost, statusCode: (Int) -> Unit) {
             val callAnnouncement = announcementCall.postAnnouncement(announcementPost)
 
