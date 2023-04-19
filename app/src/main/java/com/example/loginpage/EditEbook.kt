@@ -217,7 +217,7 @@ fun EditDataEbook(
         }
         pdfUri = uri
 
-        updateStorage(pdfState)
+//        updateStorage(pdfState)
         Log.i("uri pdf", uri.toString())
     }
 
