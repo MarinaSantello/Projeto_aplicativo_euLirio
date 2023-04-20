@@ -84,7 +84,7 @@ fun Greeting() {
         ) {
             val announcementId = it.arguments!!.getInt("itemId")
 
-            EbookView(announcementId)
+            EbookView(announcementId, navController)
         }
 
         composable(

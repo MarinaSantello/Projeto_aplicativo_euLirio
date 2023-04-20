@@ -1,7 +1,9 @@
 package com.example.loginpage
 
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
+import android.icu.text.CaseMap.Title
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -67,11 +69,27 @@ class EditEbook : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+
                     val navController = rememberNavController()
                     EditDataEbook(0, navController)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun addDataAnnouncement(context: Context, announcementID: Int, title: (MutableState<String>) -> Unit) {
+
+    val titulo = remember {
+        mutableStateOf("")
+    }
+    val userIDRepository = UserIDrepository(context).getAll()
+
+    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
+        titulo.value = it.titulo
+
+        title.invoke(titulo)
     }
 }
 @Composable
@@ -89,9 +107,14 @@ fun EditDataEbook(
         mutableStateOf(false)
     }
 
-
-    var titleState by remember {
+    var titleState = remember {
         mutableStateOf("")
+    }
+    addDataAnnouncement(
+        context = LocalContext.current,
+        announcementID = 0
+    ) {
+        titleState = it
     }
     var priceState by remember {
         mutableStateOf("")
@@ -274,22 +297,22 @@ fun EditDataEbook(
 
     val userIDRepository = UserIDrepository(context).getAll()
 
-//    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
-//        capaState = it.capa
-//        pdfState = it.pdf
-//        epubState = it.epub
-//        mobiState = it.mobi ?: ""
+    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
+        capaState = it.capa
+        pdfState = it.pdf
+        epubState = it.epub
+        mobiState = it.mobi ?: ""
 //        titleState = it.titulo
-//        priceState = it.preco.toString()
-//        sinopseState = it.sinopse
-//        volumeState = it.volume.toString()
-//        pagesState = it.qunatidadePaginas.toString()
-//        idParentalRatings = it.classificacao[0].idClassificacao!!
-//
-//        if (getName(pdfState) != "0") pdfName = "${getName(pdfState).split(".pdf-")[0]}.pdf"
-//        if (getName(epubState) != "0") epubName = "${getName(epubState).split(".epub-")[0]}.epub"
-//        if (getName(mobiState) != "0") mobiName = "${getName(mobiState).split(".mobi-")[0]}.mobi"
-//    }
+        priceState = it.preco.toString()
+        sinopseState = it.sinopse
+        volumeState = it.volume.toString()
+        pagesState = it.qunatidadePaginas.toString()
+        idParentalRatings = it.classificacao[0].idClassificacao!!
+
+        if (getName(pdfState) != "0") pdfName = "${getName(pdfState).split(".pdf-")[0]}.pdf"
+        if (getName(epubState) != "0") epubName = "${getName(epubState).split(".epub-")[0]}.epub"
+        if (getName(mobiState) != "0") mobiName = "${getName(mobiState).split(".mobi-")[0]}.mobi"
+    }
 
     var expanded by remember {
         mutableStateOf(false)
@@ -394,6 +417,7 @@ fun EditDataEbook(
                                 expandedTopBar = false
                                 expandedTopBarState = false
 
+//                                if (index == 0) CallAnnouncementAPI
                                 if (index == 1) showDialog = true
                             }
                         ) {
@@ -478,9 +502,9 @@ fun EditDataEbook(
                 TextField(
                     modifier = Modifier
                         .focusRequester(titleFocusRequester),
-                    value = titleState,
+                    value = titleState.value,
                     onValueChange = {
-                        titleState = it
+                        titleState.value = it
                     },
                     label = {
                         Text(
@@ -997,7 +1021,7 @@ fun EditDataEbook(
                     .height(40.dp)
                     .clickable {
                         //Verificação se o titulo está vazio
-                        if (titleState.isEmpty()) {
+                        if (titleState.value.isEmpty()) {
                             checkTitle = true
                             titleFocusRequester.requestFocus()
                         } else {
@@ -1040,7 +1064,7 @@ fun EditDataEbook(
                                 uploadFile(
                                     capaUri!!,
                                     "cover",
-                                    titleState,
+                                    titleState.value,
                                     context
                                 ) {
                                     capaState = it
@@ -1086,8 +1110,8 @@ fun EditDataEbook(
                             }
 
                             if (capaCheck && pdfCheck && epubCheck && mobiCheck) {
-                                val announcement = AnnouncementPost (
-                                    titulo = titleState,
+                                val announcement = AnnouncementPost(
+                                    titulo = titleState.value,
                                     volume = volumeState.toInt(),
                                     capa = capaState,
                                     sinopse = sinopseState,
@@ -1103,8 +1127,11 @@ fun EditDataEbook(
                                     generos = generos,
                                 )
 
-                                CallAnnouncementAPI.updateAnnouncement(announcementID, announcement) {
-                                    if(it == 200) {
+                                CallAnnouncementAPI.updateAnnouncement(
+                                    announcementID,
+                                    announcement
+                                ) {
+                                    if (it == 200) {
                                         navController.navigate(Routes.Home.name)
                                     }
                                 }

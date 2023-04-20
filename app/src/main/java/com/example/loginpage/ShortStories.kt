@@ -77,7 +77,7 @@ fun ShortStories(name: String) {
     val users = userIDRepository.getAll()
    // val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-   val navController = rememberNavController()
+   val nAOeSQUECAdEmUDARmARINA = rememberNavController()
 
     Scaffold(
         modifier = Modifier
@@ -92,7 +92,7 @@ fun ShortStories(name: String) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, false, context) },
+        bottomBar = { BottomBarEbook(bottomBarState, false, context, nAOeSQUECAdEmUDARmARINA, null) },
     ) {
         ShowStories(false, it.calculateBottomPadding(), context)
     }

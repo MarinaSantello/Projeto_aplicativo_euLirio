@@ -41,12 +41,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
@@ -62,7 +64,7 @@ class Ebook : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    EbookView(1)
+                    EbookView(1, rememberNavController())
                 }
             }
         }
@@ -70,7 +72,10 @@ class Ebook : ComponentActivity() {
 }
 
 @Composable
-fun EbookView(idAnnouncement: Int) {
+fun EbookView(
+    idAnnouncement: Int,
+    navController: NavController
+) {
     val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
@@ -89,8 +94,6 @@ fun EbookView(idAnnouncement: Int) {
         userAuthor.value = (it.usuario[0].idUsuario == users[0].idUser)
     }
 
-    val navController = rememberNavController()
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -103,8 +106,8 @@ fun EbookView(idAnnouncement: Int) {
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, false, context) },
+        topBar = { TopBarEbook(scaffoldState, topBarState, context, userAuthor.value) },
+        bottomBar = { BottomBarEbook(bottomBarState, userAuthor.value, context, navController, idAnnouncement) },
     ) {
         ShowEbook(idAnnouncement, userAuthor.value, it.calculateBottomPadding(), context)
     }
@@ -511,7 +514,8 @@ fun ShowEbook(
                         .padding(start = 8.dp, top = 8.dp)
                         .width(30.dp)
                         .clip(
-                            RoundedCornerShape(15.dp))
+                            RoundedCornerShape(15.dp)
+                        )
                 )
 
                 Spacer(modifier = Modifier.padding(horizontal = 8.dp))
@@ -673,7 +677,9 @@ fun ShowEbook(
                 Divider(
                     color = Color.LightGray,
                     thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 8.dp)
                 )
 
                 Row() {
@@ -697,7 +703,9 @@ fun ShowEbook(
                 Divider(
                     color = Color.LightGray,
                     thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 8.dp)
                 )
             }
         }
@@ -709,7 +717,9 @@ fun ShowEbook(
 fun BottomBarEbook(
     bottomBarState: MutableState<Boolean>,
     userAuthor: Boolean,
-    context: Context
+    context: Context,
+    navController: NavController,
+    idAnnouncement: Int?
 ) {
     AnimatedVisibility(
         visible = bottomBarState.value,
@@ -719,7 +729,7 @@ fun BottomBarEbook(
             if (userAuthor) {
                 BottomAppBar(
                     modifier = Modifier.clickable {
-                        Toast.makeText(context, "oi", Toast.LENGTH_SHORT).show()
+                        navController.navigate("${Routes.EditEbook.name}/${idAnnouncement!!}")
                     },
                     backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
                 ) {
@@ -885,6 +895,6 @@ fun TopBarEbook(
 @Composable
 fun DefaultPreview6() {
     LoginPageTheme {
-        EbookView(1)
+        EbookView(1, rememberNavController())
     }
 }
