@@ -2,8 +2,7 @@ package com.example.loginpage.API.favorite
 
 import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.models.FavoriteAnnouncement
-import com.example.loginpage.models.FavoriteShortStorie
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -120,10 +119,60 @@ class CallFavoriteAPI(){
             return retorno
         }
 
+        fun countFavoritesAnnouncement(announcementId: Int, quantidadeFavoritos:(CountFavoriteAnnouncement) -> Unit){
+            val callCountFavoriteAnnouncement = favoriteCall.countFavoriteAnnouncement(announcementId.toLong())
 
+            callCountFavoriteAnnouncement.enqueue(object:
 
+            Callback<CountFavoriteAnnouncement>{
+                override fun onResponse(
+                    call: Call<CountFavoriteAnnouncement>,
+                    response: Response<CountFavoriteAnnouncement>
+                ) {
+                    val quantidadeFavoritosShortStorie = response.body() ?: CountFavoriteAnnouncement(
+                        idAnuncio = announcementId,
+                        qtdeFavoritos = "0"
+                    )
+                    quantidadeFavoritos.invoke(quantidadeFavoritosShortStorie)
+                }
 
+                override fun onFailure(call: Call<CountFavoriteAnnouncement>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            }
+
+            )
+        }
+
+        fun countFavoritesShortStories(shortStorieId: Int, quantidadeFavoritos:(CountFavoriteShortStorie) -> Unit){
+            val callCountFavoriteShortStorie = favoriteCall.countFavoriteShortStorie(shortStorieId.toLong())
+
+            callCountFavoriteShortStorie.enqueue(object:
+
+                Callback<CountFavoriteShortStorie>{
+                override fun onResponse(
+                    call: Call<CountFavoriteShortStorie>,
+                    response: Response<CountFavoriteShortStorie>
+                ) {
+                    val quantidadeFavoritosShortStorie = response.body() ?: CountFavoriteAnnouncement(
+                        idAnuncio = shortStorieId,
+                        qtdeFavoritos = "0"
+                    )
+                    quantidadeFavoritos.invoke(quantidadeFavoritosShortStorie)
+                }
+
+                override fun onFailure(call: Call<CountFavoriteShortStorie>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            }
+
+            )
+        }
     }
+
+
+
+
 }
 
 

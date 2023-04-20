@@ -2,6 +2,8 @@ package com.example.loginpage.API.like
 
 import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.models.CountAnnouncementLikes
+import com.example.loginpage.models.CountShortStorieLikes
 import com.example.loginpage.models.LikeAnnouncement
 import com.example.loginpage.models.LikeShortStorie
 import retrofit2.Call
@@ -142,5 +144,57 @@ class CallLikeAPI() {
 
             return teste
         }
+
+
+        fun countAnnouncementLikes(announcementId: Int, qtndLikes: (CountAnnouncementLikes) -> Unit){
+            val callCountAnnouncementLike = likeCall.countAnnouncementLikes(announcementId.toLong())
+
+
+            callCountAnnouncementLike.enqueue(object:
+            Callback<CountAnnouncementLikes>{
+                override fun onResponse(call: Call<CountAnnouncementLikes>, response: Response<CountAnnouncementLikes>) {
+                    val quantidadeLikesAnuncio = response.body() ?: CountAnnouncementLikes(
+                        idAnuncio = announcementId,
+                        qtdeCurtidas = "0"
+                    )
+                    Log.i("respon post",quantidadeLikesAnuncio.qtdeCurtidas)
+                    qtndLikes.invoke(quantidadeLikesAnuncio)
+                }
+
+                override fun onFailure(call: Call<CountAnnouncementLikes>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+            )
+        }
+
+        fun countShortStoriesLikes(shortStorieId: Int, qtndLikes: (CountShortStorieLikes) -> Unit){
+            val callCountShortStorieLike = likeCall.countShortStorieLikes(shortStorieId.toLong())
+
+
+            callCountShortStorieLike.enqueue(object:
+            Callback<CountShortStorieLikes>{
+                override fun onResponse(
+                    call: Call<CountShortStorieLikes>,
+                    response: Response<CountShortStorieLikes>
+                ) {
+                    val quantidadeLikesShortStory = response.body() ?: CountShortStorieLikes(
+                        idHistoriaCurta = shortStorieId,
+                        qtdeCurtidas = "0"
+                    )
+                    qtndLikes.invoke(quantidadeLikesShortStory)
+                }
+
+                override fun onFailure(call: Call<CountShortStorieLikes>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            }
+            )
+        }
     }
 }
+
+
+
+

@@ -19,13 +19,13 @@ data class FavoriteShortStorie(
 data class CountFavoriteAnnouncement(
     @SerializedName("id_anuncio")
     var idAnuncio: Int?,
-    @SerializedName("id_usuario")
-    var idUsuario: Int?
+    @SerializedName("quantidade_favoritos")
+    var qtdeFavoritos: String
 )
 
 data class CountFavoriteShortStorie(
     @SerializedName("id_historia_curta")
     var idHistoriaCurta: Int?,
-    @SerializedName("id_usuario")
-    var idUsuario: Int?
+    @SerializedName("quantidade_favoritos")
+    var qtdeCurtidas: String
 )

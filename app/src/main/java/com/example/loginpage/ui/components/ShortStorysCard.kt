@@ -1,4 +1,5 @@
 package com.example.loginpage.ui.components
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
@@ -43,16 +45,25 @@ fun ShortStorysCard(
         mutableStateOf(false)
     }
 
-    var saveState by remember{
+    var saveState by remember {
         mutableStateOf(false)
     }
 
-    var viewState by remember{
+    var viewState by remember {
         mutableStateOf(false)
     }
 
-    var viewComents by remember{
+    var viewComents by remember {
         mutableStateOf(false)
+    }
+
+
+    var quantidadeLikesState by remember {
+        mutableStateOf("")
+    }
+
+    CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
+        quantidadeLikesState = it.qtdeCurtidas
     }
 
     Card(
@@ -62,7 +73,7 @@ fun ShortStorysCard(
             .padding(bottom = 2.dp),
         backgroundColor = Color.White,
         elevation = 0.dp
-    ){
+    ) {
         //Criação dos cards
         Column(
             modifier = Modifier
@@ -162,8 +173,7 @@ fun ShortStorysCard(
                             Card(
                                 modifier = Modifier
                                     .height(14.dp)
-                                    .padding(start = 4.dp, end = 4.dp)
-                                ,
+                                    .padding(start = 4.dp, end = 4.dp),
                                 backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border),
                                 shape = RoundedCornerShape(100.dp),
                             ) {
@@ -222,14 +232,21 @@ fun ShortStorysCard(
                                     .padding(end = 12.dp)
                                     .clickable {
                                         likeState = !likeState
-                                        if(likeState){
-                                        var shortStorieLike = LikeShortStorie (
-                                            idHistoriaCurta = shortStory.id,
-                                            idUsuario = userID
-                                        )
-                                        CallLikeAPI.likeShortStorie(shortStorieLike)
+                                        if (likeState) {
 
-                                        }else{
+
+                                            var shortStorieLike = LikeShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallLikeAPI.likeShortStorie(shortStorieLike)
+
+                                        } else {
+                                            CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
+                                                quantidadeLikesState = it.qtdeCurtidas
+                                            }
+
+
                                             var shortStorieUnLike = LikeShortStorie(
                                                 idHistoriaCurta = shortStory.id,
                                                 idUsuario = userID
@@ -237,18 +254,16 @@ fun ShortStorysCard(
                                             CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
                                         }
                                     }
-                            ){
+                            ) {
 
                                 //Verificação se o usuário curtiu a publicação
-                                if(likeState){
+                                if (likeState) {
                                     Icon(
                                         Icons.Outlined.Favorite,
                                         contentDescription = "icone de curtir",
                                         tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                     )
-                                }
-
-                                else Icon(
+                                } else Icon(
                                     Icons.Outlined.FavoriteBorder,
                                     contentDescription = "icone de curtir",
                                     modifier = Modifier,
@@ -256,7 +271,7 @@ fun ShortStorysCard(
                                 )
 
                                 Text(
-                                    text = "570",
+                                    text = quantidadeLikesState,
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500,
@@ -271,32 +286,34 @@ fun ShortStorysCard(
                                     .clickable {
                                         saveState = !saveState
 
-                                        if(!saveState){
+                                        if (!saveState) {
                                             val favoriteShortStorieUnCheck = FavoriteShortStorie(
                                                 idHistoriaCurta = shortStory.id,
                                                 idUsuario = userID
                                             )
-                                            CallFavoriteAPI.unfavoriteShortStorie(favoriteShortStorieUnCheck)
-                                        }else{
+                                            CallFavoriteAPI.unfavoriteShortStorie(
+                                                favoriteShortStorieUnCheck
+                                            )
+                                        } else {
                                             val favoriteShortStorieCheck = FavoriteShortStorie(
                                                 idHistoriaCurta = shortStory.id,
                                                 idUsuario = userID
                                             )
-                                            CallFavoriteAPI.favoriteShortStorie(favoriteShortStorieCheck)
+                                            CallFavoriteAPI.favoriteShortStorie(
+                                                favoriteShortStorieCheck
+                                            )
                                         }
                                     }
-                            ){
+                            ) {
 
                                 //Verificação se o favoritou a publicação
-                                if(saveState){
+                                if (saveState) {
                                     Icon(
                                         Icons.Outlined.Bookmark,
                                         contentDescription = "icone de favoritar",
                                         tint = colorResource(id = com.example.loginpage.R.color.eulirio_yellow_card_background)
                                     )
-                                }
-
-                                else Icon(
+                                } else Icon(
                                     Icons.Outlined.BookmarkAdd,
                                     contentDescription = "icone de favoritar",
                                     tint = colorResource(id = com.example.loginpage.R.color.eulirio_yellow_card_background)
@@ -314,26 +331,40 @@ fun ShortStorysCard(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
-                                    .clickable { viewState = !viewState }
-                            ){
+                                    .clickable {
+                                        viewState = !viewState
+
+                                        if (!viewState) {
+                                            val unViewShortStorie = VisualizationShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
+                                        } else {
+                                            val viewShortStorie = VisualizationShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallVisualizationAPI.viewShortStorie(viewShortStorie)
+                                        }
+                                    }
+                            ) {
 
                                 //Verificação se o usuário visualizou a publicação
-                                if(viewState){
+                                if (viewState) {
                                     Icon(
                                         Icons.Rounded.CheckCircle,
                                         contentDescription = "icone de visualizacão",
                                         tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                                     )
-                                }
-
-                                else Icon(
+                                } else Icon(
                                     Icons.Outlined.CheckCircle,
                                     contentDescription = "icone de visualizacão",
                                     tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                                 )
 
                                 Text(
-                                    text = "570",
+                                    text = "44",
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500

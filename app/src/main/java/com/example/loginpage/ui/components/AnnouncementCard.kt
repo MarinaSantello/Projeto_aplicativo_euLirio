@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
@@ -64,6 +65,25 @@ fun AnnouncementCard(
         mutableStateOf(false)
     }
 
+    var quantidadeLikesState by remember{
+        mutableStateOf("")
+    }
+
+    var quantidadeFavoritosState by remember{
+        mutableStateOf("")
+    }
+
+
+    CallLikeAPI.countAnnouncementLikes(announcement.id!!){
+        quantidadeLikesState = it.qtdeCurtidas
+    }
+
+    CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!){
+        quantidadeFavoritosState = it.qtdeFavoritos
+    }
+
+
+
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
 
@@ -76,6 +96,7 @@ fun AnnouncementCard(
                 if (type == 1) navController.navigate("${Routes.Ebook.name}/${announcement.id}")
 
                 if (type == 2) navController.navigate("${Routes.EditEbook.name}/${announcement.id}")
+
             },
         backgroundColor = Color.White,
         elevation = 0.dp
@@ -247,7 +268,11 @@ fun AnnouncementCard(
                                             CallLikeAPI.dislikeAnnouncement(announcementDislike)
 //                                            likeState = false
                                         } else {
-//                                            likeState = false
+//
+                                            CallLikeAPI.countAnnouncementLikes(announcement.id!!){
+                                                quantidadeLikesState = it.qtdeCurtidas
+                                            }
+
                                             val announcementLike = LikeAnnouncement(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
@@ -276,7 +301,7 @@ fun AnnouncementCard(
                                 )
 
                                 Text(
-                                    text = "570",
+                                    text = quantidadeLikesState,
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500,
@@ -299,6 +324,11 @@ fun AnnouncementCard(
                                             CallFavoriteAPI.unfavoriteAnnouncement(announcementUnFavorite)
 
                                         }else{
+
+                                            CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!){
+                                                quantidadeFavoritosState = it.qtdeFavoritos
+                                            }
+
                                             val announcementFavorite = FavoriteAnnouncement(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
@@ -324,7 +354,7 @@ fun AnnouncementCard(
                                 )
 
                                 Text(
-                                    text = "570",
+                                    text = quantidadeFavoritosState,
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500
@@ -335,7 +365,24 @@ fun AnnouncementCard(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
-                                    .clickable { viewState = !viewState }
+                                    .clickable {
+                                        viewState = !viewState
+
+                                        if(!viewState){
+                                            val unViewAnnouncement = VisualizationAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+                                            CallVisualizationAPI.unViewAnnouncement(unViewAnnouncement)
+                                        }else{
+                                            val viewAnnouncement = VisualizationAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+                                            CallVisualizationAPI.viewAnnouncement(viewAnnouncement)
+                                        }
+
+                                    }
                             ){
 
                                 //Verificação se o usuário visualizou a publicação

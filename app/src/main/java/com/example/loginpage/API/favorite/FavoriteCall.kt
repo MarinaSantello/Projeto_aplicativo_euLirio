@@ -2,6 +2,7 @@ package com.example.loginpage.API.favorite
 
 import com.example.loginpage.constants.Constant
 import com.example.loginpage.models.CountFavoriteAnnouncement
+import com.example.loginpage.models.CountFavoriteShortStorie
 import com.example.loginpage.models.FavoriteAnnouncement
 import com.example.loginpage.models.FavoriteShortStorie
 import retrofit2.Call
@@ -19,7 +20,7 @@ interface FavoriteCall{
     fun unFavoriteAnnouncement(@Body favorite: FavoriteAnnouncement): Call<String>
 
     //Obter a quantidade total de favoritos que o anuncio recebeu
-    @GET("count-announcement-favorite-/announcement-id/{id}")
+    @GET("count-announcement-favorites/announcement-id/{id}")
     fun countFavoriteAnnouncement(@Path("id") id: Long): Call<CountFavoriteAnnouncement>
 
     //Favoritar uma historia curta
@@ -34,7 +35,7 @@ interface FavoriteCall{
 
     //Obter a quantidade total de favoritos que a historia curta recebeu
     @GET("count-short-storie-favorite/short-storie-id/{id}")
-    fun countFavoriteShortStorie(@Path("id") id: Long): Call<CountFavoriteAnnouncement>
+    fun countFavoriteShortStorie(@Path("id") id: Long): Call<CountFavoriteShortStorie>
 
 
 
