@@ -50,6 +50,7 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.Generos
 import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
@@ -85,13 +86,16 @@ fun EbookView(
     val fabState = remember { mutableStateOf(true) }
     var userAuthor = remember { mutableStateOf(false) }
 
-    // registrando o id do usuário no sqlLite
-    val userIDRepository = UserIDrepository(context)
-    val users = userIDRepository.getAll()
-    //val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = UserIDrepository(context).getAll()[0].idUser
 
-    CallAnnouncementAPI.getAnnouncement(idAnnouncement, users[0].idUser) {
-        userAuthor.value = (it.usuario[0].idUsuario == users[0].idUser)
+    var announcement by remember {
+        mutableStateOf<AnnouncementGet?>(null)
+    }
+
+    CallAnnouncementAPI.getAnnouncement(idAnnouncement, userID) {
+        announcement = it
+
+        userAuthor.value = (it.usuario[0].idUsuario == userID)
     }
 
     Scaffold(
@@ -109,24 +113,21 @@ fun EbookView(
         topBar = { TopBarEbook(scaffoldState, topBarState, context, userAuthor.value) },
         bottomBar = { BottomBarEbook(bottomBarState, userAuthor.value, context, navController, idAnnouncement) },
     ) {
-        ShowEbook(idAnnouncement, userAuthor.value, it.calculateBottomPadding(), context)
+        if (announcement != null) ShowEbook(idAnnouncement, announcement!!, userAuthor.value, it.calculateBottomPadding(), context)
     }
 }
 
 @Composable
 fun ShowEbook(
     idAnnouncement: Int,
+    announcement: AnnouncementGet,
     userAuthor: Boolean,
     bottomBarLength: Dp,
     context: Context
 ) {
 
-    val userIDRepository = UserIDrepository(context)
-    val users = userIDRepository.getAll()
-
-    CallAnnouncementAPI.getAnnouncement(idAnnouncement, users[0].idUser) {
-        val announcementGet = it
-    }
+    val context = LocalContext.current
+    val userID = UserIDrepository(context).getAll()[0].idUser
 
     var likeState by remember {
         mutableStateOf(false)
@@ -156,16 +157,12 @@ fun ShowEbook(
         mutableStateOf(false)
     }
 
-    var sinopseState by remember {
-        mutableStateOf("")
-    }
+    val priceVerify = announcement.preco.toString().split('.')
+    var price = announcement.preco.toString()
+    val mouths = listOf<String>("Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez.")
+    val date = announcement.data.split("T")[0].split("-")
+    val mouth = mouths[(date[1].toInt() - 1)]
 
-    var reviewState by remember {
-        mutableStateOf("")
-    }
-    var selectedDate by remember {
-        mutableStateOf("")
-    }
 
     //Card de informações do usuario
     Column(
@@ -197,7 +194,7 @@ fun ShowEbook(
                     .padding(28.dp, 12.dp)
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                    painter = rememberAsyncImagePainter(announcement.capa),
                     contentDescription = "capa do livro",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -216,7 +213,7 @@ fun ShowEbook(
                     Column() {
 
                         Text(
-                            text = "Lorem Ipsum",
+                            text = announcement.titulo,
                             modifier = Modifier
                                 .padding(start = 4.dp),
                             fontWeight = FontWeight.Light,
@@ -227,10 +224,8 @@ fun ShowEbook(
 
                         Spacer(modifier = Modifier.width(4.dp))
 
-                        val generos = listOf<String>("genero 1", "genero 2", "genero 4")
-
                         LazyRow() {
-                            items(generos) {
+                            items(announcement.generos) {
                                 Card(
                                     modifier = Modifier
                                         .padding(start = 4.dp, end = 4.dp),
@@ -238,7 +233,7 @@ fun ShowEbook(
                                     shape = RoundedCornerShape(100.dp),
                                 ) {
                                     Text(
-                                        text = it,//.nome.uppercase(),
+                                        text = it.nome.uppercase(),
                                         fontSize = 10.sp,
                                         fontFamily = MontSerratSemiBold,
                                         textAlign = TextAlign.Center,
@@ -462,8 +457,13 @@ fun ShowEbook(
                             Modifier.fillMaxSize(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            if (priceVerify[1].isEmpty())
+                                price = "${priceVerify[0]}.00"
+                            else if (priceVerify[1].length == 1)
+                                price = "${announcement.preco}0"
+
                             Text(
-                                text = "R$ 20,00",
+                                text = "R$ ${price.replace('.', ',')}",
                                 modifier = Modifier.fillMaxWidth(),
                                 color = colorResource(id = R.color.eulirio_yellow_card_background),
                                 textAlign = TextAlign.Center,
@@ -507,7 +507,7 @@ fun ShowEbook(
         Column(Modifier.height(1000.dp)) {
             Row {
                 Image(
-                    painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                    painter = rememberAsyncImagePainter(announcement.usuario[0].foto),
                     contentDescription = "foto da pessoa",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -522,13 +522,13 @@ fun ShowEbook(
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "Noah Sebastian",
+                        text = announcement.usuario[0].nomeUsuario,
                         fontSize = 16.sp,
                         fontFamily = SpartanMedium,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Text(
-                        text = "@n.sebastian",
+                        text = "@${announcement.usuario[0].userName}",
                         fontSize = 14.sp,
                         fontFamily = Spartan
                     )
@@ -549,8 +549,8 @@ fun ShowEbook(
                     Icon(
                         Icons.Outlined.Description,
                         contentDescription = "icone de páginas",
-                        modifier = Modifier
-                            .clickable { pageState = !pageState },
+//                        modifier = Modifier
+//                            .clickable { pageState = !pageState },
                         tint = Color.Black
                     )
                     Text(
@@ -561,7 +561,7 @@ fun ShowEbook(
 
                         )
                     Text(
-                        text = "41",
+                        text = announcement.qunatidadePaginas.toString(),
                         fontSize = 20.sp,
                         fontFamily = MontSerratSemiBold,
                         fontWeight = FontWeight.Bold
@@ -577,8 +577,8 @@ fun ShowEbook(
                     Icon(
                         Icons.Outlined.LibraryBooks,
                         contentDescription = "icone de volume",
-                        modifier = Modifier
-                            .clickable { volumeState = !volumeState },
+//                        modifier = Modifier
+//                            .clickable { volumeState = !volumeState },
                         tint = Color.Black
                     )
                     Text(
@@ -588,7 +588,7 @@ fun ShowEbook(
                         fontWeight = FontWeight.W500,
                     )
                     Text(
-                        text = "2",
+                        text = announcement.volume.toString(),
                         fontSize = 20.sp,
                         fontFamily = MontSerratSemiBold,
                         fontWeight = FontWeight.Bold
@@ -603,8 +603,8 @@ fun ShowEbook(
                     Icon(
                         Icons.Outlined.ShoppingBag,
                         contentDescription = "icone de vendas",
-                        modifier = Modifier
-                            .clickable { vendaState = !vendaState },
+//                        modifier = Modifier
+//                            .clickable { vendaState = !vendaState },
                         tint = Color.Black
                     )
 
@@ -633,8 +633,8 @@ fun ShowEbook(
                     Icon(
                         Icons.Outlined.CalendarMonth,
                         contentDescription = "icone de publicacoes",
-                        modifier = Modifier
-                            .clickable { postState = !postState },
+//                        modifier = Modifier
+//                            .clickable { postState = !postState },
                         tint = Color.Black
                     )
 
@@ -646,7 +646,7 @@ fun ShowEbook(
 
                         )
                     Text(
-                        text = "12 Jun.2022",
+                        text = "${date[2]} $mouth ${date[0]}",
                         fontSize = 12.sp,
                         fontFamily = MontSerratSemiBold,
                         fontWeight = FontWeight.Bold
@@ -666,7 +666,7 @@ fun ShowEbook(
             Column() {
 
                 Text(
-                    text = stringResource(id = R.string.review),
+                    text = announcement.sinopse,
                     fontSize = 12.sp,
                     fontFamily = QuickSand,
                     modifier = Modifier.padding(start = 12.dp)
@@ -688,7 +688,7 @@ fun ShowEbook(
                         fontFamily = Spartan,
                         modifier = Modifier.padding(start = 8.dp))
                     Text(
-                        text = "Livre",
+                        text = announcement.classificacao[0].classificacao,
                         fontFamily = SpartanBold,
                         modifier = Modifier.padding(start = 4.dp))
                 }
@@ -696,8 +696,10 @@ fun ShowEbook(
                     Row(modifier= Modifier.fillMaxWidth()){ Text(text = "Disponível em: ",
                         fontFamily = Spartan,
                         modifier = Modifier.padding(start = 8.dp))
-                        Text(text = "PDF e ePUB ",
-                            fontFamily = SpartanBold)
+                        Text(
+                            text = if (announcement.mobi.isNullOrEmpty()) "PDF e ePUB" else "PDF, ePUB e MOBI",
+                            fontFamily = SpartanBold
+                        )
                     }
                 }
                 Divider(
