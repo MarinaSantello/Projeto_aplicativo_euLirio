@@ -9,7 +9,7 @@ import retrofit2.http.*
 
 interface AnnouncementCall {
     @GET("announcement/id/")
-    fun getByID(@Query("announcementId") announcementID: Int, @Query("userId")userID: Int): Call<List<AnnouncementGet>>
+    fun getByID(@Query("announcementId") announcementID: Int, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
 
     @GET("announcements")
     fun getAllAnnouncements(): Call<List<AnnouncementGet>>

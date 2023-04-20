@@ -59,6 +59,22 @@ import com.example.loginpage.resources.uploadFile
 import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.*
 
+var titleState: MutableState<String> = mutableStateOf("")
+var capaState: MutableState<String> = mutableStateOf("")
+var priceState: MutableState<String> = mutableStateOf("")
+var sinopseState: MutableState<String> = mutableStateOf("")
+var volumeState: MutableState<String> = mutableStateOf("")
+var pagesState: MutableState<String> = mutableStateOf("")
+var pdfState: MutableState<String> = mutableStateOf("")
+var epubState: MutableState<String> = mutableStateOf("")
+var mobiState: MutableState<String> = mutableStateOf("")
+var idParentalRatings: MutableState<Int> = mutableStateOf(0)
+
+fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
+    CallAnnouncementAPI.getAnnouncement(announcementID, userID) {
+        titleState.value = it.titulo
+    }
+}
 class EditEbook : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,27 +85,11 @@ class EditEbook : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
                     val navController = rememberNavController()
-                    EditDataEbook(0, navController)
+                    EditDataEbook(54, navController)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun addDataAnnouncement(context: Context, announcementID: Int, title: (MutableState<String>) -> Unit) {
-
-    val titulo = remember {
-        mutableStateOf("")
-    }
-    val userIDRepository = UserIDrepository(context).getAll()
-
-    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
-        titulo.value = it.titulo
-
-        title.invoke(titulo)
     }
 }
 @Composable
@@ -99,46 +99,14 @@ fun EditDataEbook(
 ) {
     val context = LocalContext.current
 
-    var capaState by remember {
-        mutableStateOf("")
-    }
+    val userID = UserIDrepository(context).getAll()[0].idUser
 
     var checkState by remember {
         mutableStateOf(false)
     }
 
-    var titleState = remember {
-        mutableStateOf("")
-    }
-    addDataAnnouncement(
-        context = LocalContext.current,
-        announcementID = 0
-    ) {
-        titleState = it
-    }
-    var priceState by remember {
-        mutableStateOf("")
-    }
-    var sinopseState by remember {
-        mutableStateOf("")
-    }
-    var volumeState by remember {
-        mutableStateOf("")
-    }
-    var pagesState by remember {
-        mutableStateOf("")
-    }
     var generos by remember {
         mutableStateOf(listOf<Genero>())
-    }
-    var pdfState by remember {
-        mutableStateOf("")
-    }
-    var epubState by remember {
-        mutableStateOf("")
-    }
-    var mobiState by remember {
-        mutableStateOf("")
     }
 
     var showDialog by remember {
@@ -159,9 +127,6 @@ fun EditDataEbook(
     }
     var parentalRatings by remember {
         mutableStateOf(listOf<Classificacao>())
-    }
-    var idParentalRatings by remember {
-        mutableStateOf(13)
     }
 
     var checkVol  by remember {
@@ -217,7 +182,7 @@ fun EditDataEbook(
     ) { uri: Uri? ->
         capaUri = uri
 
-        updateStorage(capaState)
+        updateStorage(capaState.value)
         Log.i("uri image", uri.toString())
     }
 
@@ -243,7 +208,7 @@ fun EditDataEbook(
         }
         pdfUri = uri
 
-        updateStorage(pdfState)
+        updateStorage(pdfState.value)
         Log.i("uri pdf", uri.toString())
     }
 
@@ -267,7 +232,7 @@ fun EditDataEbook(
         }
         epubUri = uri
 
-        updateStorage(epubState)
+        updateStorage(epubState.value)
         Log.i("uri epub", uri.toString())
     }
 
@@ -291,27 +256,25 @@ fun EditDataEbook(
         }
         mobiUri = uri
 
-        updateStorage(mobiState)
+        updateStorage(mobiState.value)
         Log.i("uri mobi", uri.toString())
     }
 
-    val userIDRepository = UserIDrepository(context).getAll()
+    CallAnnouncementAPI.getAnnouncement(announcementID, userID) {
+//        capaState = it.capa
+//        pdfState = it.pdf
+//        epubState = it.epub
+//        mobiState = it.mobi ?: ""
+////        titleState = it.titulo
+//        priceState = it.preco.toString()
+//        sinopseState = it.sinopse
+//        volumeState = it.volume.toString()
+//        pagesState = it.qunatidadePaginas.toString()
+//        idParentalRatings = it.classificacao[0].idClassificacao!!
 
-    CallAnnouncementAPI.getAnnouncement(announcementID, userIDRepository[0].idUser) {
-        capaState = it.capa
-        pdfState = it.pdf
-        epubState = it.epub
-        mobiState = it.mobi ?: ""
-//        titleState = it.titulo
-        priceState = it.preco.toString()
-        sinopseState = it.sinopse
-        volumeState = it.volume.toString()
-        pagesState = it.qunatidadePaginas.toString()
-        idParentalRatings = it.classificacao[0].idClassificacao!!
-
-        if (getName(pdfState) != "0") pdfName = "${getName(pdfState).split(".pdf-")[0]}.pdf"
-        if (getName(epubState) != "0") epubName = "${getName(epubState).split(".epub-")[0]}.epub"
-        if (getName(mobiState) != "0") mobiName = "${getName(mobiState).split(".mobi-")[0]}.mobi"
+        if (getName(pdfState.value) != "0") pdfName = "${getName(pdfState.value).split(".pdf-")[0]}.pdf"
+        if (getName(epubState.value) != "0") epubName = "${getName(epubState.value).split(".epub-")[0]}.epub"
+        if (getName(mobiState.value) != "0") mobiName = "${getName(mobiState.value).split(".mobi-")[0]}.mobi"
     }
 
     var expanded by remember {
@@ -443,11 +406,11 @@ fun EditDataEbook(
                                 onClick = {
                                     CallAnnouncementAPI.deleteAnnouncement(announcementID) {
                                         if (it == 200) {
-                                            updateStorage(capaState)
+                                            updateStorage(capaState.value)
 
-                                            updateStorage(pdfState)
-                                            updateStorage(epubState)
-                                            if (mobiState.isNotEmpty()) updateStorage(mobiState)
+                                            updateStorage(pdfState.value)
+                                            updateStorage(epubState.value)
+                                            if (mobiState.value.isNotEmpty()) updateStorage(mobiState.value)
 
                                             navController.navigate(Routes.UserStories.name)
                                         }
@@ -539,7 +502,7 @@ fun EditDataEbook(
                 TextField(
                     modifier = Modifier
                         .focusRequester(priceFocusRequester),
-                    value = priceState,
+                    value = priceState.value,
                     onValueChange = {
                         // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
                         val lastChar = if (it.isEmpty()) it
@@ -551,7 +514,7 @@ fun EditDataEbook(
                             if (lastChar == ' ' || lastChar == '-') it.dropLast(1)  // se sim, remove 1 caracter 'do final para o começo'
                             else it // se não, o valor digitado é mantido intacto
 
-                        priceState = newValue // valor desejado, porque recebeu o valor do 'it'
+                        priceState.value = newValue // valor desejado, porque recebeu o valor do 'it'
                     },
                     label = {
                         Text(
@@ -602,9 +565,9 @@ fun EditDataEbook(
 
         Column(Modifier.padding(20.dp, 0.dp)) {
             TextField(
-                value = sinopseState,
+                value = sinopseState.value,
                 onValueChange = {
-                    sinopseState = it
+                    sinopseState.value = it
                 },
                 modifier = Modifier
                     .heightIn(120.dp)
@@ -667,7 +630,7 @@ fun EditDataEbook(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = parentalRatings[idParentalRatings - 13].classificacao,
+                            text = parentalRatings[idParentalRatings.value - 13].classificacao,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(4.dp, 10.dp)
                         )
@@ -690,7 +653,7 @@ fun EditDataEbook(
                                 selectedItem = index
                                 expanded = false
 
-                                idParentalRatings = parentalRatings[index].idClassificacao!!
+                                idParentalRatings.value = parentalRatings[index].idClassificacao!!
                             }
                         ) {
                             Text(text = item.classificacao)
@@ -738,9 +701,9 @@ fun EditDataEbook(
             Spacer(modifier = Modifier.height(12.dp))
 
             TextField(
-                value = volumeState,
+                value = volumeState.value,
                 onValueChange = {
-                    volumeState = it
+                    volumeState.value = it
                 },
                 label = {
                     Text(
@@ -781,9 +744,9 @@ fun EditDataEbook(
             Spacer(modifier = Modifier.height(12.dp))
 
             TextField(
-                value = pagesState,
+                value = pagesState.value,
                 onValueChange = {
-                    pagesState = it
+                    pagesState.value = it
                 },
                 label = {
                     Text(
@@ -1029,20 +992,20 @@ fun EditDataEbook(
                         }
 
                         //Verificação se o preço esta vazio
-                        if (priceState.isEmpty()) {
+                        if (priceState.value.isEmpty()) {
                             checkPrice = true
                             priceFocusRequester.requestFocus()
                         } else {
                             checkPrice = false
                         }
 
-                        if (sinopseState.isEmpty()) {
+                        if (sinopseState.value.isEmpty()) {
                             checkSinopse = true
                             sinopseFocusRequester.requestFocus()
                         } else checkSinopse = false
 
                         //Verificação se o volume esta vazio
-                        if (volumeState.isEmpty()) {
+                        if (volumeState.value.isEmpty()) {
                             checkVol = true
                             volFocusRequester.requestFocus()
                         } else {
@@ -1050,7 +1013,7 @@ fun EditDataEbook(
                         }
 
                         //Verificação se o campo de páginas esta vazio
-                        if (pagesState.isEmpty()) {
+                        if (pagesState.value.isEmpty()) {
                             checkPages = true
                             pagesFocusRequester.requestFocus()
                         } else {
@@ -1067,7 +1030,7 @@ fun EditDataEbook(
                                     titleState.value,
                                     context
                                 ) {
-                                    capaState = it
+                                    capaState.value = it
                                     capaCheck = true
                                 }
                             }
@@ -1076,7 +1039,7 @@ fun EditDataEbook(
                                 pdfCheck = false
 
                                 uploadFile(pdfUri!!, "file", "$pdfName-", context) {
-                                    pdfState = it
+                                    pdfState.value = it
                                     pdfCheck = true
                                 }
                             }
@@ -1090,7 +1053,7 @@ fun EditDataEbook(
                                     "$epubName-",
                                     context
                                 ) {
-                                    epubState = it
+                                    epubState.value = it
                                     epubCheck = true
                                 }
                             }
@@ -1104,7 +1067,7 @@ fun EditDataEbook(
                                     "$mobiName-",
                                     context
                                 ) {
-                                    mobiState = it
+                                    mobiState.value = it
                                     mobiCheck = true
                                 }
                             }
@@ -1112,18 +1075,18 @@ fun EditDataEbook(
                             if (capaCheck && pdfCheck && epubCheck && mobiCheck) {
                                 val announcement = AnnouncementPost(
                                     titulo = titleState.value,
-                                    volume = volumeState.toInt(),
-                                    capa = capaState,
-                                    sinopse = sinopseState,
-                                    qunatidadePaginas = pagesState.toInt(),
-                                    preco = priceState
+                                    volume = volumeState.value.toInt(),
+                                    capa = capaState.value,
+                                    sinopse = sinopseState.value,
+                                    qunatidadePaginas = pagesState.value.toInt(),
+                                    preco = priceState.value
                                         .replace(',', '.')
                                         .toFloat(),
-                                    idClassificacao = idParentalRatings,
-                                    idUsuario = userIDRepository[0].idUser,
-                                    epub = epubState,
-                                    pdf = pdfState,
-                                    mobi = if (mobiState.isNotEmpty()) mobiState else null,
+                                    idClassificacao = idParentalRatings.value,
+                                    idUsuario = userID,
+                                    epub = epubState.value,
+                                    pdf = pdfState.value,
+                                    mobi = if (mobiState.value.isNotEmpty()) mobiState.value else null,
                                     generos = generos,
                                 )
 
@@ -1162,11 +1125,11 @@ fun EditDataEbook(
 
 
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun DefaultPreview8() {
-    LoginPageTheme {
-        val navController = rememberNavController()
-        EditDataEbook(0, navController)
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun DefaultPreview8() {
+//    LoginPageTheme {
+//        val navController = rememberNavController()
+//        EditDataEbook(0, navController)
+//    }
+//}

@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.google.firebase.auth.FirebaseAuth
@@ -47,6 +48,8 @@ fun Greeting() {
     val currentUser = auth.currentUser // retorna a conta que está autenticada no dispositivo (se não tiver usuario, ele é nulo)
     val userAuth = currentUser != null
 
+
+    val userID = UserIDrepository(context).getAll()[0].idUser
     // registrando o id do usuário no sqlLite
 //    val userIDRepository = UserIDrepository(context)
 //    val users = userIDRepository.getAll()
@@ -93,6 +96,7 @@ fun Greeting() {
         ) {
             val announcementId = it.arguments!!.getInt("itemId")
 
+            addDataAnnouncement(userID, announcementId)
             EditDataEbook(announcementId, navController)
         }
 
