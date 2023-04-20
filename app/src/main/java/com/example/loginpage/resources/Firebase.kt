@@ -114,7 +114,7 @@ fun uploadFile(file: Uri, folder: String, fileName: String, context: Context, ur
         .reference
         .child("$folder/$fileName$discriminante")
 
-    imageRef.putFile(file)
+    if(file.toString().isNotEmpty()) imageRef.putFile(file)
         .addOnSuccessListener { p0 ->
             imageRef
                 .downloadUrl
@@ -131,4 +131,6 @@ fun uploadFile(file: Uri, folder: String, fileName: String, context: Context, ur
             var progress = (100.0 * p0.bytesTransferred) / p0.totalByteCount
             //pd.setMessage("Uploaded ${progress.toInt()}%")
         }
+    else
+        uri.invoke("")
 }

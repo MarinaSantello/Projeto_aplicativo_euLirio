@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -68,11 +69,20 @@ var pagesState: MutableState<String> = mutableStateOf("")
 var pdfState: MutableState<String> = mutableStateOf("")
 var epubState: MutableState<String> = mutableStateOf("")
 var mobiState: MutableState<String> = mutableStateOf("")
-var idParentalRatings: MutableState<Int> = mutableStateOf(0)
+var idParentalRatings: MutableState<Int> = mutableStateOf(13)
 
 fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
     CallAnnouncementAPI.getAnnouncement(announcementID, userID) {
+        capaState.value = it.capa
+        pdfState.value = it.pdf
+        epubState.value = it.epub
+        mobiState.value = it.mobi ?: ""
         titleState.value = it.titulo
+        priceState.value = it.preco.toString()
+        sinopseState.value = it.sinopse
+        volumeState.value = it.volume.toString()
+        pagesState.value = it.qunatidadePaginas.toString()
+        idParentalRatings.value = it.classificacao[0].idClassificacao!!
     }
 }
 class EditEbook : ComponentActivity() {
@@ -182,7 +192,8 @@ fun EditDataEbook(
     ) { uri: Uri? ->
         capaUri = uri
 
-        updateStorage(capaState.value)
+        if(capaState.value.isNotEmpty()) updateStorage(capaState.value)
+        capaState.value = ""
         Log.i("uri image", uri.toString())
     }
 
@@ -271,11 +282,10 @@ fun EditDataEbook(
 //        volumeState = it.volume.toString()
 //        pagesState = it.qunatidadePaginas.toString()
 //        idParentalRatings = it.classificacao[0].idClassificacao!!
-
-        if (getName(pdfState.value) != "0") pdfName = "${getName(pdfState.value).split(".pdf-")[0]}.pdf"
-        if (getName(epubState.value) != "0") epubName = "${getName(epubState.value).split(".epub-")[0]}.epub"
-        if (getName(mobiState.value) != "0") mobiName = "${getName(mobiState.value).split(".mobi-")[0]}.mobi"
     }
+    if (getName(pdfState.value) != "0") pdfName = "${getName(pdfState.value).split(".pdf-")[0]}.pdf"
+    if (getName(epubState.value) != "0") epubName = "${getName(epubState.value).split(".epub-")[0]}.epub"
+    if (getName(mobiState.value) != "0") mobiName = "${getName(mobiState.value).split(".mobi-")[0]}.mobi"
 
     var expanded by remember {
         mutableStateOf(false)
@@ -439,7 +449,7 @@ fun EditDataEbook(
 
 
             Image(
-                painter = rememberAsyncImagePainter(capaState),
+                painter = rememberAsyncImagePainter(capaUri ?: capaState.value),
                 contentDescription = "capa do seu livro",
                 modifier = Modifier
                     .height(160.dp)
@@ -965,16 +975,16 @@ fun EditDataEbook(
 
 
             var capaCheck by remember {
-                mutableStateOf(true)
+                mutableStateOf(false)
             }
             var pdfCheck by remember {
-                mutableStateOf(true)
+                mutableStateOf(false)
             }
             var epubCheck by remember {
-                mutableStateOf(true)
+                mutableStateOf(false)
             }
             var mobiCheck by remember {
-                mutableStateOf(true)
+                mutableStateOf(false)
             }
 
             Card(
@@ -983,6 +993,18 @@ fun EditDataEbook(
                     .fillMaxWidth()
                     .height(40.dp)
                     .clickable {
+//                        if (capaUri != null) {
+//                        } else capaCheck = true
+
+//                        if (pdfUri != null) {
+//                        } else pdfCheck = true
+
+//                        if (epubUri != null) {
+//                        } else epubCheck = true
+//
+//                        if (mobiUri != null) {
+//                        } else mobiCheck = true
+
                         //Verificação se o titulo está vazio
                         if (titleState.value.isEmpty()) {
                             checkTitle = true
@@ -1021,84 +1043,100 @@ fun EditDataEbook(
                         }
 
                         if (!checkTitle && !checkPrice && !checkSinopse && !checkClassification && !checkPages && !checkPDF && !checkEPUB && !checkFoto) {
-                            if (capaUri != null) {
-                                capaCheck = false
+
+                            uploadFile(
+                                if (capaUri != null) capaUri!! else "".toUri(),
+                                "cover",
+                                titleState.value,
+                                context
+                            ) { capa ->
+                                if (capa.isNotEmpty()) capaState.value = capa
+                                capaCheck = true
 
                                 uploadFile(
-                                    capaUri!!,
-                                    "cover",
-                                    titleState.value,
+                                    if (pdfUri != null) pdfUri!! else "".toUri(),
+                                    "file",
+                                    "$pdfName-",
                                     context
-                                ) {
-                                    capaState.value = it
-                                    capaCheck = true
-                                }
-                            }
-
-                            if (pdfUri != null) {
-                                pdfCheck = false
-
-                                uploadFile(pdfUri!!, "file", "$pdfName-", context) {
-                                    pdfState.value = it
+                                ) { pdf ->
+                                    if (pdf.isNotEmpty()) pdfState.value = pdf
                                     pdfCheck = true
-                                }
-                            }
 
-                            if (epubUri != null) {
-                                epubCheck = false
+                                    uploadFile(
+                                        if (epubUri != null) epubUri!! else "".toUri(),
+                                        "file",
+                                        "$epubName-",
+                                        context
+                                    ) { epub ->
+                                        if (epub.isNotEmpty()) epubState.value = epub
+                                        epubCheck = true
 
-                                uploadFile(
-                                    epubUri!!,
-                                    "file",
-                                    "$epubName-",
-                                    context
-                                ) {
-                                    epubState.value = it
-                                    epubCheck = true
-                                }
-                            }
+                                        uploadFile(
+                                            if (mobiUri != null) mobiUri!! else "".toUri(),
+                                            "file",
+                                            "$mobiName-",
+                                            context
+                                        ) { mobi ->
+                                            if (epub.isNotEmpty()) mobiState.value = mobi
+                                            mobiCheck = true
 
-                            if (mobiUri != null) {
-                                mobiCheck = false
+                                            val announcement = AnnouncementPost(
+                                                titulo = titleState.value,
+                                                volume = volumeState.value.toInt(),
+                                                capa = capaState.value,
+                                                sinopse = sinopseState.value,
+                                                qunatidadePaginas = pagesState.value.toInt(),
+                                                preco = priceState.value
+                                                    .replace(',', '.')
+                                                    .toFloat(),
+                                                idClassificacao = idParentalRatings.value,
+                                                idUsuario = userID,
+                                                epub = epubState.value,
+                                                pdf = pdfState.value,
+                                                mobi = if (mobiState.value.isNotEmpty()) mobiState.value else null,
+                                                generos = generos,
+                                            )
 
-                                uploadFile(
-                                    mobiUri!!,
-                                    "file",
-                                    "$mobiName-",
-                                    context
-                                ) {
-                                    mobiState.value = it
-                                    mobiCheck = true
-                                }
-                            }
-
-                            if (capaCheck && pdfCheck && epubCheck && mobiCheck) {
-                                val announcement = AnnouncementPost(
-                                    titulo = titleState.value,
-                                    volume = volumeState.value.toInt(),
-                                    capa = capaState.value,
-                                    sinopse = sinopseState.value,
-                                    qunatidadePaginas = pagesState.value.toInt(),
-                                    preco = priceState.value
-                                        .replace(',', '.')
-                                        .toFloat(),
-                                    idClassificacao = idParentalRatings.value,
-                                    idUsuario = userID,
-                                    epub = epubState.value,
-                                    pdf = pdfState.value,
-                                    mobi = if (mobiState.value.isNotEmpty()) mobiState.value else null,
-                                    generos = generos,
-                                )
-
-                                CallAnnouncementAPI.updateAnnouncement(
-                                    announcementID,
-                                    announcement
-                                ) {
-                                    if (it == 200) {
-                                        navController.navigate(Routes.Home.name)
+                                            CallAnnouncementAPI.updateAnnouncement(
+                                                announcementID,
+                                                announcement
+                                            ) {
+                                                if (it == 200) {
+                                                    navController.navigate(Routes.Home.name)
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
+//                            if(capaState.value.isNotEmpty()) {
+//                                Log.i("update livros", "hmkk")
+//                                val announcement = AnnouncementPost(
+//                                    titulo = titleState.value,
+//                                    volume = volumeState.value.toInt(),
+//                                    capa = capaState.value,
+//                                    sinopse = sinopseState.value,
+//                                    qunatidadePaginas = pagesState.value.toInt(),
+//                                    preco = priceState.value
+//                                        .replace(',', '.')
+//                                        .toFloat(),
+//                                    idClassificacao = idParentalRatings.value,
+//                                    idUsuario = userID,
+//                                    epub = epubState.value,
+//                                    pdf = pdfState.value,
+//                                    mobi = if (mobiState.value.isNotEmpty()) mobiState.value else null,
+//                                    generos = generos,
+//                                )
+//
+//                                CallAnnouncementAPI.updateAnnouncement(
+//                                    announcementID,
+//                                    announcement
+//                                ) {
+//                                    if (it == 200) {
+//                                        navController.navigate(Routes.Home.name)
+//                                    }
+//                                }
+//                            }
                         }
 
                     }
