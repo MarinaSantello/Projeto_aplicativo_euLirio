@@ -92,6 +92,7 @@
     <string name="title_activity_ebook">Ebook</string>
 
     <string name="title_ebook">E-book</string>
+    <string name="title_short_story">história pequena</string>
     <string name="ebook_edit">editar publicação</string>
     <string name="ebook_buy">comprar</string>
     <string name="ebook_bag">adicionar ao carrinho</string>

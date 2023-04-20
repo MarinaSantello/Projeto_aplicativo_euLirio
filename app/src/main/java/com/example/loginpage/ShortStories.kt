@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
@@ -54,7 +55,7 @@ class ShortStories : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShortStories("")
+                    ShortStories(1, rememberNavController())
                 }
             }
         }
@@ -62,7 +63,10 @@ class ShortStories : ComponentActivity() {
 }
 
 @Composable
-fun ShortStories(name: String) {
+fun ShortStories(
+    shortStoryId: Int,
+    navController: NavController
+) {
 
     val context = LocalContext.current
 
@@ -77,8 +81,6 @@ fun ShortStories(name: String) {
     val users = userIDRepository.getAll()
    // val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-   val nAOeSQUECAdEmUDARmARINA = rememberNavController()
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -91,8 +93,8 @@ fun ShortStories(name: String) {
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, false, context, nAOeSQUECAdEmUDARmARINA, null) },
+        topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, context, false) },
+        bottomBar = { BottomBarEbook(bottomBarState, false, context, navController, null) },
     ) {
         ShowStories(false, it.calculateBottomPadding(), context)
     }

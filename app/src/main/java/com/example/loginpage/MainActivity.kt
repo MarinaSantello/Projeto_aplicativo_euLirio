@@ -91,6 +91,15 @@ fun Greeting() {
         }
 
         composable(
+            "${Routes.ShortStory.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val shortStoryId = it.arguments!!.getInt("itemId")
+
+            ShortStories(shortStoryId, navController)
+        }
+
+        composable(
             "${Routes.EditEbook.name}/{itemId}",
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })
         ) {

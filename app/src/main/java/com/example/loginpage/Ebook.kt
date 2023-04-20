@@ -110,7 +110,7 @@ fun EbookView(
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(scaffoldState, topBarState, context, userAuthor.value) },
+        topBar = { TopBarEbook(stringResource(R.string.title_ebook), topBarState, context, userAuthor.value) },
         bottomBar = { BottomBarEbook(bottomBarState, userAuthor.value, context, navController, idAnnouncement) },
     ) {
         if (announcement != null) ShowEbook(idAnnouncement, announcement!!, userAuthor.value, it.calculateBottomPadding(), context)
@@ -819,7 +819,7 @@ fun BottomBarEbook(
 
 @Composable
 fun TopBarEbook(
-    scaffoldState: ScaffoldState,
+    title: String,
     topBarState: MutableState<Boolean>,
     context: Context,
     userAuthor: Boolean
@@ -840,7 +840,7 @@ fun TopBarEbook(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.title_ebook).uppercase(),
+                            text = title.uppercase(),
                             modifier = Modifier
                                 .fillMaxWidth(.8f),
 //                                .padding(end = 44.dp),

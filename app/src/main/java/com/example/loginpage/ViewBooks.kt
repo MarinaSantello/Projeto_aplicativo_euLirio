@@ -186,7 +186,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
-                        ShortStorysCard(it, userID)
+                        ShortStorysCard(it, navController, userID)
                     }
                 }
             }

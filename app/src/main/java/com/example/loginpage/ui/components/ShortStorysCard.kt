@@ -26,11 +26,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
 
@@ -38,6 +40,7 @@ import com.example.loginpage.ui.theme.*
 @Composable
 fun ShortStorysCard(
     shortStory: ShortStoryGet,
+    navController: NavController,
     userID: Int
 ) {
 
@@ -70,7 +73,10 @@ fun ShortStorysCard(
         modifier = Modifier
             .height(204.dp)
             .fillMaxWidth()
-            .padding(bottom = 2.dp),
+            .padding(bottom = 2.dp)
+            .clickable {
+                navController.navigate("${Routes.ShortStory.name}/${shortStory.id}")
+            },
         backgroundColor = Color.White,
         elevation = 0.dp
     ) {
