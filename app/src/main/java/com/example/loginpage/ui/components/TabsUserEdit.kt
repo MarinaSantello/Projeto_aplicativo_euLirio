@@ -147,33 +147,35 @@ fun TabsUserStories(
                     mutableStateOf(false)
                 }
 
-                if (selectedItem == 0) CallAPI.getUser(userID.toLong()) {
-                    if (it.anuncios.isNullOrEmpty()) announcementIsNull = true
-
-                    else {
-                        announcementSize = (it.anuncios!!.size - 1) ?: 0
-                        announcementsUser = it.anuncios!!
-                    }
-                }
-
-                var announcement by remember {
-                    mutableStateOf(listOf<AnnouncementGet>())
-                }
-
-                if (announcementsUser.isNotEmpty()) Column() {
-                    for (i in 0..announcementSize) {
-                        Log.i("id anuncio $i", announcementsUser[i].id.toString())
-
-                        CallAnnouncementAPI.getAnnouncmentsByUserActivated(userID) {
-                            announcement += it
+                if (selectedItem == 0) {
+                    CallAPI.getUser(userID.toLong()) {
+                        if (it.anunciosActivate.isNullOrEmpty()) announcementIsNull = true
+                        else {
+                            announcementSize = (it.anunciosActivate!!.size - 1) ?: 0
+                            announcementsUser = it.anunciosActivate!!
                         }
-//
-                        if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2)
                     }
+
+                    var announcement by remember {
+                        mutableStateOf(listOf<AnnouncementGet>())
+                    }
+
+                    if (announcementsUser.isNotEmpty()) Column() {
+                        for (i in 0..announcementSize) {
+                            Log.i("id anuncio $i", announcementsUser[i].id.toString())
+
+                            CallAnnouncementAPI.getAnnouncementsByUser(1, userID) {
+                                announcement += it
+                            }
+//
+                            if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2)
+                        }
+                    }
+
+                    if (announcementIsNull) Text(text = "Você não possui livros publicados.")
+
                 }
-
-                if (announcementIsNull) Text(text = "Você não possui livros publicados.")
-
+                else if (selectedItem == 1) Text(text = "curtas")
             }
             1 -> {
                 var selectedItem by remember {
@@ -231,24 +233,48 @@ fun TabsUserStories(
                     }
                 }
 
+                var announcementSize by remember {
+                    mutableStateOf(0)
+                }
+                var announcementsUser by remember {
+                    mutableStateOf(listOf<Anuncios>())
+                }
+                var announcementIsNull by remember {
+                    mutableStateOf(false)
+                }
 
-                if (selectedItem == 0) Text(text = "livros")
+                if (selectedItem == 0) {
+                    CallAPI.getUser(userID.toLong()) {
+                        if (it.anunciosDeactivate.isNullOrEmpty()) announcementIsNull = true
+                        else {
+                            announcementSize = (it.anunciosDeactivate!!.size - 1) ?: 0
+                            announcementsUser = it.anunciosDeactivate!!
+                        }
+                    }
+                    var announcement by remember {
+                        mutableStateOf(listOf<AnnouncementGet>())
+                    }
+
+                    if (announcementsUser.isNotEmpty()) Column() {
+                        for (i in 0..announcementSize) {
+                            Log.i("id anuncio $i", announcementsUser[i].id.toString())
+
+                            CallAnnouncementAPI.getAnnouncementsByUser(0, userID) {
+                                announcement += it
+                            }
+
+                            if (announcement.isNotEmpty()) AnnouncementCard(
+                                announcement[i],
+                                userID,
+                                navController,
+                                2
+                            )
+                        }
+                    }
+
+                    if (announcementIsNull) Text(text = "Você não possui livros desativados.")
+                }
                 else if (selectedItem == 1) Text(text = "curtas")
-
-//                var shortStory by remember {
-//                    mutableStateOf(listOf<ShortStoryGet>())
-//                }
-//
-//                //CallShortStoryAPI.getShortStories {
-//                CallShortStoryAPI.getShortStoriesByGenreUser(userID) {
-//                    shortStory = it
-//                }
-//
-//                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-//                    items(shortStory) {
-//                        ShortStorysCard(it)
-//                    }
-//                }
             }
         }
     }

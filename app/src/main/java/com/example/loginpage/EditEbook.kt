@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -70,6 +71,7 @@ var pdfState: MutableState<String> = mutableStateOf("")
 var epubState: MutableState<String> = mutableStateOf("")
 var mobiState: MutableState<String> = mutableStateOf("")
 var idParentalRatings: MutableState<Int> = mutableStateOf(13)
+var statusState: MutableState<Int?> = mutableStateOf(null)
 
 fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
     CallAnnouncementAPI.getAnnouncement(announcementID, userID) {
@@ -83,6 +85,7 @@ fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
         volumeState.value = it.volume.toString()
         pagesState.value = it.qunatidadePaginas.toString()
         idParentalRatings.value = it.classificacao[0].idClassificacao!!
+        statusState.value = it.status
     }
 }
 class EditEbook : ComponentActivity() {
@@ -132,7 +135,7 @@ fun EditDataEbook(
         mutableStateOf(false)
     }
 
-    var checkClassification  by remember {
+    val checkClassification  by remember {
         mutableStateOf(false)
     }
     var parentalRatings by remember {
@@ -151,15 +154,15 @@ fun EditDataEbook(
         mutableStateOf(false)
     }
 
-    var checkPDF  by remember {
+    val checkPDF  by remember {
         mutableStateOf(false)
     }
 
-    var checkEPUB  by remember {
+    val checkEPUB  by remember {
         mutableStateOf(false)
     }
 
-    var checkFoto by remember{
+    val checkFoto by remember{
         mutableStateOf(false)
     }
 
@@ -373,7 +376,7 @@ fun EditDataEbook(
                     }
                 }
 
-                val items1 = listOf("Desativar Ebook", "Apagar Ebook")
+                val items1 = listOf(if(statusState.value == 1) "Desativar e-book" else "Ativar e-book", "Apagar Ebook")
 
                 DropdownMenu(
                     expanded = expandedTopBar,
@@ -390,8 +393,14 @@ fun EditDataEbook(
                                 expandedTopBar = false
                                 expandedTopBarState = false
 
-//                                if (index == 0) CallAnnouncementAPI
-                                if (index == 1) showDialog = true
+                                if (index == 0) statusState?.value?.let {
+                                    CallAnnouncementAPI.statusAnnouncement(it, announcementID) { code, message ->
+                                        if (code == 200) Toast.makeText(context, message.replace("Item", "e-book"), Toast.LENGTH_SHORT)
+                                            .show()
+                                        else Log.i("desativar pub", message.toString())
+                                    }
+                                }
+                                else if (index == 1) showDialog = true
                             }
                         ) {
                             Text(text = item)
@@ -1077,7 +1086,7 @@ fun EditDataEbook(
                                             "$mobiName-",
                                             context
                                         ) { mobi ->
-                                            if (epub.isNotEmpty()) mobiState.value = mobi
+                                            if (mobi.isNotEmpty()) mobiState.value = mobi
                                             mobiCheck = true
 
                                             val announcement = AnnouncementPost(

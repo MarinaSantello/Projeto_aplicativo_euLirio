@@ -18,7 +18,11 @@ data class User(
 
     var tags: List<Tag>,
     var generos: List<Genero>,
-    var anuncios: List<Anuncios>?
+    @SerializedName("anuncios_desativados")
+    var anunciosDeactivate: List<Anuncios>?,
+
+    @SerializedName("anuncios_ativos")
+    var anunciosActivate: List<Anuncios>?
 ) {
     override fun toString(): String {
         return super.toString()

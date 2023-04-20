@@ -79,8 +79,8 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getAnnouncmentsByUserActivated(announcementID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
-            val callAnnouncements = announcementCall.getAllAnnouncementsByUserActivated(announcementID)
+        fun getAnnouncementsByUser(type: Int, announcementID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+            val callAnnouncements = if(type == 1) announcementCall.getAllAnnouncementsByUserActivated(announcementID) else announcementCall.getAllAnnouncementsByUserDeactivated(announcementID)
 
             Log.i("id anuncio", announcementID.toString())
             callAnnouncements.enqueue(object :
@@ -152,6 +152,26 @@ class CallAnnouncementAPI() {
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     //TODO("Not yet implemented")
                 }
+            })
+        }
+
+        fun statusAnnouncement(type: Int, announcementID: Int, apiReturn: (Int, String) -> Unit) {
+            val callAnnouncement = if (type == 1) announcementCall.deactivateAnnouncement(announcementID) else announcementCall.activateAnnouncement(announcementID)
+
+            Log.i("id anun", announcementID.toString())
+            callAnnouncement.enqueue(object :
+            Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+                    val message = response.body()!!
+
+                    apiReturn.invoke(status, message)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+
             })
         }
     }

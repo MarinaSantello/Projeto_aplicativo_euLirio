@@ -20,6 +20,9 @@ interface AnnouncementCall {
     @GET("activated-announcement/user-id/{id}")
     fun getAllAnnouncementsByUserActivated(@Path("id") userID: Int): Call<List<AnnouncementGet>>
 
+    @GET("desactivated-announcement/user-id/{id}")
+    fun getAllAnnouncementsByUserDeactivated(@Path("id") userID: Int): Call<List<AnnouncementGet>>
+
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("announcement")
     fun postAnnouncement(@Body announcementPost: AnnouncementPost): Call<String>
@@ -31,4 +34,10 @@ interface AnnouncementCall {
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @PUT("announcement/id/{id}")
     fun updateAnnouncement(@Path("id") userID: Int, @Body announcementPost: AnnouncementPost): Call<String>
+
+    @PUT("activate-announcement/id/{id}")
+    fun activateAnnouncement(@Path("id") announcementID: Int): Call<String>
+
+    @PUT("desactivate-announcement/id/{id}")
+    fun deactivateAnnouncement(@Path("id") announcementID: Int): Call<String>
 }
