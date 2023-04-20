@@ -78,11 +78,16 @@ fun EbookView(idAnnouncement: Int) {
     val topBarState = remember { mutableStateOf(true) }
     val bottomBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
+    var userAuthor = remember { mutableStateOf(false) }
 
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
     //val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+
+    CallAnnouncementAPI.getAnnouncement(idAnnouncement, users[0].idUser) {
+        userAuthor.value = (it.usuario[0].idUsuario == users[0].idUser)
+    }
 
     val navController = rememberNavController()
 
@@ -101,7 +106,7 @@ fun EbookView(idAnnouncement: Int) {
         topBar = { TopBarEbook(scaffoldState, topBarState, context, false) },
         bottomBar = { BottomBarEbook(bottomBarState, false, context) },
     ) {
-        ShowEbook(idAnnouncement, false, it.calculateBottomPadding(), context)
+        ShowEbook(idAnnouncement, userAuthor.value, it.calculateBottomPadding(), context)
     }
 }
 
@@ -660,7 +665,7 @@ fun ShowEbook(
                     text = stringResource(id = R.string.review),
                     fontSize = 12.sp,
                     fontFamily = QuickSand,
-                    modifier = Modifier.padding(start = 4.dp)
+                    modifier = Modifier.padding(start = 12.dp)
 
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -668,7 +673,7 @@ fun ShowEbook(
                 Divider(
                     color = Color.LightGray,
                     thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)
                 )
 
                 Row() {
@@ -692,7 +697,7 @@ fun ShowEbook(
                 Divider(
                     color = Color.LightGray,
                     thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)
                 )
             }
         }
