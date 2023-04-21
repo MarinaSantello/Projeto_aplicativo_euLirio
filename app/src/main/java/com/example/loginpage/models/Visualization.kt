@@ -13,8 +13,8 @@ data class VisualizationAnnouncement(
 data class CountVisualizationAnnouncement(
     @SerializedName("id_anuncio")
     var idAnuncio: Int?,
-    @SerializedName("id_usuario")
-    var idUsuario: Int?
+    @SerializedName("quantidade_lido")
+    var qtdeLidos: String
 )
 
 data class VisualizationShortStorie(
@@ -27,6 +27,6 @@ data class VisualizationShortStorie(
 data class CountVisualizationShortStorie(
     @SerializedName("id_historia_curta")
     var idHistoriaCurta: Int?,
-    @SerializedName("id_usuario")
-    var idUsuario: Int?
+    @SerializedName("quantidade_lidos")
+    var qtdeLidos: String
 )

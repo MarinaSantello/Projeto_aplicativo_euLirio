@@ -54,7 +54,7 @@ fun AnnouncementCard(
     announcement.curtido = likeStateAPI
 
     var likeState by remember {
-        mutableStateOf(announcement.curtido!!)
+        mutableStateOf(false)
     }
 
     var saveState by remember{
@@ -73,6 +73,10 @@ fun AnnouncementCard(
         mutableStateOf("")
     }
 
+    var quantidadeViewsState by remember{
+        mutableStateOf("")
+    }
+
 
     CallLikeAPI.countAnnouncementLikes(announcement.id!!){
         quantidadeLikesState = it.qtdeCurtidas
@@ -81,6 +85,13 @@ fun AnnouncementCard(
     CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!){
         quantidadeFavoritosState = it.qtdeFavoritos
     }
+
+    CallVisualizationAPI.countViewAnnouncement(announcement.id!!){
+        quantidadeViewsState = it.qtdeLidos
+    }
+
+
+
 
 
 
@@ -267,11 +278,11 @@ fun AnnouncementCard(
 
                                             CallLikeAPI.dislikeAnnouncement(announcementDislike)
 //                                            likeState = false
-                                        } else {
-//
+
                                             CallLikeAPI.countAnnouncementLikes(announcement.id!!){
                                                 quantidadeLikesState = it.qtdeCurtidas
                                             }
+                                        } else {
 
                                             val announcementLike = LikeAnnouncement(
                                                 idAnuncio = announcement.id,
@@ -281,9 +292,13 @@ fun AnnouncementCard(
                                             CallLikeAPI.likeAnnouncement(announcementLike)
 //                                            likeState = true
                                         }
+
+                                        CallLikeAPI.countAnnouncementLikes(announcement.id!!){
+                                            quantidadeLikesState = it.qtdeCurtidas
+                                        }
                                     }
                             ){
-
+                                Log.i("anuncio get", likeState.toString())
                                 //Verificação se o usuário curtiu a publicação
                                 if(likeState){
                                     Icon(
@@ -334,6 +349,7 @@ fun AnnouncementCard(
                                                 idUsuario = userID
                                             )
                                             CallFavoriteAPI.favoriteAnnouncement(announcementFavorite)
+
                                         }
                                     }
                             ){
@@ -374,18 +390,27 @@ fun AnnouncementCard(
                                                 idUsuario = userID
                                             )
                                             CallVisualizationAPI.unViewAnnouncement(unViewAnnouncement)
+
+                                            CallVisualizationAPI.countViewAnnouncement(announcement.id!!){
+                                                quantidadeViewsState = it.qtdeLidos
+                                            }
                                         }else{
                                             val viewAnnouncement = VisualizationAnnouncement(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
                                             )
                                             CallVisualizationAPI.viewAnnouncement(viewAnnouncement)
+
+                                            CallVisualizationAPI.countViewAnnouncement(announcement.id!!){
+                                                quantidadeViewsState = it.qtdeLidos
+                                            }
                                         }
 
                                     }
                             ){
 
                                 //Verificação se o usuário visualizou a publicação
+
                                 if(viewState){
                                     Icon(
                                         Icons.Rounded.CheckCircle,
@@ -401,7 +426,7 @@ fun AnnouncementCard(
                                 )
 
                                 Text(
-                                    text = "570",
+                                    text = quantidadeViewsState ?: "0",
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500

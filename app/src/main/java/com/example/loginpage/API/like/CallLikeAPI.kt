@@ -1,11 +1,11 @@
 package com.example.loginpage.API.like
 
 import android.util.Log
+import com.example.loginpage.API.announcement.AnnouncementCall
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.announcement.CallAnnouncementAPI.Companion.announcementCall
 import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.models.CountAnnouncementLikes
-import com.example.loginpage.models.CountShortStorieLikes
-import com.example.loginpage.models.LikeAnnouncement
-import com.example.loginpage.models.LikeShortStorie
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -187,6 +187,27 @@ class CallLikeAPI() {
                 }
 
                 override fun onFailure(call: Call<CountShortStorieLikes>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            }
+            )
+        }
+
+        fun verifyLikeAnnouncement(announcementId: Int, userId:Int, announcementData: (List<AnnouncementGet>) -> Unit){
+            val callVerifyLikeAnnouncement = announcementCall.statusAnnouncement(announcementId.toLong(), userId.toLong())
+
+            callVerifyLikeAnnouncement.enqueue(object:
+            Callback<List<AnnouncementGet>>{
+                override fun onResponse(
+                    call: Call<List<AnnouncementGet>>,
+                    response: Response<List<AnnouncementGet>>
+                ) {
+                    val announcement = response.body()!!
+                    announcementData.invoke(announcement)
+                }
+
+
+                override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
                     TODO("Not yet implemented")
                 }
             }

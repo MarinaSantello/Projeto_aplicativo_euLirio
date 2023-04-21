@@ -1,10 +1,7 @@
 package com.example.loginpage.API.visualization
 
 import com.example.loginpage.constants.Constant
-import com.example.loginpage.models.CountFavoriteAnnouncement
-import com.example.loginpage.models.CountFavoriteShortStorie
-import com.example.loginpage.models.VisualizationAnnouncement
-import com.example.loginpage.models.VisualizationShortStorie
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -21,7 +18,7 @@ interface VisualizationCall {
 
     //Obter a quantidade total de visualizações que o anuncio recebeu
     @GET("count-announcement-reads/announcement-id/{id}")
-    fun countViewsAnnouncement(@Path("id") id: Long): Call<CountFavoriteAnnouncement>
+    fun countViewsAnnouncement(@Path("id") id: Long): Call<CountVisualizationAnnouncement>
 
     //Adicionar a visualização da historia curta
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
@@ -34,8 +31,8 @@ interface VisualizationCall {
     fun unVisualizationShortStorie(@Body visualization: VisualizationShortStorie): Call<String>
 
     //Obter a quantidade total de visualizações que a historia curta recebeu
-    @GET("count-short-stories-reads/announcement-id/{id}")
-    fun countViewsShortStorie(@Path("id") id: Long): Call<CountFavoriteShortStorie>
+    @GET("count-short-stories-reads/short-storie-id/{id}")
+    fun countViewsShortStorie(@Path("id") id: Long): Call<CountVisualizationShortStorie>
 
 
 }

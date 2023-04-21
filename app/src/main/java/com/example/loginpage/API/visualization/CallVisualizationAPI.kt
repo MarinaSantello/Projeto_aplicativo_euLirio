@@ -3,8 +3,7 @@ package com.example.loginpage.API.visualization
 import android.util.Log
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.models.VisualizationAnnouncement
-import com.example.loginpage.models.VisualizationShortStorie
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -119,6 +118,58 @@ class CallVisualizationAPI() {
             )
             return retorno
         }
+
+        //Função para mostrar a quantidade de visualizações de um anuncio
+        fun countViewAnnouncement(announcementId: Int, quantidadeViews:(CountVisualizationAnnouncement) -> Unit){
+            val callCountViewsAnnouncement = visualizationCall.countViewsAnnouncement(announcementId.toLong())
+
+            callCountViewsAnnouncement.enqueue(object:
+            Callback<CountVisualizationAnnouncement>{
+                override fun onResponse(
+                    call: Call<CountVisualizationAnnouncement>,
+                    response: Response<CountVisualizationAnnouncement>
+                ) {
+                    val quantidadeViewsAnnouncement = response.body() ?: CountVisualizationAnnouncement(
+                        idAnuncio = announcementId,
+                        qtdeLidos = "0"
+                    )
+                    quantidadeViews.invoke(quantidadeViewsAnnouncement)
+                }
+
+                override fun onFailure(call: Call<CountVisualizationAnnouncement>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+
+
+        //Função para mostrar a quantidade de visualizações de uma historia curta
+        fun countViewShortStorie(shortStoryId:Int, qtdeViews:(CountVisualizationShortStorie) -> Unit){
+            val callCountVisualizationShortStorie = visualizationCall.countViewsShortStorie(shortStoryId.toLong())
+
+            callCountVisualizationShortStorie.enqueue(object:
+            Callback<CountVisualizationShortStorie>{
+                override fun onResponse(
+                    call: Call<CountVisualizationShortStorie>,
+                    response: Response<CountVisualizationShortStorie>
+                ) {
+                    val quantidadeViewsShortStorie = response.body() ?: CountVisualizationShortStorie(
+                        idHistoriaCurta = shortStoryId,
+                        qtdeLidos = "0"
+                    )
+
+                    qtdeViews.invoke(quantidadeViewsShortStorie)
+                }
+
+                override fun onFailure(call: Call<CountVisualizationShortStorie>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+            )
+        }
+
 
 
     }

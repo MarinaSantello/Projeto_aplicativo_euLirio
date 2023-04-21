@@ -154,11 +154,10 @@ class CallFavoriteAPI(){
                     call: Call<CountFavoriteShortStorie>,
                     response: Response<CountFavoriteShortStorie>
                 ) {
-                    val quantidadeFavoritosShortStorie = response.body()!!
-//                        ?: CountFavoriteAnnouncement(
-//                        idAnuncio = shortStorieId,
-//                        qtdeFavoritos = "0"
-//                    )
+                    val quantidadeFavoritosShortStorie = response.body() ?: CountFavoriteShortStorie(
+                        idHistoriaCurta = shortStorieId,
+                        qtdeFavoritos = "0"
+                    )
                     quantidadeFavoritos.invoke(quantidadeFavoritosShortStorie)
                 }
 

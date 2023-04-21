@@ -65,9 +65,27 @@ fun ShortStorysCard(
         mutableStateOf("")
     }
 
+    var quantidadeFavoritosState by remember {
+        mutableStateOf("")
+    }
+
+    var quantidadeViewsState by remember {
+        mutableStateOf("")
+    }
+
     CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
         quantidadeLikesState = it.qtdeCurtidas
     }
+
+    CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+        quantidadeFavoritosState = it.qtdeFavoritos
+    }
+
+    CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+        quantidadeViewsState = it.qtdeLidos
+    }
+
+
 
     Card(
         modifier = Modifier
@@ -292,6 +310,10 @@ fun ShortStorysCard(
                                     .clickable {
                                         saveState = !saveState
 
+                                        CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+                                            quantidadeFavoritosState = it.qtdeFavoritos
+                                        }
+
                                         if (!saveState) {
                                             val favoriteShortStorieUnCheck = FavoriteShortStorie(
                                                 idHistoriaCurta = shortStory.id,
@@ -308,6 +330,7 @@ fun ShortStorysCard(
                                             CallFavoriteAPI.favoriteShortStorie(
                                                 favoriteShortStorieCheck
                                             )
+
                                         }
                                     }
                             ) {
@@ -326,7 +349,7 @@ fun ShortStorysCard(
                                 )
 
                                 Text(
-                                    text = "570",
+                                    text = quantidadeFavoritosState,
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500
@@ -346,12 +369,20 @@ fun ShortStorysCard(
                                                 idUsuario = userID
                                             )
                                             CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
+
+                                            CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+                                                quantidadeViewsState = it.qtdeLidos
+                                            }
                                         } else {
                                             val viewShortStorie = VisualizationShortStorie(
                                                 idHistoriaCurta = shortStory.id,
                                                 idUsuario = userID
                                             )
                                             CallVisualizationAPI.viewShortStorie(viewShortStorie)
+
+                                            CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+                                                quantidadeViewsState = it.qtdeLidos
+                                            }
                                         }
                                     }
                             ) {
@@ -370,7 +401,7 @@ fun ShortStorysCard(
                                 )
 
                                 Text(
-                                    text = "44",
+                                    text = quantidadeViewsState ?: "1",
                                     fontSize = 10.sp,
                                     fontFamily = Montserrat2,
                                     fontWeight = FontWeight.W500

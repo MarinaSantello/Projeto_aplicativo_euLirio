@@ -27,5 +27,5 @@ data class CountFavoriteShortStorie(
     @SerializedName("id_historia_curta")
     var idHistoriaCurta: Int?,
     @SerializedName("quantidade_favoritos")
-    var qtdeCurtidas: String
+    var qtdeFavoritos: String
 )
