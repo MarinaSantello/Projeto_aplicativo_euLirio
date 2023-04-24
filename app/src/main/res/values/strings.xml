@@ -111,4 +111,5 @@ Etiam lacinia vulputate orci et bibendum. Fusce ipsum velit, tempor in velit vel
     <string name="title_activity_edit_ebook">EditEbook</string>
 
     <string name="texto_publicacao_curta">Publique narrativas curtas em seu perfil usando nossa plataforma web. Lembrando que recomendamos o uso de dispositivos desktop para uma experiência melhor.</string>
+    <string name="title_activity_search_view_books">SearchViewBooks</string>
 </resources>
