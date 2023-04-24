@@ -1,6 +1,8 @@
 package com.example.loginpage
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -20,13 +22,20 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,50 +46,41 @@ import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.models.FavoriteShortStorie
 import com.example.loginpage.models.LikeShortStorie
+import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.models.VisualizationShortStorie
 import com.example.loginpage.ui.theme.*
+import kotlinx.coroutines.launch
 
-
-class ShortStoryReader : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    ScreenBuilder()
-                }
-            }
-        }
-    }
-}
+//class ShortStoryReader : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    ScreenBuilder()
+//                }
+//            }
+//        }
+//    }
+//}
 
 var offset: MutableState<Float> = mutableStateOf(0f)
 var visibility: MutableState<Boolean> = mutableStateOf(true)
 
 @Composable
-fun ScreenBuilder() {
-    val scaffoldState = rememberScaffoldState()
+fun ScreenBuilder(shortStory: ShortStoryGet) {
+    val context = LocalContext.current
 
-    val html =
-        "<p><span style=\"font-size: 36pt;\">Tamanho de Fonte (de 8 pt a 36 pt) - Exemplo com 36 Pt</span></p>\n" +
-                "\n" +
-                "<p><strong>Negrito</strong> | <em>Italico </em> | <span style=\"text-decoration: underline;\">Underline</span></p>\n" +
-                "\n" +
-                "<p>Esquerda</p>\n" +
-                "<p style=\"text-align: center;\">Centro</p>\n" +
-                "<p style=\"text-align: right;\">Direita kn cfkjn kfjn kjn knk vnfkjgnfd sjkdfcjsdjfcv sdjfh jdhdjf bds fvghjdsdf gvjhsdfjvhsdfjvch vjvj dfjvjdf vjdfjngikejn ifn d ldsfvdsl.</p>\n" +
-                "<p style=\"text-align: justify;\">Justificado jhsbdfcjs dhb dsbfjhgfbcsghefv fbhghwe fvfdsghwef vwfdc ebghvfdesw wsdefgc wwedsfvgws </p>\n" +
-                "<p style=\"padding-left: 120px; text-align: center;\"><span style=\"text-decoration: underline; font-size: 18pt;\"><em><strong>Exemplo de Tudo Junto</strong></em></span></p>" +
-                "<p style=\"text-align: justify; padding-left: 40px;\">Identado</p>"
+    val scaffoldState = rememberScaffoldState()
 
     val htmlFontStyle =
         "<head><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap\" rel=\"stylesheet\"></head>\n" +
                 "<body>\n" +
-                html +
+                shortStory.historia +
                 "<style>body{font-family: 'Noto Serif', serif;}</style>\n" +
                 "</body>"
     Scaffold(
@@ -95,10 +95,10 @@ fun ScreenBuilder() {
             },
         scaffoldState = scaffoldState,
         topBar = {
-            TopBar()
+            TopBar(shortStory, context)
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(shortStory)
         },
     ) { contentPadding ->
         Surface(
@@ -112,7 +112,6 @@ fun ScreenBuilder() {
         }
     }
 }
-
 @Composable
 fun PageRender(htmlText: String) {
     var likeState by remember {
@@ -144,7 +143,12 @@ fun PageRender(htmlText: String) {
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(
+    shortStory: ShortStoryGet,
+    context: Context
+) {
+    val coroutineScope = rememberCoroutineScope()
+
     AnimatedVisibility(
         visible = visibility.value,
         modifier = Modifier.zIndex(2f),
@@ -154,33 +158,52 @@ fun TopBar() {
             Column {
                 TopAppBar(
                     title = {
-                        Text(
-                            text = "HISTÓRIA PEQUENA",
-                            fontWeight = FontWeight(700),
-                            fontFamily = MontSerratBold
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.title_short_story),
+                                modifier = Modifier
+                                    .fillMaxWidth(.9f),
+//                                .padding(end = 44.dp),
+                                color = colorResource(id = R.color.eulirio_black),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.h2
+                            )
+
+                            Icon(
+                                Icons.Rounded.MoreVert,
+                                contentDescription = "botao de menu",
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .fillMaxHeight()
+                                    .width(28.dp)
+                                    .clip(RoundedCornerShape(100.dp))
+                                    .clickable { },
+                                tint = colorResource(id = R.color.eulirio_black)
+                            )
+
+                        }
                     },
                     navigationIcon = {
                         IconButton(
                             onClick = {
-                                /* TODO */
+                                coroutineScope.launch {
+                                    val intent = Intent(context, Home::class.java)
+                                    context.startActivity(intent)
+                                }
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ChevronLeft,
-                                contentDescription = null,
+                                Icons.Rounded.ChevronLeft,
+                                contentDescription = "botao para voltar",
                                 modifier = Modifier
-                                    .height(40.dp)
-                                    .width(40.dp)
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                null,
-                                tint = colorResource(R.color.eulirio_black)
+                                    .fillMaxSize(.8f)
+                                    .padding(start = 12.dp)
+                                    .clip(RoundedCornerShape(100.dp)),
+                                tint = colorResource(id = R.color.eulirio_black)
                             )
                         }
                     },
@@ -215,7 +238,7 @@ fun TopBar() {
                                 .padding(10.dp)
                         ) {
                             Text(
-                                text = "Lorem Ipsum",
+                                text = shortStory.titulo,
                                 fontWeight = FontWeight(700),
                                 fontFamily = SpartanBold,
                                 fontSize = 25.sp
@@ -229,7 +252,7 @@ fun TopBar() {
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))
                                 Text(
-                                    text = "n.sebastian",
+                                    text = shortStory.usuario[0].userName,
                                     fontWeight = FontWeight(600),
                                     fontFamily = SpartanBold,
                                     fontSize = 16.sp
@@ -244,11 +267,11 @@ fun TopBar() {
 }
 
 @Composable
-fun BottomBar() {
+fun BottomBar(shortStory: ShortStoryGet) {
 
 
     var likeState by remember {
-        mutableStateOf(false)
+        mutableStateOf(shortStory.curtido)
     }
 
     var quantidadeLikesState by remember {
@@ -257,7 +280,7 @@ fun BottomBar() {
 
 
     var saveState by remember {
-        mutableStateOf(false)
+        mutableStateOf(shortStory.favorito)
     }
 
     var quantidadeFavoritosState by remember{
@@ -265,9 +288,8 @@ fun BottomBar() {
     }
 
 
-
     var viewState by remember {
-        mutableStateOf(false)
+        mutableStateOf(shortStory.lido)
     }
 
     var quantidadeViewsState by remember{
@@ -482,7 +504,7 @@ fun BottomBar() {
                                         color = colorResource(R.color.eulirio_black)
 
                                     )
-                                    Text(text = offset.value.toString())
+//                                    Text(text = offset.value.toString())
                                 }
                             }
                         }
@@ -508,7 +530,7 @@ fun WebViewComponent(htmlCode: String, onTap: (Boolean) -> Unit) {
     ) {
         AndroidView(
             modifier = Modifier
-                .size(200.dp),
+                .fillMaxSize(),
             factory = { context ->
                 val webView = WebView(context)
 
@@ -560,13 +582,14 @@ fun WebViewComponent(htmlCode: String, onTap: (Boolean) -> Unit) {
                         visibility.value = !visibility.value
                     }
                 )
-            })
+            }
+    )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview7() {
-    LoginPageTheme {
-        ScreenBuilder()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview7() {
+//    LoginPageTheme {
+//        ScreenBuilder()
+//    }
+//}

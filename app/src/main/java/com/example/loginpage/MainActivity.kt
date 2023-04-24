@@ -17,7 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.google.firebase.auth.FirebaseAuth
 
@@ -91,15 +93,6 @@ fun Greeting() {
         }
 
         composable(
-            "${Routes.ShortStory.name}/{itemId}",
-            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
-        ) {
-            val shortStoryId = it.arguments!!.getInt("itemId")
-
-            ShortStories(shortStoryId, navController)
-        }
-
-        composable(
             "${Routes.EditEbook.name}/{itemId}",
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })
         ) {
@@ -107,6 +100,33 @@ fun Greeting() {
 
             addDataAnnouncement(userID, announcementId)
             EditDataEbook(announcementId, navController)
+        }
+
+        composable(
+            "${Routes.ShortStory.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val shortStoryId = it.arguments!!.getInt("itemId")
+
+            ShortStory(shortStoryId, navController)
+        }
+
+        composable(
+            "${Routes.ShortStoryRender.name}/{itemId}/{userId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType }, navArgument("userId") { type = NavType.IntType })
+        ) {
+            val shortStoryId = it.arguments!!.getInt("itemId")
+            val userId = it.arguments!!.getInt("userId")
+
+            var shortStory by remember {
+                mutableStateOf<ShortStoryGet?>(null)
+            }
+
+            CallShortStoryAPI.getShortStoryByID(shortStoryId, userId) { shortStoryData ->
+                shortStory = shortStoryData
+            }
+
+            if (shortStory != null) ScreenBuilder(shortStory!!)
         }
 
 //        composable(Routes.PostEbook.name) {

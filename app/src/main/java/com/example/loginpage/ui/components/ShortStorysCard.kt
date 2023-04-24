@@ -57,10 +57,6 @@ fun ShortStorysCard(
         mutableStateOf(shortStory.lido)
     }
 
-    var viewComents by remember {
-        mutableStateOf(false)
-    }
-
 
     var quantidadeLikesState by remember {
         mutableStateOf("")
@@ -187,7 +183,7 @@ fun ShortStorysCard(
 
                     }
 
-                    var generos by remember {
+                    val generos by remember {
                         mutableStateOf(listOf<Generos>())
                     }
 

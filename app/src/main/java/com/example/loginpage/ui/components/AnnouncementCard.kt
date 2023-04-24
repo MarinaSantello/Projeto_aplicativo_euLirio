@@ -136,7 +136,7 @@ fun AnnouncementCard(
                     )
 
                     Text(
-                        text = announcement.usuario[0]!!.nomeUsuario,
+                        text = announcement.usuario[0].nomeUsuario,
                         fontSize = 10.sp,
                         fontFamily = SpartanMedium
                     )

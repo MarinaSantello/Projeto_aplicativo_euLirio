@@ -40,8 +40,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
+import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.*
@@ -55,7 +59,7 @@ class ShortStories : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShortStories(1, rememberNavController())
+                    ShortStory(1, rememberNavController())
                 }
             }
         }
@@ -63,7 +67,7 @@ class ShortStories : ComponentActivity() {
 }
 
 @Composable
-fun ShortStories(
+fun ShortStory(
     shortStoryId: Int,
     navController: NavController
 ) {
@@ -75,11 +79,20 @@ fun ShortStories(
     val topBarState = remember { mutableStateOf(true) }
     val bottomBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
+    var userAuthor by remember { mutableStateOf(false) }
 
     // registrando o id do usuário no sqlLite
-    val userIDRepository = UserIDrepository(context)
-    val users = userIDRepository.getAll()
-   // val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = UserIDrepository(context).getAll()[0].idUser
+
+    var shortStory by remember {
+        mutableStateOf<ShortStoryGet?>(null)
+    }
+
+    CallShortStoryAPI.getShortStoryByID(shortStoryId, userID) {
+        shortStory = it
+
+        userAuthor = (it.usuario[0].idUsuario == userID)
+    }
 
     Scaffold(
         modifier = Modifier
@@ -93,33 +106,34 @@ fun ShortStories(
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, context, false) },
-        bottomBar = { BottomBarEbook(bottomBarState, false, context, navController, null) },
+        topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, context, userAuthor) },
+        bottomBar = { if (shortStory != null) BottomBarShortStory(bottomBarState, context, navController, shortStory!!, userID) },
     ) {
-        ShowStories(false, it.calculateBottomPadding(), context)
+        if (shortStory != null) ShowStories(shortStory!!, it.calculateBottomPadding(), context)
     }
 }
 
 @Composable
 fun ShowStories(
-    userAuthor: Boolean,
+    shortStory: ShortStoryGet,
     bottomBarLength: Dp,
-    context: Context) {
+    context: Context
+) {
 
     var likeState by remember {
-        mutableStateOf(false)
+        mutableStateOf(shortStory.curtido)
     }
 
     var saveState by remember {
-        mutableStateOf(false)
+        mutableStateOf(shortStory.favorito)
     }
     var viewState by remember {
-        mutableStateOf(false)
+        mutableStateOf(shortStory.lido)
     }
 
-    var postState by remember {
-        mutableStateOf(false)
-    }
+    val mouths = listOf("Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez.")
+    val date = shortStory.data.split("T")[0].split("-")
+    val mouth = mouths[(date[1].toInt() - 1)]
 
     Column(
         modifier = Modifier
@@ -138,8 +152,8 @@ fun ShowStories(
                 .fillMaxWidth()
                 .height(168.dp),
             shape = RoundedCornerShape(
-                bottomEnd = if (userAuthor) 40.dp else 0.dp,
-                bottomStart = if (userAuthor) 40.dp else 0.dp
+                bottomEnd = 40.dp,
+                bottomStart = 40.dp
             ),
             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
             elevation = 0.dp
@@ -150,7 +164,7 @@ fun ShowStories(
                     .padding(28.dp, 12.dp)
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                    painter = rememberAsyncImagePainter(shortStory.capa),
                     contentDescription = "capa do livro",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -169,7 +183,7 @@ fun ShowStories(
                     Column() {
 
                         Text(
-                            text = "Lorem Ipsum",
+                            text = shortStory.titulo,
                             modifier = Modifier
                                 .padding(start = 4.dp),
                             fontWeight = FontWeight.Light,
@@ -180,10 +194,8 @@ fun ShowStories(
 
                         Spacer(modifier = Modifier.width(4.dp))
 
-                        val generos = listOf<String>("genero 1", "genero 2", "genero 4")
-
                         LazyRow() {
-                            items(generos) {
+                            items(shortStory.generos) {
                                 Card(
                                     modifier = Modifier
                                         .padding(start = 4.dp, end = 4.dp),
@@ -191,7 +203,7 @@ fun ShowStories(
                                     shape = RoundedCornerShape(100.dp),
                                 ) {
                                     Text(
-                                        text = it,//.nome.uppercase(),
+                                        text = it.nome.uppercase(),
                                         fontSize = 10.sp,
                                         fontFamily = MontSerratSemiBold,
                                         textAlign = TextAlign.Center,
@@ -389,66 +401,72 @@ fun ShowStories(
                 }
             }
         }
-
-        Column(modifier = Modifier.height(1000.dp)) {
-            Row {
-                Image(
-                    painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
-                    contentDescription = "foto da pessoa",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 8.dp)
-                        .width(30.dp)
-                        .clip(
-                            RoundedCornerShape(15.dp)
-                        )
-                )
-
-                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-
-                Column() {
-                    Text(
-                        text = "Noah Sebastian",
-                        fontSize = 16.sp,
-                        fontFamily = SpartanMedium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    Text(
-                        text = "@n.sebastian",
-                        fontSize = 14.sp,
-                        fontFamily = Spartan
-                    )
-
-                }
-                    Icon(
-                        Icons.Outlined.CalendarMonth,
-                        contentDescription = "icone de publicacoes",
+        Column (Modifier.height(1000.dp)) {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+                Row {
+                    Image(
+                        painter = rememberAsyncImagePainter(shortStory.usuario[0].foto),
+                        contentDescription = "foto da pessoa",
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .padding(horizontal = 4.dp)
-                            .clickable { postState = !postState },
-                        tint = Color.Black
+                            .padding(start = 8.dp, top = 8.dp)
+                            .size(36.dp)
+                            .clip(
+                                RoundedCornerShape(20.dp)
+                            )
                     )
+
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+
+                    Column() {
+                        Text(
+                            text = shortStory.usuario[0].nomeUsuario,
+                            fontSize = 16.sp,
+                            fontFamily = SpartanMedium,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                        Text(
+                            text = "@${shortStory.usuario[0].userName}",
+                            fontSize = 14.sp,
+                            fontFamily = Spartan
+                        )
+
+                    }
+                }
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            Icons.Outlined.CalendarMonth,
+                            contentDescription = "icone de publicacoes",
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp),
+                            tint = Color.Black
+                        )
+                        Text(
+                            text = "publicação",
+                            fontSize = 10.sp,
+                            fontFamily = QuickSand,
+                            fontWeight = FontWeight.W500,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.padding(4.dp))
+
                     Text(
-                        text = "publicação",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-                    )
-                Column() {
-                    Text(
-                        text = "12 Jun.2022",
+                        text = "${date[2]} $mouth ${date[0]}",
                         fontSize = 12.sp,
                         fontFamily = MontSerratSemiBold,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
-            Spacer(modifier = Modifier.padding(8.dp))
 
             //sinopse
             Column() {
                 Text(
-                    text = stringResource(id = R.string.review),
+                    text = shortStory.sinopse,
                     fontFamily = QuickSand,
                     textAlign = TextAlign.Justify,
                     modifier = Modifier.padding(8.dp)
@@ -468,7 +486,7 @@ fun ShowStories(
                         textAlign = TextAlign.End
                     )
                     Text(
-                        text = "Livre",
+                        text = shortStory.classificacao[0].classificacao,
                         fontFamily = SpartanBold,
                         modifier = Modifier.padding(start = 4.dp)
                     )
@@ -483,6 +501,40 @@ fun ShowStories(
     }
 }
 
+@Composable
+fun BottomBarShortStory(
+    bottomBarState: MutableState<Boolean>,
+    context: Context,
+    navController: NavController,
+    shortStory: ShortStoryGet,
+    userID: Int
+) {
+
+    AnimatedVisibility(
+        visible = bottomBarState.value,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it })
+    ) {
+
+        BottomAppBar(
+            modifier = Modifier.clickable {
+                navController.navigate("${Routes.ShortStoryRender.name}/${shortStory.id}/$userID")
+            },
+            backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
+        ) {
+            Text(
+                text = stringResource(R.string.read_short_story).uppercase(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.ExtraLight,
+                style = MaterialTheme.typography.h2
+            )
+        }
+    }
+}
 //@Preview(showBackground = true)
 //@Composable
 //fun DefaultPreview6() {

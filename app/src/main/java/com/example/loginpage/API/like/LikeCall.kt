@@ -38,6 +38,4 @@ interface LikeCall {
     @GET("verify-announcement-like")
     fun verifyAnnouncementLike(@Query("announcementID") announcementID: Int, @Query("userId") userID: Int): Call<Boolean>
 
-
-
 }

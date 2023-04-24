@@ -54,6 +54,26 @@ class CallShortStoryAPI {
 
             })
         }
+
+        fun getShortStoryByID(shortStoryID: Int, userID: Int, ShortStoryData: (ShortStoryGet) -> Unit) {
+            val callShortStories = shortStoryCall.getByID(shortStoryID, userID)
+
+            callShortStories.enqueue(object :
+                Callback<List<ShortStoryGet>> {
+                override fun onResponse(
+                    call: Call<List<ShortStoryGet>>,
+                    response: Response<List<ShortStoryGet>>
+                ) {
+                    val shortStory = response.body()!![0]
+
+                    ShortStoryData.invoke(shortStory)
+                }
+
+                override fun onFailure(call: Call<List<ShortStoryGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
     }
 
 }

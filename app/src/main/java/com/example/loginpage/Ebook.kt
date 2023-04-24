@@ -512,9 +512,9 @@ fun ShowEbook(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .padding(start = 8.dp, top = 8.dp)
-                        .width(30.dp)
+                        .size(36.dp)
                         .clip(
-                            RoundedCornerShape(15.dp)
+                            RoundedCornerShape(20.dp)
                         )
                 )
 
@@ -842,7 +842,7 @@ fun TopBarEbook(
                         Text(
                             text = title.uppercase(),
                             modifier = Modifier
-                                .fillMaxWidth(.8f),
+                                .fillMaxWidth(.9f),
 //                                .padding(end = 44.dp),
                             color = colorResource(id = R.color.eulirio_black),
                             textAlign = TextAlign.Center,
@@ -855,7 +855,7 @@ fun TopBarEbook(
                             modifier = Modifier
                                 .padding(end = 16.dp)
                                 .fillMaxHeight()
-                                .width(32.dp)
+                                .width(28.dp)
                                 .clip(RoundedCornerShape(100.dp))
                                 .clickable { },
                             tint = if (userAuthor) Color.Transparent else colorResource(
