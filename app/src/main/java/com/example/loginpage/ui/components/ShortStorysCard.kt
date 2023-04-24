@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,15 +45,15 @@ fun ShortStorysCard(
     userID: Int
 ) {
 
-    var likeState by remember {
+    var likeState by rememberSaveable {
+        mutableStateOf(shortStory.c)
+    }
+
+    var saveState by rememberSaveable {
         mutableStateOf(false)
     }
 
-    var saveState by remember {
-        mutableStateOf(false)
-    }
-
-    var viewState by remember {
+    var viewState by rememberSaveable {
         mutableStateOf(false)
     }
 

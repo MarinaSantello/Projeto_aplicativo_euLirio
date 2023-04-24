@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,20 +50,16 @@ fun AnnouncementCard(
     type: Int
 ) {
 
-    val likeStateAPI = CallLikeAPI.verifyAnnouncementLike(announcement.id!!, userID)
-
-    announcement.curtido = likeStateAPI
-
-    var likeState by remember {
-        mutableStateOf(false)
+    var likeState by rememberSaveable {
+        mutableStateOf(announcement.curtido)
     }
 
-    var saveState by remember{
-        mutableStateOf(false)
+    var saveState by rememberSaveable{
+        mutableStateOf(announcement.favorito)
     }
 
-    var viewState by remember{
-        mutableStateOf(false)
+    var viewState by rememberSaveable{
+        mutableStateOf(announcement.lido)
     }
 
     var quantidadeLikesState by remember{
@@ -279,7 +276,7 @@ fun AnnouncementCard(
                                             CallLikeAPI.dislikeAnnouncement(announcementDislike)
 //                                            likeState = false
 
-                                            CallLikeAPI.countAnnouncementLikes(announcement.id!!){
+                                            CallLikeAPI.countAnnouncementLikes(announcement.id!!) {
                                                 quantidadeLikesState = it.qtdeCurtidas
                                             }
                                         } else {
@@ -293,7 +290,7 @@ fun AnnouncementCard(
 //                                            likeState = true
                                         }
 
-                                        CallLikeAPI.countAnnouncementLikes(announcement.id!!){
+                                        CallLikeAPI.countAnnouncementLikes(announcement.id!!) {
                                             quantidadeLikesState = it.qtdeCurtidas
                                         }
                                     }
@@ -331,16 +328,18 @@ fun AnnouncementCard(
                                     .clickable {
                                         saveState = !saveState
 
-                                        if(!saveState){
+                                        if (!saveState) {
                                             val announcementUnFavorite = FavoriteAnnouncement(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
                                             )
-                                            CallFavoriteAPI.unfavoriteAnnouncement(announcementUnFavorite)
+                                            CallFavoriteAPI.unfavoriteAnnouncement(
+                                                announcementUnFavorite
+                                            )
 
-                                        }else{
+                                        } else {
 
-                                            CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!){
+                                            CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!) {
                                                 quantidadeFavoritosState = it.qtdeFavoritos
                                             }
 
@@ -348,7 +347,9 @@ fun AnnouncementCard(
                                                 idAnuncio = announcement.id,
                                                 idUsuario = userID
                                             )
-                                            CallFavoriteAPI.favoriteAnnouncement(announcementFavorite)
+                                            CallFavoriteAPI.favoriteAnnouncement(
+                                                announcementFavorite
+                                            )
 
                                         }
                                     }

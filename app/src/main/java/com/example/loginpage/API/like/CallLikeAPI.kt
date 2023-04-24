@@ -124,27 +124,6 @@ class CallLikeAPI() {
             return retorno
         }
 
-        fun verifyAnnouncementLike(announcementId: Int, userId: Int): Boolean {
-            val callVerifyAnnouncementLike = likeCall.verifyAnnouncementLike(announcementId, userId)
-            var teste: Boolean = false
-
-            callVerifyAnnouncementLike.enqueue(object:
-                Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    teste =  response.message().toBoolean()
-                    Log.i("respon post", response.message().toString())
-                }
-
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-
-            }
-            )
-
-            return teste
-        }
-
 
         fun countAnnouncementLikes(announcementId: Int, qtndLikes: (CountAnnouncementLikes) -> Unit){
             val callCountAnnouncementLike = likeCall.countAnnouncementLikes(announcementId.toLong())
@@ -187,27 +166,6 @@ class CallLikeAPI() {
                 }
 
                 override fun onFailure(call: Call<CountShortStorieLikes>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-            }
-            )
-        }
-
-        fun verifyLikeAnnouncement(announcementId: Int, userId:Int, announcementData: (List<AnnouncementGet>) -> Unit){
-            val callVerifyLikeAnnouncement = announcementCall.statusAnnouncement(announcementId.toLong(), userId.toLong())
-
-            callVerifyLikeAnnouncement.enqueue(object:
-            Callback<List<AnnouncementGet>>{
-                override fun onResponse(
-                    call: Call<List<AnnouncementGet>>,
-                    response: Response<List<AnnouncementGet>>
-                ) {
-                    val announcement = response.body()!!
-                    announcementData.invoke(announcement)
-                }
-
-
-                override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
                     TODO("Not yet implemented")
                 }
             }

@@ -13,7 +13,10 @@ data class ShortStoryGet(
     var classificacao:List<Classificacao>,
     var usuario:List<Usuario>,
     var tipo:List<Tipo>,
-    var generos:List<Genero>
+    var generos:List<Genero>,
+    var curtido: Boolean,
+    var favorito: Boolean,
+    var lido: Boolean,
 ){
     override fun toString(): String {
         return super.toString()

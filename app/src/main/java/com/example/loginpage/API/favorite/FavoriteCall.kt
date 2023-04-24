@@ -20,7 +20,7 @@ interface FavoriteCall{
     fun unFavoriteAnnouncement(@Body favorite: FavoriteAnnouncement): Call<String>
 
     //Obter a quantidade total de favoritos que o anuncio recebeu
-    @GET("count-short-stories-favorites/short-storie-id/{id}")
+    @GET("count-announcement-favorites/announcement-id/{id}")
     fun countFavoriteAnnouncement(@Path("id") id: Long): Call<CountFavoriteAnnouncement>
 
     //Favoritar uma historia curta
