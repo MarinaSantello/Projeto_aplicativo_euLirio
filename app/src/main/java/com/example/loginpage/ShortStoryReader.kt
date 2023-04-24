@@ -32,6 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
+import com.example.loginpage.API.favorite.CallFavoriteAPI
+import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.visualization.CallVisualizationAPI
+import com.example.loginpage.models.FavoriteShortStorie
+import com.example.loginpage.models.LikeShortStorie
+import com.example.loginpage.models.VisualizationShortStorie
 import com.example.loginpage.ui.theme.*
 
 
@@ -239,17 +245,49 @@ fun TopBar() {
 
 @Composable
 fun BottomBar() {
+
+
     var likeState by remember {
         mutableStateOf(false)
     }
+
+    var quantidadeLikesState by remember {
+        mutableStateOf("")
+    }
+
 
     var saveState by remember {
         mutableStateOf(false)
     }
 
+    var quantidadeFavoritosState by remember{
+        mutableStateOf("")
+    }
+
+
+
     var viewState by remember {
         mutableStateOf(false)
     }
+
+    var quantidadeViewsState by remember{
+        mutableStateOf("")
+    }
+
+
+    CallLikeAPI.countShortStoriesLikes(13){
+        quantidadeLikesState = it.qtdeCurtidas
+    }
+
+    CallFavoriteAPI.countFavoritesShortStories(13){
+        quantidadeFavoritosState = it.qtdeFavoritos
+    }
+
+    CallVisualizationAPI.countViewShortStorie(13){
+        quantidadeViewsState = it.qtdeLidos
+    }
+
+
     AnimatedVisibility(
         visible = visibility.value,
         enter = slideInVertically(initialOffsetY = { it }),
@@ -279,7 +317,30 @@ fun BottomBar() {
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
                                         .padding(end = 12.dp)
-                                        .clickable { likeState = !likeState }
+                                        .clickable {
+
+                                            likeState = !likeState
+                                            if (likeState) {
+
+                                                var shortStorieLike = LikeShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                                CallLikeAPI.likeShortStorie(shortStorieLike)
+
+                                            } else {
+                                                CallLikeAPI.countShortStoriesLikes(13){
+                                                    quantidadeLikesState = it.qtdeCurtidas
+                                                }
+
+
+                                                var shortStorieUnLike = LikeShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                                CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
+                                            }
+                                        }
                                 ) {
 
                                     //Verificação se o usuário curtiu a publicação
@@ -299,7 +360,7 @@ fun BottomBar() {
                                     Spacer(modifier = Modifier.width(2.dp))
 
                                     Text(
-                                        text = "570",
+                                        text = quantidadeLikesState,
                                         fontSize = 14.sp,
                                         fontFamily = Montserrat2,
                                         fontWeight = FontWeight.W500,
@@ -312,7 +373,31 @@ fun BottomBar() {
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
                                         .padding(end = 12.dp)
-                                        .clickable { saveState = !saveState }
+                                        .clickable {
+                                            saveState = !saveState
+
+                                            CallFavoriteAPI.countFavoritesShortStories(13){
+                                                quantidadeFavoritosState = it.qtdeFavoritos
+                                            }
+
+                                            if (!saveState) {
+                                                val favoriteShortStorieUnCheck = FavoriteShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                                CallFavoriteAPI.unfavoriteShortStorie(
+                                                    favoriteShortStorieUnCheck
+                                                )
+                                            } else {
+                                                val favoriteShortStorieCheck = FavoriteShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                                CallFavoriteAPI.favoriteShortStorie(
+                                                    favoriteShortStorieCheck
+                                                )
+                                            }
+                                        }
                                 ) {
 
                                     //Verificação se o favoritou a publicação
@@ -331,7 +416,7 @@ fun BottomBar() {
                                     Spacer(modifier = Modifier.width(2.dp))
 
                                     Text(
-                                        text = "570",
+                                        text = quantidadeFavoritosState  ?: "0",
                                         fontSize = 14.sp,
                                         fontFamily = Montserrat2,
                                         fontWeight = FontWeight.W500,
@@ -343,7 +428,35 @@ fun BottomBar() {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
-                                        .clickable { viewState = !viewState }
+                                        .clickable {
+
+                                            viewState = !viewState
+                                            if (!viewState) {
+                                                val unViewShortStorie = VisualizationShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                                CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
+
+                                                CallVisualizationAPI.countViewShortStorie(13){
+                                                    quantidadeViewsState = it.qtdeLidos
+                                                }
+                                            } else {
+                                                val viewShortStorie = VisualizationShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                                CallVisualizationAPI.viewShortStorie(viewShortStorie)
+
+                                                CallVisualizationAPI.countViewShortStorie(13){
+                                                    quantidadeViewsState = it.qtdeLidos
+                                                }
+                                            }
+
+
+
+
+                                        }
                                 ) {
 
                                     //Verificação se o usuário visualizou a publicação
@@ -362,7 +475,7 @@ fun BottomBar() {
                                     Spacer(modifier = Modifier.width(2.dp))
 
                                     Text(
-                                        text = "570",
+                                        text = quantidadeViewsState ?: "0",
                                         fontSize = 14.sp,
                                         fontFamily = Montserrat2,
                                         fontWeight = FontWeight.W500,

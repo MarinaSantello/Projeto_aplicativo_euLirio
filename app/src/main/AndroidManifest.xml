@@ -20,7 +20,7 @@
             android:label="@string/title_activity_edit_ebook"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".ShortStoryReader"
+            android:name=".MainActivity"
             android:exported="false"
             android:label="@string/title_activity_short_story_reader"
             android:theme="@style/Theme.LoginPage" />
@@ -95,7 +95,7 @@
             android:label="@string/title_activity_register_page"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ShortStoryReader"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LoginPage">
