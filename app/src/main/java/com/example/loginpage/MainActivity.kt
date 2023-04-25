@@ -126,7 +126,7 @@ fun Greeting() {
                 shortStory = shortStoryData
             }
 
-            if (shortStory != null) ScreenBuilder(shortStory!!)
+            if (shortStory != null) ScreenBuilder(shortStory!!, navController)
         }
 
 //        composable(Routes.PostEbook.name) {

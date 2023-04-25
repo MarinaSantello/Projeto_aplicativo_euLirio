@@ -21,9 +21,7 @@ import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.LoginPageTheme
 
-//class UserStories (navControllerClass: NavController) : ComponentActivity() {
-//    private val navController = navControllerClass
-//
+//class UserStories () : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        setContent {
@@ -33,7 +31,7 @@ import com.example.loginpage.ui.theme.LoginPageTheme
 //                    modifier = Modifier.fillMaxSize(),
 //                    color = MaterialTheme.colors.background
 //                ) {
-//                    ShowUserStories(navController)
+//                    ShowUserStories(rememberNavController())
 //                }
 //            }
 //        }

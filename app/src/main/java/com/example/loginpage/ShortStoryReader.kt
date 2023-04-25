@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,9 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.FavoriteShortStorie
 import com.example.loginpage.models.LikeShortStorie
 import com.example.loginpage.models.ShortStoryGet
@@ -72,7 +76,10 @@ var offset: MutableState<Float> = mutableStateOf(0f)
 var visibility: MutableState<Boolean> = mutableStateOf(true)
 
 @Composable
-fun ScreenBuilder(shortStory: ShortStoryGet) {
+fun ScreenBuilder(
+    shortStory: ShortStoryGet,
+    navController: NavController
+) {
     val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
@@ -81,7 +88,7 @@ fun ScreenBuilder(shortStory: ShortStoryGet) {
         "<head><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap\" rel=\"stylesheet\"></head>\n" +
                 "<body>\n" +
                 shortStory.historia +
-                "<style>body{font-family: 'Noto Serif', serif;}</style>\n" +
+                "<style>body{font-family: 'Noto Serif', serif; margin: 12px;}</style>\n" +
                 "</body>"
     Scaffold(
         modifier = Modifier
@@ -95,7 +102,7 @@ fun ScreenBuilder(shortStory: ShortStoryGet) {
             },
         scaffoldState = scaffoldState,
         topBar = {
-            TopBar(shortStory, context)
+            TopBar(shortStory, context, navController)
         },
         bottomBar = {
             BottomBar(shortStory)
@@ -145,7 +152,8 @@ fun PageRender(htmlText: String) {
 @Composable
 fun TopBar(
     shortStory: ShortStoryGet,
-    context: Context
+    context: Context,
+    navController: NavController
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -164,35 +172,33 @@ fun TopBar(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(R.string.title_short_story),
+                                text = stringResource(R.string.title_short_story).uppercase(),
                                 modifier = Modifier
-                                    .fillMaxWidth(.9f),
+                                    .fillMaxWidth(.82f),
 //                                .padding(end = 44.dp),
                                 color = colorResource(id = R.color.eulirio_black),
                                 textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.h2
+                                style = MaterialTheme.typography.h2,
+                                fontSize = 20.sp
                             )
 
                             Icon(
                                 Icons.Rounded.MoreVert,
                                 contentDescription = "botao de menu",
                                 modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .fillMaxHeight()
-                                    .width(28.dp)
+                                    .padding(start = 8.dp, end = 20.dp)
+                                    .fillMaxSize(.9f)
                                     .clip(RoundedCornerShape(100.dp))
                                     .clickable { },
                                 tint = colorResource(id = R.color.eulirio_black)
                             )
-
                         }
                     },
                     navigationIcon = {
                         IconButton(
                             onClick = {
                                 coroutineScope.launch {
-                                    val intent = Intent(context, Home::class.java)
-                                    context.startActivity(intent)
+                                    navController.popBackStack()
                                 }
                             }
                         ) {
@@ -325,187 +331,185 @@ fun BottomBar(shortStory: ShortStoryGet) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(end = 12.dp)
+                                .clickable { likeState = !likeState }
                         ) {
+                            //Linha de curtir
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
-                                    .clickable { likeState = !likeState }
-                            ) {
-                                //Linha de curtir
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .padding(end = 12.dp)
-                                        .clickable {
+                                    .clickable {
 
-                                            likeState = !likeState
-                                            if (likeState) {
+                                        likeState = !likeState
+                                        if (likeState) {
 
-                                                var shortStorieLike = LikeShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
-                                                )
-                                                CallLikeAPI.likeShortStorie(shortStorieLike)
+                                            var shortStorieLike = LikeShortStorie(
+                                                idHistoriaCurta = 13,
+                                                idUsuario = 113
+                                            )
+                                            CallLikeAPI.likeShortStorie(shortStorieLike)
 
-                                            } else {
-                                                CallLikeAPI.countShortStoriesLikes(13){
-                                                    quantidadeLikesState = it.qtdeCurtidas
-                                                }
-
-
-                                                var shortStorieUnLike = LikeShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
-                                                )
-                                                CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
+                                        } else {
+                                            CallLikeAPI.countShortStoriesLikes(13) {
+                                                quantidadeLikesState = it.qtdeCurtidas
                                             }
-                                        }
-                                ) {
 
-                                    //Verificação se o usuário curtiu a publicação
-                                    if (likeState) {
-                                        Icon(
-                                            Icons.Outlined.Favorite,
-                                            contentDescription = "icone de curtir",
-                                            tint = colorResource(R.color.eulirio_black)
-                                        )
-                                    } else Icon(
-                                        Icons.Outlined.FavoriteBorder,
+
+                                            var shortStorieUnLike = LikeShortStorie(
+                                                idHistoriaCurta = 13,
+                                                idUsuario = 113
+                                            )
+                                            CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
+                                        }
+                                    }
+                            ) {
+
+                                //Verificação se o usuário curtiu a publicação
+                                if (likeState) {
+                                    Icon(
+                                        Icons.Outlined.Favorite,
                                         contentDescription = "icone de curtir",
-                                        modifier = Modifier,
                                         tint = colorResource(R.color.eulirio_black)
                                     )
+                                } else Icon(
+                                    Icons.Outlined.FavoriteBorder,
+                                    contentDescription = "icone de curtir",
+                                    modifier = Modifier,
+                                    tint = colorResource(R.color.eulirio_black)
+                                )
 
-                                    Spacer(modifier = Modifier.width(2.dp))
+                                Spacer(modifier = Modifier.width(2.dp))
 
-                                    Text(
-                                        text = quantidadeLikesState,
-                                        fontSize = 14.sp,
-                                        fontFamily = Montserrat2,
-                                        fontWeight = FontWeight.W500,
-                                        color = colorResource(R.color.eulirio_black)
-                                    )
-                                }
+                                Text(
+                                    text = quantidadeLikesState,
+                                    fontSize = 14.sp,
+                                    fontFamily = Montserrat2,
+                                    fontWeight = FontWeight.W500,
+                                    color = colorResource(R.color.eulirio_black)
+                                )
+                            }
 
-                                //Linha de favoritar
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .padding(end = 12.dp)
-                                        .clickable {
-                                            saveState = !saveState
+                            //Linha de favoritar
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(end = 12.dp)
+                                    .clickable {
+                                        saveState = !saveState
 
-                                            CallFavoriteAPI.countFavoritesShortStories(13){
-                                                quantidadeFavoritosState = it.qtdeFavoritos
-                                            }
-
-                                            if (!saveState) {
-                                                val favoriteShortStorieUnCheck = FavoriteShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
-                                                )
-                                                CallFavoriteAPI.unfavoriteShortStorie(
-                                                    favoriteShortStorieUnCheck
-                                                )
-                                            } else {
-                                                val favoriteShortStorieCheck = FavoriteShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
-                                                )
-                                                CallFavoriteAPI.favoriteShortStorie(
-                                                    favoriteShortStorieCheck
-                                                )
-                                            }
+                                        CallFavoriteAPI.countFavoritesShortStories(13) {
+                                            quantidadeFavoritosState = it.qtdeFavoritos
                                         }
-                                ) {
 
-                                    //Verificação se o favoritou a publicação
-                                    if (saveState) {
-                                        Icon(
-                                            Icons.Outlined.Bookmark,
-                                            contentDescription = "icone de favoritar",
-                                            tint = colorResource(R.color.eulirio_black)
-                                        )
-                                    } else Icon(
-                                        Icons.Outlined.BookmarkAdd,
+                                        if (!saveState) {
+                                            val favoriteShortStorieUnCheck =
+                                                FavoriteShortStorie(
+                                                    idHistoriaCurta = 13,
+                                                    idUsuario = 113
+                                                )
+                                            CallFavoriteAPI.unfavoriteShortStorie(
+                                                favoriteShortStorieUnCheck
+                                            )
+                                        } else {
+                                            val favoriteShortStorieCheck = FavoriteShortStorie(
+                                                idHistoriaCurta = 13,
+                                                idUsuario = 113
+                                            )
+                                            CallFavoriteAPI.favoriteShortStorie(
+                                                favoriteShortStorieCheck
+                                            )
+                                        }
+                                    }
+                            ) {
+
+                                //Verificação se o favoritou a publicação
+                                if (saveState) {
+                                    Icon(
+                                        Icons.Outlined.Bookmark,
                                         contentDescription = "icone de favoritar",
                                         tint = colorResource(R.color.eulirio_black)
                                     )
+                                } else Icon(
+                                    Icons.Outlined.BookmarkAdd,
+                                    contentDescription = "icone de favoritar",
+                                    tint = colorResource(R.color.eulirio_black)
+                                )
 
-                                    Spacer(modifier = Modifier.width(2.dp))
+                                Spacer(modifier = Modifier.width(2.dp))
 
-                                    Text(
-                                        text = quantidadeFavoritosState  ?: "0",
-                                        fontSize = 14.sp,
-                                        fontFamily = Montserrat2,
-                                        fontWeight = FontWeight.W500,
-                                        color = colorResource(R.color.eulirio_black)
-                                    )
-                                }
+                                Text(
+                                    text = quantidadeFavoritosState  ?: "0",
+                                    fontSize = 14.sp,
+                                    fontFamily = Montserrat2,
+                                    fontWeight = FontWeight.W500,
+                                    color = colorResource(R.color.eulirio_black)
+                                )
+                            }
 
-                                //Linha de visualização
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .clickable {
+                            //Linha de visualização
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clickable {
 
-                                            viewState = !viewState
-                                            if (!viewState) {
-                                                val unViewShortStorie = VisualizationShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
-                                                )
-                                                CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
+                                        viewState = !viewState
+                                        if (!viewState) {
+                                            val unViewShortStorie = VisualizationShortStorie(
+                                                idHistoriaCurta = 13,
+                                                idUsuario = 113
+                                            )
+                                            CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
 
-                                                CallVisualizationAPI.countViewShortStorie(13){
-                                                    quantidadeViewsState = it.qtdeLidos
-                                                }
-                                            } else {
-                                                val viewShortStorie = VisualizationShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
-                                                )
-                                                CallVisualizationAPI.viewShortStorie(viewShortStorie)
-
-                                                CallVisualizationAPI.countViewShortStorie(13){
-                                                    quantidadeViewsState = it.qtdeLidos
-                                                }
+                                            CallVisualizationAPI.countViewShortStorie(13){
+                                                quantidadeViewsState = it.qtdeLidos
                                             }
+                                        } else {
+                                            val viewShortStorie = VisualizationShortStorie(
+                                                idHistoriaCurta = 13,
+                                                idUsuario = 113
+                                            )
+                                            CallVisualizationAPI.viewShortStorie(viewShortStorie)
 
-
-
-
+                                            CallVisualizationAPI.countViewShortStorie(13){
+                                                quantidadeViewsState = it.qtdeLidos
+                                            }
                                         }
-                                ) {
 
-                                    //Verificação se o usuário visualizou a publicação
-                                    if (viewState) {
-                                        Icon(
-                                            Icons.Rounded.CheckCircle,
-                                            contentDescription = "icone de visualizacão",
-                                            tint = colorResource(R.color.eulirio_black)
-                                        )
-                                    } else Icon(
-                                        Icons.Outlined.CheckCircle,
+
+
+
+                                    }
+                            ) {
+
+                                //Verificação se o usuário visualizou a publicação
+                                if (viewState) {
+                                    Icon(
+                                        Icons.Rounded.CheckCircle,
                                         contentDescription = "icone de visualizacão",
                                         tint = colorResource(R.color.eulirio_black)
                                     )
+                                } else Icon(
+                                    Icons.Outlined.CheckCircle,
+                                    contentDescription = "icone de visualizacão",
+                                    tint = colorResource(R.color.eulirio_black)
+                                )
 
-                                    Spacer(modifier = Modifier.width(2.dp))
+                                Spacer(modifier = Modifier.width(2.dp))
 
-                                    Text(
-                                        text = quantidadeViewsState ?: "0",
-                                        fontSize = 14.sp,
-                                        fontFamily = Montserrat2,
-                                        fontWeight = FontWeight.W500,
-                                        color = colorResource(R.color.eulirio_black)
+                                Text(
+                                    text = quantidadeViewsState ?: "0",
+                                    fontSize = 14.sp,
+                                    fontFamily = Montserrat2,
+                                    fontWeight = FontWeight.W500,
+                                    color = colorResource(R.color.eulirio_black)
 
-                                    )
+                                )
 //                                    Text(text = offset.value.toString())
-                                }
                             }
                         }
                     }
@@ -538,15 +542,15 @@ fun WebViewComponent(htmlCode: String, onTap: (Boolean) -> Unit) {
                     loadData(htmlCode, "text/html", "utf-8")
                 }
 
-                webView.settings.javaScriptEnabled = true
-                webView.setOnTouchListener { view, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        visibility.value = !visibility.value
-                    }
-                    // Forward touch events to parent view
-                    view.parent?.requestDisallowInterceptTouchEvent(false)
-                    false
-                }
+//                webView.settings.javaScriptEnabled = true
+//                webView.setOnTouchListener { view, event ->
+//                    if (event.action == MotionEvent.ACTION_DOWN) {
+//                        visibility.value = !visibility.value
+//                    }
+//                    // Forward touch events to parent view
+//                    view.parent?.requestDisallowInterceptTouchEvent(false)
+//                    false
+//                }
                 webView
             }
         )
@@ -584,6 +588,21 @@ fun WebViewComponent(htmlCode: String, onTap: (Boolean) -> Unit) {
                 )
             }
     )
+    
+    else Box (
+        Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopEnd
+    ) {
+        Icon(
+            Icons.Rounded.Info,
+            contentDescription = "icone para vizualizar mais informações sobre a publicação",
+            modifier = Modifier
+                .padding(top = 12.dp, end = 12.dp)
+                .clickable { visibility.value = true },
+            tint = colorResource(id = R.color.eulirio_purple_text_color_border)
+        )
+    }
 }
 
 //@Preview(showBackground = true)

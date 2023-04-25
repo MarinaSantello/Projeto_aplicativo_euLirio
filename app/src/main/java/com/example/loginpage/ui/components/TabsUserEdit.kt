@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Anuncios
+import com.example.loginpage.models.ShortStoryGet
 
 @Composable
 fun TabsUserStories(
@@ -137,17 +139,18 @@ fun TabsUserStories(
                     }
                 }
 
-                var announcementSize by remember {
-                    mutableStateOf(0)
-                }
-                var announcementsUser by remember {
-                    mutableStateOf(listOf<Anuncios>())
-                }
-                var announcementIsNull by remember {
-                    mutableStateOf(false)
-                }
-
                 if (selectedItem == 0) {
+
+                    var announcementSize by remember {
+                        mutableStateOf(0)
+                    }
+                    var announcementsUser by remember {
+                        mutableStateOf(listOf<Anuncios>())
+                    }
+                    var announcementIsNull by remember {
+                        mutableStateOf(false)
+                    }
+
                     CallAPI.getUser(userID.toLong()) {
                         if (it.anunciosActivate.isNullOrEmpty()) announcementIsNull = true
                         else {
@@ -165,7 +168,7 @@ fun TabsUserStories(
                             Log.i("id anuncio $i", announcementsUser[i].id.toString())
 
                             CallAnnouncementAPI.getAnnouncementsByUser(1, userID) {
-                                announcement += it
+                                announcement = it
                             }
 //
                             if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2)
@@ -175,7 +178,45 @@ fun TabsUserStories(
                     if (announcementIsNull) Text(text = "Você não possui livros publicados.")
 
                 }
-                else if (selectedItem == 1) Text(text = "curtas")
+                else if (selectedItem == 1) {
+
+                    var shortStoriesSize by remember {
+                        mutableStateOf(0)
+                    }
+                    var shortStoriesUser by remember {
+                        mutableStateOf(listOf<Anuncios>())
+                    }
+                    var shortStoriesIsNull by remember {
+                        mutableStateOf(false)
+                    }
+
+                    CallAPI.getUser(userID.toLong()) {
+                        if (it.shortStoriesActivate.isNullOrEmpty()) shortStoriesIsNull = true
+                        else {
+                            shortStoriesSize = (it.shortStoriesActivate!!.size - 1) ?: 0
+                            shortStoriesUser = it.shortStoriesActivate!!
+                        }
+                    }
+
+                    var shortStories by remember {
+                        mutableStateOf(listOf<ShortStoryGet>())
+                    }
+
+                    if (shortStoriesUser.isNotEmpty()) Column() {
+                        for (i in 0..shortStoriesSize) {
+                            Log.i("id anuncio $i", shortStoriesUser[i].id.toString())
+
+                            CallShortStoryAPI.getShortStoriesByUser(1, userID) {
+                                shortStories = it
+                            }
+
+                            if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID)
+                        }
+                    }
+
+                    if (shortStoriesIsNull) Text(text = "Você não possui pequenas histórias publicados.")
+
+                }
             }
             1 -> {
                 var selectedItem by remember {
@@ -260,7 +301,7 @@ fun TabsUserStories(
                             Log.i("id anuncio $i", announcementsUser[i].id.toString())
 
                             CallAnnouncementAPI.getAnnouncementsByUser(0, userID) {
-                                announcement += it
+                                announcement = it
                             }
 
                             if (announcement.isNotEmpty()) AnnouncementCard(
@@ -274,7 +315,46 @@ fun TabsUserStories(
 
                     if (announcementIsNull) Text(text = "Você não possui livros desativados.")
                 }
-                else if (selectedItem == 1) Text(text = "curtas")
+                else if (selectedItem == 1) {
+
+
+                    var shortStoriesSize by remember {
+                        mutableStateOf(0)
+                    }
+                    var shortStoriesUser by remember {
+                        mutableStateOf(listOf<Anuncios>())
+                    }
+                    var shortStoriesIsNull by remember {
+                        mutableStateOf(false)
+                    }
+
+                    CallAPI.getUser(userID.toLong()) {
+                        if (it.shortStoriesDeactivate.isNullOrEmpty()) shortStoriesIsNull = true
+                        else {
+                            shortStoriesSize = (it.shortStoriesDeactivate!!.size - 1) ?: 0
+                            shortStoriesUser = it.shortStoriesDeactivate!!
+                        }
+                    }
+
+                    var shortStories by remember {
+                        mutableStateOf(listOf<ShortStoryGet>())
+                    }
+
+                    if (shortStoriesUser.isNotEmpty()) Column() {
+                        for (i in 0..shortStoriesSize) {
+                            Log.i("id anuncio $i", shortStoriesUser[i].id.toString())
+
+                            CallShortStoryAPI.getShortStoriesByUser(0, userID) {
+                                shortStories = it
+                            }
+
+                            if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID)
+                        }
+                    }
+
+                    if (shortStoriesIsNull) Text(text = "Você não possui pequenas histórias desativadas.")
+
+                }
             }
         }
     }

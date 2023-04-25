@@ -22,7 +22,13 @@ data class User(
     var anunciosDeactivate: List<Anuncios>?,
 
     @SerializedName("anuncios_ativos")
-    var anunciosActivate: List<Anuncios>?
+    var anunciosActivate: List<Anuncios>?,
+
+    @SerializedName("historias_curtas_ativas")
+    var shortStoriesActivate: List<Anuncios>?,
+
+    @SerializedName("historias_curtas_desativadas")
+    var shortStoriesDeactivate: List<Anuncios>?
 ) {
     override fun toString(): String {
         return super.toString()

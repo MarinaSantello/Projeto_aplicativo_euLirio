@@ -403,6 +403,9 @@ fun DrawerDesign(
                         .clickable {
                             navController.navigate(Routes.UserStories.name)
 
+//                            val intent = Intent(context, UserStories::class.java)
+//
+//                            context.startActivity(intent)
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
                             }

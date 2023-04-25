@@ -308,7 +308,9 @@ fun accountCreate(context: Context,
                 tags = tags,
                 generos = generos,
                 anunciosActivate = null,
-                anunciosDeactivate = null
+                anunciosDeactivate = null,
+                shortStoriesActivate = null,
+                shortStoriesDeactivate = null
             )
 
             val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
