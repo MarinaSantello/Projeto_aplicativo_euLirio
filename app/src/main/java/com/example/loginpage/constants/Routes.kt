@@ -12,5 +12,6 @@ enum class Routes {
     CardEbook,
     Feed,
     PostEbook,
-    EditEbook
+    EditEbook,
+    ShoppingCart
 }

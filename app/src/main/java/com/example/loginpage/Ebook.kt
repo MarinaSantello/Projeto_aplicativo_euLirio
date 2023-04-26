@@ -45,11 +45,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.cart.CallCartAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.Cart
 import com.example.loginpage.models.Generos
 import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
@@ -110,8 +112,8 @@ fun EbookView(
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(stringResource(R.string.title_ebook), topBarState, context, userAuthor.value) },
-        bottomBar = { BottomBarEbook(bottomBarState, userAuthor.value, context, navController, idAnnouncement) },
+        topBar = { TopBarEbook(stringResource(R.string.title_ebook), topBarState, context, userAuthor.value, navController) },
+        bottomBar = { BottomBarEbook(bottomBarState, userAuthor.value, context, navController, idAnnouncement, userID) },
     ) {
         if (announcement != null) ShowEbook(idAnnouncement, announcement!!, userAuthor.value, it.calculateBottomPadding(), context)
     }
@@ -504,6 +506,9 @@ fun ShowEbook(
             }
         }
 
+
+        Spacer(modifier = Modifier.padding(vertical = 20.dp))
+
         Column(Modifier.height(1000.dp)) {
             Row {
                 Image(
@@ -512,9 +517,9 @@ fun ShowEbook(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .padding(start = 8.dp, top = 8.dp)
-                        .size(36.dp)
+                        .width(30.dp)
                         .clip(
-                            RoundedCornerShape(20.dp)
+                            RoundedCornerShape(15.dp)
                         )
                 )
 
@@ -523,19 +528,19 @@ fun ShowEbook(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = announcement.usuario[0].nomeUsuario,
-                        fontSize = 16.sp,
+                        fontSize = 22.sp,
                         fontFamily = SpartanMedium,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 11.dp)
                     )
                     Text(
                         text = "@${announcement.usuario[0].userName}",
-                        fontSize = 14.sp,
+                        fontSize = 20.sp,
                         fontFamily = Spartan
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(15.dp))
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.width(25.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             //row dos icones
             Row(modifier = Modifier.fillMaxWidth(),
@@ -569,7 +574,7 @@ fun ShowEbook(
 
                 }
 
-                Spacer(modifier = Modifier.width(15.dp))
+                Spacer(modifier = Modifier.width(20.dp))
 
                 //coluna de volumes
                 Column() {
@@ -625,7 +630,7 @@ fun ShowEbook(
 
                 }
 
-                Spacer(modifier = Modifier.width(15.dp))
+                Spacer(modifier = Modifier.width(20.dp))
 
                 //coluns de publicaçao
                 Column() {
@@ -654,7 +659,7 @@ fun ShowEbook(
 
                 }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Divider(
                 color = Color.Gray,
@@ -672,7 +677,7 @@ fun ShowEbook(
                     modifier = Modifier.padding(start = 12.dp)
 
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Divider(
                     color = Color.LightGray,
@@ -721,8 +726,10 @@ fun BottomBarEbook(
     userAuthor: Boolean,
     context: Context,
     navController: NavController,
-    idAnnouncement: Int?
+    idAnnouncement: Int?,
+    userID: Int
 ) {
+
     AnimatedVisibility(
         visible = bottomBarState.value,
         enter = slideInVertically(initialOffsetY = { it }),
@@ -759,9 +766,18 @@ fun BottomBarEbook(
                                 .fillMaxWidth(.5f)
                                 .fillMaxHeight()
                                 .clickable {
-                                    Toast
-                                        .makeText(context, "oi", Toast.LENGTH_SHORT)
-                                        .show()
+                                    val cart = idAnnouncement?.let {
+                                        Cart(
+                                            anuncioID = it,
+                                            userID = userID
+                                        )
+                                    }
+
+                                    CallCartAPI.putInCart(cart!!) {
+                                        Toast
+                                            .makeText(context, it, Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
                                 },
                             shape = RoundedCornerShape(0.dp),
                             backgroundColor = Color.White,
@@ -822,7 +838,8 @@ fun TopBarEbook(
     title: String,
     topBarState: MutableState<Boolean>,
     context: Context,
-    userAuthor: Boolean
+    userAuthor: Boolean,
+    navController: NavController
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -842,7 +859,7 @@ fun TopBarEbook(
                         Text(
                             text = title.uppercase(),
                             modifier = Modifier
-                                .fillMaxWidth(.9f),
+                                .fillMaxWidth(.8f),
 //                                .padding(end = 44.dp),
                             color = colorResource(id = R.color.eulirio_black),
                             textAlign = TextAlign.Center,
@@ -855,7 +872,7 @@ fun TopBarEbook(
                             modifier = Modifier
                                 .padding(end = 16.dp)
                                 .fillMaxHeight()
-                                .width(28.dp)
+                                .width(32.dp)
                                 .clip(RoundedCornerShape(100.dp))
                                 .clickable { },
                             tint = if (userAuthor) Color.Transparent else colorResource(
@@ -868,10 +885,7 @@ fun TopBarEbook(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            coroutineScope.launch {
-                                val intent = Intent(context, Home::class.java)
-                                context.startActivity(intent)
-                            }
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(

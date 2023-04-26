@@ -109,4 +109,5 @@
 
     <string name="texto_publicacao_curta">Publique narrativas curtas em seu perfil usando nossa plataforma web. Lembrando que recomendamos o uso de dispositivos desktop para uma experiência melhor.</string>
     <string name="title_activity_search_view_books">SearchViewBooks</string>
+    <string name="title_activity_shopping_cart">ShoppingCart</string>
 </resources>

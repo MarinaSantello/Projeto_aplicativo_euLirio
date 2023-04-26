@@ -81,7 +81,6 @@ fun ShowBooks(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xffFAF0B8)),
-
     ) {
         //Layout do perfil
         when (type) {
@@ -92,6 +91,8 @@ fun ShowBooks(
 
             //Layout das obras do usuario
             3 -> TabsUserStories(userID, bottomBarLength, navController)
+
+            4 -> ShowItemsCart(userID, bottomBarLength, navController)
         }
     }
 

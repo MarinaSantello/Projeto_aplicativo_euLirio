@@ -129,6 +129,15 @@ fun Greeting() {
             if (shortStory != null) ScreenBuilder(shortStory!!, navController)
         }
 
+        composable(
+            "${Routes.ShoppingCart.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val userId = it.arguments!!.getInt("itemId")
+
+            ShoppingCartPage(navController, userId)
+        }
+
 //        composable(Routes.PostEbook.name) {
 //            InputDataEbook(navController)
 //        }
