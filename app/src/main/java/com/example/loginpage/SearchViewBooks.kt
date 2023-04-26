@@ -30,6 +30,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -128,7 +130,7 @@ fun SearchBooks(navController: NavController) {
         ShowBooks(users[0].idUser, it.calculateBottomPadding(), 2, navController)
     }
 
-    if(!fabState.value) ButtonsPost(navController, context) {
+    if (!fabState.value) ButtonsPost(navController, context) {
         fabState.value = it
     }
 }
@@ -144,7 +146,13 @@ fun TopBarSearch(
         mutableStateOf("")
     }
 
-    CallAPI.getUser(userID.idUser.toLong()){
+    var searchState by remember {
+        mutableStateOf("")
+    }
+
+    val RoundedCornerShape = RoundedCornerShape(20.dp)
+
+    CallAPI.getUser(userID.idUser.toLong()) {
         foto = it.foto
     }
 
@@ -156,18 +164,65 @@ fun TopBarSearch(
         content = {
             TopAppBar(
                 title = {
-                    Card(
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .height(30.dp)
-                            .width(240.dp)
-                    ){}
-                    Icon(
-                        imageVector = Icons.Outlined.Menu,
-                        contentDescription = "Menu burguer",
-                        modifier = Modifier
-                            .size(48.dp, 40.dp)
-                            .clickable {}
-                    )
+                            .fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .height(45.dp)
+                                .width(280.dp)
+                                .padding(end = 10.dp)
+                                .background(Color.White)
+                                .border(
+                                    1.dp,
+                                    color = Color.Black,
+                                    shape = RoundedCornerShape(20.dp)
+                                )
+                        ) {
+                            TextField(
+                                value = searchState,
+                                onValueChange = { searchState = it },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .align(Alignment.CenterStart)
+                                    .padding(0.dp),
+                                placeholder = {
+                                    Text(
+                                        text = "Buscar por obras e autores",
+                                        fontSize = 8.sp
+                                    )
+
+                                },
+                                singleLine = true,
+                                colors = TextFieldDefaults.textFieldColors(
+                                    backgroundColor = Color.White,
+                                    textColor = Color.Black,
+                                    cursorColor = Color.Black,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                textStyle = TextStyle(fontSize = 8.sp)
+
+                            )
+
+                        }
+
+                        Icon(
+                            imageVector = Icons.Outlined.Menu,
+                            contentDescription = "Menu burguer",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clickable {}
+
+                        )
+
+                    }
+
                 },
                 navigationIcon = {
                     IconButton(
@@ -179,7 +234,10 @@ fun TopBarSearch(
                     ) {
 
                         Image(
-                            rememberAsyncImagePainter(foto ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                            rememberAsyncImagePainter(
+                                foto
+                                    ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            ),
                             contentScale = ContentScale.Crop,
                             contentDescription = "foto de perfil",
                             modifier = Modifier
@@ -188,10 +246,6 @@ fun TopBarSearch(
                                 .clip(RoundedCornerShape(100.dp))
                         )
 
-//                        Icon(
-//                            Icons.Filled.Menu,
-//                            contentDescription = "Localized description"
-//                        )
                     }
                 },
                 backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
@@ -226,7 +280,11 @@ fun TabsFeedSearch(
             tabs.forEachIndexed { index, title ->
                 Tab(
                     text = {
-                        val icons = listOf(Icons.Outlined.MenuBook, Icons.Outlined.FormatAlignCenter, Icons.Rounded.Person)
+                        val icons = listOf(
+                            Icons.Outlined.MenuBook,
+                            Icons.Outlined.FormatAlignCenter,
+                            Icons.Rounded.Person
+                        )
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically
