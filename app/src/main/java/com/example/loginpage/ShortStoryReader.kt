@@ -47,6 +47,7 @@ import androidx.navigation.Navigation.findNavController
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.FavoriteShortStorie
 import com.example.loginpage.models.LikeShortStorie
@@ -275,6 +276,9 @@ fun TopBar(
 @Composable
 fun BottomBar(shortStory: ShortStoryGet) {
 
+    val context = LocalContext.current
+
+    val userID = UserIDrepository(context).getAll()[0].idUser
 
     var likeState by remember {
         mutableStateOf(shortStory.curtido)
@@ -303,15 +307,15 @@ fun BottomBar(shortStory: ShortStoryGet) {
     }
 
 
-    CallLikeAPI.countShortStoriesLikes(13){
+    CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
         quantidadeLikesState = it.qtdeCurtidas
     }
 
-    CallFavoriteAPI.countFavoritesShortStories(13){
+    CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
         quantidadeFavoritosState = it.qtdeFavoritos
     }
 
-    CallVisualizationAPI.countViewShortStorie(13){
+    CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
         quantidadeViewsState = it.qtdeLidos
     }
 
@@ -344,28 +348,28 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                 modifier = Modifier
                                     .padding(end = 12.dp)
                                     .clickable {
-
                                         likeState = !likeState
                                         if (likeState) {
 
                                             var shortStorieLike = LikeShortStorie(
-                                                idHistoriaCurta = 13,
-                                                idUsuario = 113
+                                                idHistoriaCurta = shortStory.id!!,
+                                                idUsuario = userID
                                             )
                                             CallLikeAPI.likeShortStorie(shortStorieLike)
 
                                         } else {
-                                            CallLikeAPI.countShortStoriesLikes(13) {
-                                                quantidadeLikesState = it.qtdeCurtidas
-                                            }
-
 
                                             var shortStorieUnLike = LikeShortStorie(
-                                                idHistoriaCurta = 13,
-                                                idUsuario = 113
+                                                idHistoriaCurta = shortStory.id!!,
+                                                idUsuario = userID
                                             )
                                             CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
                                         }
+
+                                        CallLikeAPI.countShortStoriesLikes(shortStory.id!!) {
+                                            quantidadeLikesState = it.qtdeCurtidas
+                                        }
+
                                     }
                             ) {
 
@@ -402,27 +406,27 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                     .clickable {
                                         saveState = !saveState
 
-                                        CallFavoriteAPI.countFavoritesShortStories(13) {
-                                            quantidadeFavoritosState = it.qtdeFavoritos
-                                        }
-
                                         if (!saveState) {
                                             val favoriteShortStorieUnCheck =
                                                 FavoriteShortStorie(
-                                                    idHistoriaCurta = 13,
-                                                    idUsuario = 113
+                                                    idHistoriaCurta = shortStory.id!!,
+                                                    idUsuario = userID
                                                 )
                                             CallFavoriteAPI.unfavoriteShortStorie(
                                                 favoriteShortStorieUnCheck
                                             )
                                         } else {
                                             val favoriteShortStorieCheck = FavoriteShortStorie(
-                                                idHistoriaCurta = 13,
-                                                idUsuario = 113
+                                                idHistoriaCurta = shortStory.id!!,
+                                                idUsuario = userID
                                             )
                                             CallFavoriteAPI.favoriteShortStorie(
                                                 favoriteShortStorieCheck
                                             )
+                                        }
+
+                                        CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!) {
+                                            quantidadeFavoritosState = it.qtdeFavoritos
                                         }
                                     }
                             ) {
@@ -456,33 +460,25 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .clickable {
-
                                         viewState = !viewState
                                         if (!viewState) {
                                             val unViewShortStorie = VisualizationShortStorie(
-                                                idHistoriaCurta = 13,
-                                                idUsuario = 113
+                                                idHistoriaCurta = shortStory.id!!,
+                                                idUsuario = userID
                                             )
                                             CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
 
-                                            CallVisualizationAPI.countViewShortStorie(13){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
                                         } else {
                                             val viewShortStorie = VisualizationShortStorie(
-                                                idHistoriaCurta = 13,
-                                                idUsuario = 113
+                                                idHistoriaCurta = shortStory.id!!,
+                                                idUsuario = userID
                                             )
                                             CallVisualizationAPI.viewShortStorie(viewShortStorie)
 
-                                            CallVisualizationAPI.countViewShortStorie(13){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
                                         }
-
-
-
-
+                                        CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+                                            quantidadeViewsState = it.qtdeLidos
+                                        }
                                     }
                             ) {
 

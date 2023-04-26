@@ -12,10 +12,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FormatAlignCenter
 import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material.icons.rounded.ChevronLeft
@@ -30,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -43,6 +46,7 @@ import com.example.loginpage.API.cart.CallCartAPI
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
@@ -50,6 +54,7 @@ import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.AnnouncementCart
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.MontSerratSemiBold
 import kotlinx.coroutines.launch
 
 class ShoppingCart : ComponentActivity() {
@@ -88,9 +93,9 @@ fun ShoppingCartPage(
             .fillMaxSize(),
         scaffoldState = scaffoldState,
         topBar = { TopBarShop(navController) },
-        bottomBar = { BottomBarScaffold(bottomBarState, navController, 3) },
+        bottomBar = { BottomBarScaffold(bottomBarState, navController, userID, 3) },
         floatingActionButtonPosition = FabPosition.End,
-    ) {it
+    ) {
         ShowBooks(userID, it.calculateBottomPadding(), 4, navController)
     }
 }
@@ -142,22 +147,101 @@ fun ShowItemsCart(
 
         when (tabIndex) {
             0 -> {
-                var itemsCarts by remember {
-                    mutableStateOf(listOf<CartData>())
-                }
+//                var itemsCarts by remember {
+//                    mutableStateOf(listOf<CartData>())
+//                }
+//
+//                CallCartAPI.getItemsCart(userID) {
+//                    itemsCarts = it
+//                }
+//
+//                if (itemsCarts.isNotEmpty()) LazyColumn() {
+//                    items(itemsCarts) {
+//                        AnnouncementCart(it, navController, 0)
+//                    }
 
-                CallCartAPI.getItemsCart(userID) {
-                    itemsCarts = it
-                }
-
-                if (itemsCarts.isNotEmpty()) LazyColumn() {
-                    items(itemsCarts) {
-                        AnnouncementCart(it, navController, 0)
-                    }
-                }
+                Text(text = "no aguardo da api")
             }
             1 -> {
+                var announcement by remember {
+                    mutableStateOf(listOf<AnnouncementGet>())
+                }
 
+                CallAnnouncementAPI.getUserFavoritedAnnouncements(userID) {
+                    announcement = it
+                }
+
+                if (announcement.isNotEmpty()) LazyColumn() {
+                    items(announcement) {
+                        Card(
+                            modifier = Modifier
+                                .height(204.dp)
+                                .fillMaxWidth()
+                                .padding(bottom = 2.dp)
+                                .clickable {
+                                    navController.navigate("${Routes.Ebook.name}/${it.id}")
+                                },
+                            backgroundColor = Color.White,
+                            elevation = 0.dp
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp, 20.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                //Imagem da capa do livro
+                                Image(
+                                    painter = rememberAsyncImagePainter(it.capa),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .height(150.dp)
+                                        .width(100.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop,
+                                )
+
+                                Column (
+                                    modifier = Modifier.fillMaxHeight(),
+                                    verticalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column(Modifier.fillMaxWidth()) {
+                                        val files = listOf("PDF", "ePUB", if (it.mobi == "null") "" else "MOBI")
+                                        Log.i("mobi fdp", it.mobi)
+
+                                        Text(text = it.titulo)
+
+                                        LazyRow(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                                            items(files) {
+                                                if (it.isNotEmpty()) Card(
+                                                    modifier = Modifier
+                                                        .height(14.dp)
+                                                        .padding(start = 4.dp, end = 4.dp)
+                                                    ,
+                                                    backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                                    shape = RoundedCornerShape(100.dp),
+                                                ) {
+                                                    Text(
+                                                        text = it,
+                                                        fontSize = 10.sp,
+                                                        fontFamily = MontSerratSemiBold,
+                                                        textAlign = TextAlign.Center,
+                                                        modifier = Modifier
+                                                            .padding(12.dp, 1.dp),
+                                                        color = Color.White
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    Text(text = "${it.preco}")
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

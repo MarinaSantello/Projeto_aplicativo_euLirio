@@ -113,7 +113,7 @@ fun SearchBooks(navController: NavController) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBarSearch(userID, scaffoldState, topBarState) },
-        bottomBar = { BottomBarScaffold(bottomBarState, navController, 2) },
+        bottomBar = { BottomBarScaffold(bottomBarState, navController, users[0].idUser, 2) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value) {

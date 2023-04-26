@@ -50,15 +50,15 @@ fun AnnouncementCard(
     type: Int
 ) {
 
-    var likeState by rememberSaveable {
+    var likeState by remember {
         mutableStateOf(announcement.curtido)
     }
 
-    var saveState by rememberSaveable{
+    var saveState by remember{
         mutableStateOf(announcement.favorito)
     }
 
-    var viewState by rememberSaveable{
+    var viewState by remember{
         mutableStateOf(announcement.lido)
     }
 

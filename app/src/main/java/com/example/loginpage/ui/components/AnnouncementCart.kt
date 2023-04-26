@@ -99,7 +99,7 @@ fun AnnouncementCart(
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(text = "${announcement.preco}")
 
-                    if (type == 1) Icon(
+                    if (type == 0) Icon(
                         Icons.Outlined.Delete,
                         contentDescription = "icone para excluir o livro do carrinho"
                     )

@@ -299,6 +299,7 @@ fun DrawerDesign(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
+                            navController.navigate(Routes.SavePage.name)
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
                             }
@@ -511,6 +512,7 @@ fun DrawerDesign(
 fun BottomBarScaffold(
     state: MutableState<Boolean>,
     navController: NavController,
+    userID: Int,
     activity: Int
 ) {
     AnimatedVisibility(
@@ -530,21 +532,27 @@ fun BottomBarScaffold(
                     Icon(
                         if (activity == 1) Icons.Default.Spa else Icons.Outlined.Spa,
                         "",
-                        modifier = Modifier.size(if (activity == 1) 32.dp else 28.dp),
+                        modifier = Modifier
+                            .size(if (activity == 1) 32.dp else 28.dp)
+                            .clickable { navController.navigate(Routes.Home.name) },
                         tint = if (activity == 1) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
 
                     Icon(
                         if (activity == 2) Icons.Default.Search else Icons.Outlined.Search,
                         "",
-                        modifier = Modifier.size(if (activity == 2) 32.dp else 28.dp),
+                        modifier = Modifier
+                            .size(if (activity == 1) 32.dp else 28.dp)
+                            .clickable { navController.navigate(Routes.Search.name) },
                         tint = if (activity == 2) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
 
                     Icon(
                         if (activity == 3) Icons.Default.ShoppingCart else Icons.Outlined.ShoppingCart,
                         "",
-                        modifier = Modifier.size(if (activity == 3) 34.dp else 28.dp),
+                        modifier = Modifier
+                            .size(if (activity == 1) 32.dp else 28.dp)
+                            .clickable { navController.navigate("${Routes.ShoppingCart.name}/$userID") },
                         tint = if (activity == 3) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
                 }

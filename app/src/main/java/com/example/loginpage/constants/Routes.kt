@@ -13,5 +13,7 @@ enum class Routes {
     Feed,
     PostEbook,
     EditEbook,
-    ShoppingCart
+    ShoppingCart,
+    Search,
+    SavePage
 }

@@ -702,7 +702,7 @@ fun ShowEbook(
                         fontFamily = Spartan,
                         modifier = Modifier.padding(start = 8.dp))
                         Text(
-                            text = if (announcement.mobi.isNullOrEmpty()) "PDF e ePUB" else "PDF, ePUB e MOBI",
+                            text = if (announcement.mobi == "null") "PDF e ePUB" else "PDF, ePUB e MOBI",
                             fontFamily = SpartanBold
                         )
                     }

@@ -129,11 +129,12 @@ class CallVisualizationAPI() {
                     call: Call<CountVisualizationAnnouncement>,
                     response: Response<CountVisualizationAnnouncement>
                 ) {
-                    val quantidadeViewsAnnouncement = response.body() ?: CountVisualizationAnnouncement(
+                    val quantidadeViewsAnnouncement = if (response.code() == 200) response.body()!! else CountVisualizationAnnouncement(
                         idAnuncio = announcementId,
                         qtdeLidos = "0"
                     )
                     quantidadeViews.invoke(quantidadeViewsAnnouncement)
+                    Log.i("anun id", response.message().toString())
                 }
 
                 override fun onFailure(call: Call<CountVisualizationAnnouncement>, t: Throwable) {

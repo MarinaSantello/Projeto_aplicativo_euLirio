@@ -41,4 +41,7 @@ interface AnnouncementCall {
     @PUT("desactivate-announcement/id/{id}")
     fun deactivateAnnouncement(@Path("id") announcementID: Int): Call<String>
 
+    @GET("favorited-announcements/user-id/{id}")
+    fun getUserFavoritedAnnouncements(@Path("id") userID: Int): Call<List<AnnouncementGet>>
+
 }

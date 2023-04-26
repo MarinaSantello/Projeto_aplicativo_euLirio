@@ -121,7 +121,7 @@ fun HomeBooks(navController: NavController) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBar(userID, scaffoldState, topBarState) },
-        bottomBar = { BottomBarScaffold(bottomBarState, navController, 1) },
+        bottomBar = { BottomBarScaffold(bottomBarState, navController, users[0].idUser, 1) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value) {

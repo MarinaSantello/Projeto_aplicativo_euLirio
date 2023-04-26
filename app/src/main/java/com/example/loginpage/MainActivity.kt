@@ -83,6 +83,14 @@ fun Greeting() {
             PostDataEbook(navController)
         }
 
+        composable(Routes.Search.name) {
+            SearchBooks(navController)
+        }
+
+        composable(Routes.SavePage.name) {
+            PubFavoritas(navController, userID)
+        }
+
         composable(
             "${Routes.Ebook.name}/{itemId}",
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })

@@ -13,7 +13,7 @@ data class VisualizationAnnouncement(
 data class CountVisualizationAnnouncement(
     @SerializedName("id_anuncio")
     var idAnuncio: Int?,
-    @SerializedName("quantidade_lido")
+    @SerializedName("quantidade_lidos")
     var qtdeLidos: String
 )
 

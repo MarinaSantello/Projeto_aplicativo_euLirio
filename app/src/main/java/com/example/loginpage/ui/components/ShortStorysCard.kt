@@ -45,15 +45,15 @@ fun ShortStorysCard(
     userID: Int
 ) {
 
-    var likeState by rememberSaveable {
+    var likeState by remember {
         mutableStateOf(shortStory.curtido)
     }
 
-    var saveState by rememberSaveable {
+    var saveState by remember {
         mutableStateOf(shortStory.favorito)
     }
 
-    var viewState by rememberSaveable {
+    var viewState by remember {
         mutableStateOf(shortStory.lido)
     }
 
