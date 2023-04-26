@@ -83,6 +83,8 @@ class SearchViewBooks : ComponentActivity() {
     }
 }
 
+var bottomBarState: MutableState<Boolean> = mutableStateOf(true)
+var menuState: MutableState<Boolean> = mutableStateOf(false)
 @Composable
 fun SearchBooks(navController: NavController) {
 
@@ -91,7 +93,6 @@ fun SearchBooks(navController: NavController) {
     val scaffoldState = rememberScaffoldState()
 
     val topBarState = remember { mutableStateOf(true) }
-    val bottomBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
 
     // registrando o id do usuário no sqlLite
@@ -127,7 +128,7 @@ fun SearchBooks(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 2, navController)
+        TabsFeedSearch(users[0].idUser, it.calculateBottomPadding(), navController)
     }
 
     if (!fabState.value) ButtonsPost(navController, context) {
@@ -149,6 +150,8 @@ fun TopBarSearch(
     var searchState by remember {
         mutableStateOf("")
     }
+
+
 
     val RoundedCornerShape = RoundedCornerShape(20.dp)
 
@@ -173,7 +176,7 @@ fun TopBarSearch(
                     ) {
                         Box(
                             modifier = Modifier
-                                .height(45.dp)
+                                .height(42.dp)
                                 .width(280.dp)
                                 .padding(end = 10.dp)
                                 .background(Color.White)
@@ -190,7 +193,8 @@ fun TopBarSearch(
                                     .fillMaxWidth()
                                     .fillMaxHeight()
                                     .align(Alignment.CenterStart)
-                                    .padding(0.dp),
+                                    .padding(0.dp)
+                                    ,
                                 placeholder = {
                                     Text(
                                         text = "Buscar por obras e autores",
@@ -217,7 +221,14 @@ fun TopBarSearch(
                             contentDescription = "Menu burguer",
                             modifier = Modifier
                                 .size(50.dp)
-                                .clickable {}
+                                .clickable {
+                                    menuState.value = true
+                                    if (menuState.value) {
+                                        bottomBarState.value = false
+                                    }
+
+
+                                }
 
                         )
 
@@ -354,6 +365,25 @@ fun TabsFeedSearch(
             2 -> Text(text = "Pequenas Histórias")
         }
     }
+
+    if(menuState.value){
+        AnimatedVisibility(
+            visible = menuState.value,
+            enter = slideInVertically(initialOffsetY = { -it }),
+            exit = slideOutVertically(targetOffsetY = { -it }),
+            content = {
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    backgroundColor = Color.Black
+                ){}
+            }
+        )
+    }
+
+
+
+
 }
 
 
