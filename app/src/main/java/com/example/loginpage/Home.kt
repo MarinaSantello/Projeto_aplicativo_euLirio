@@ -72,24 +72,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Home : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    val navController = rememberNavController()
-
-                    HomeBooks(navController)
-                }
-            }
-        }
-    }
-}
+//class Home : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    val navController = rememberNavController()
+//
+//                    HomeBooks(navController)
+//                }
+//            }
+//        }
+//    }
+//}
 
 //@OptIn(ExperimentalPagerApi::class)
 @Composable

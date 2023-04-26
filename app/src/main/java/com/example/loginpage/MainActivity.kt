@@ -60,15 +60,23 @@ fun Greeting() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.SplashScreen.name) {
         composable(Routes.SplashScreen.name) {
-            Splash(navController = navController, userAuth)
+            Splash(navController, userAuth)
         }
 
         composable(Routes.Introduction.name) {
-            IntroductionPt1()
+            IntroductionPt1(navController)
+        }
+
+        composable(Routes.Intro2.name) {
+            IntroductionPt2(navController)
+        }
+
+        composable(Routes.Intro3.name) {
+            IntroductionPt3(navController)
         }
 
         composable(Routes.Login.name) {
-            loginPage()
+            LoginPage(navController)
         }
 
         composable(Routes.Home.name) {
@@ -89,6 +97,19 @@ fun Greeting() {
 
         composable(Routes.SavePage.name) {
             PubFavoritas(navController, userID)
+        }
+
+        composable(Routes.UpdateUser.name) {
+            UpdatePage(navController)
+        }
+
+        composable(
+            "${Routes.User.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val userId = it.arguments!!.getInt("itemId")
+
+            UserHomePage(navController)
         }
 
         composable(

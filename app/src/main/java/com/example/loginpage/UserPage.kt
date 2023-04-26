@@ -33,10 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Genero
 import com.example.loginpage.models.Genre
 import com.example.loginpage.models.Tag
@@ -47,26 +49,27 @@ import com.example.loginpage.ui.theme.Montserrat2
 import com.example.loginpage.ui.theme.QuickSand
 //import com.google.accompanist.pager.ExperimentalPagerApi
 
-class UserPage : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-                ) {
-                    UserHomePage()
-                }
-            }
-        }
-    }
-}
+//class UserPage : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
+//                ) {
+//                    UserHomePage()
+//                }
+//            }
+//        }
+//    }
+//}
 
 //@OptIn(ExperimentalPagerApi::class)
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun UserHomePage() {
+fun UserHomePage(
+    navController: NavController
+) {
 
     val context = LocalContext.current
 
@@ -150,8 +153,7 @@ fun UserHomePage() {
                                 .height(24.dp)
                                 .width(30.dp)
                                 .clickable {
-                                    val intent = Intent(context, Home::class.java)
-                                    context.startActivity(intent)
+                                    navController.popBackStack()
                                 }
                         )
                     }
@@ -206,9 +208,7 @@ fun UserHomePage() {
                                 modifier = Modifier
                                     .padding(start = 148.dp)
                                     .clickable {
-                                        val intent = Intent(context, UpdateActivity::class.java)
-
-                                        context.startActivity(intent)
+                                        navController.navigate(Routes.UpdateUser.name)
                                     },
                                 backgroundColor = colorResource(id = R.color.white),
                                 shape = RoundedCornerShape(10.dp),

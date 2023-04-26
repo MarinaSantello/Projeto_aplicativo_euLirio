@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.CallAPI
@@ -48,6 +49,7 @@ import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.resources.updateStorage
 import com.example.loginpage.resources.uploadFile
@@ -61,25 +63,27 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDateTime
 
-class UpdateActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    UpdatePage()
-                }
-            }
-        }
-    }
-}
+//class UpdateActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    UpdatePage()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
-fun UpdatePage() {
+fun UpdatePage(
+    navController: NavController
+) {
     val context = LocalContext.current
 
     var photoState by remember {
@@ -675,9 +679,7 @@ fun UpdatePage() {
                                                 Log.i("erro fdp", responseValidate.toString())
 
                                                 if (responseValidate == 200) {
-                                                    val intent =
-                                                        Intent(context, UserPage::class.java)
-                                                    context.startActivity(intent)
+                                                    navController.popBackStack()
                                                 }
                                                 Log.i(
                                                     "respon post",
@@ -738,9 +740,7 @@ fun UpdatePage() {
                                                     Log.i("erro fdp", responseValidate.toString())
 
                                                     if (responseValidate == 200) {
-                                                        val intent =
-                                                            Intent(context, UserPage::class.java)
-                                                        context.startActivity(intent)
+                                                        navController.popBackStack()
                                                     }
                                                     Log.i(
                                                         "respon post",
@@ -868,8 +868,7 @@ fun UpdatePage() {
 
                                                     updateStorage(photoState)
 
-                                                    val intent = Intent(context, Home::class.java)
-                                                    context.startActivity(intent)
+                                                    navController.navigate(Routes.Introduction.name)
                                                 }
                                             }
 
@@ -900,11 +899,4 @@ fun UpdatePage() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun UpdatePreview() {
-    LoginPageTheme {
-        UpdatePage()
-    }
-}
 

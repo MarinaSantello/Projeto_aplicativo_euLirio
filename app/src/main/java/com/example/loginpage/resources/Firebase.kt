@@ -5,11 +5,13 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.navigation.NavController
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.userLogin.UserLoginCall
-import com.example.loginpage.Home
+import com.example.loginpage.MainActivity
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.RetornoApi
 import com.example.loginpage.models.UserLogin
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +22,11 @@ import retrofit2.Response
 import java.time.LocalDateTime
 
 
-fun authenticate(email: String, password: String, context: Context) {
+fun authenticate(
+    email: String,
+    password: String,
+    context: Context
+) {
 
     // obtendo a instancia do firebase
     val auth = FirebaseAuth.getInstance()
@@ -55,7 +61,7 @@ fun authenticate(email: String, password: String, context: Context) {
                             val userIDRepository = UserIDrepository(context)
                             userIDRepository.save(UserID(idUser = response.body()!!.id))
 
-                            val intent = Intent(context, Home::class.java)
+                            val intent = Intent(context, MainActivity::class.java)
                             context.startActivity(intent)
                         }
                     }

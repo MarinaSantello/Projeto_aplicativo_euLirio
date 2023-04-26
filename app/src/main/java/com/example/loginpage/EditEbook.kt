@@ -88,23 +88,23 @@ fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
         statusState.value = it.status
     }
 }
-class EditEbook : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    val navController = rememberNavController()
-                    EditDataEbook(54, navController)
-                }
-            }
-        }
-    }
-}
+//class EditEbook : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    val navController = rememberNavController()
+//                    EditDataEbook(54, navController)
+//                }
+//            }
+//        }
+//    }
+//}
 @Composable
 fun EditDataEbook(
     announcementID: Int,
@@ -342,8 +342,7 @@ fun EditDataEbook(
                         modifier = Modifier
                             .padding(top = 2.dp)
                             .clickable {
-                                val intent = Intent(context, Home::class.java)
-                                context.startActivity(intent)
+                                navController.popBackStack()
                             })
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(

@@ -48,25 +48,24 @@ import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-class ViewBooks (navControllerClass: NavController) : ComponentActivity() {
-    private val navController = navControllerClass
-
-    //    @OptIn(ExperimentalPagerApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    ShowBooks(0, 40.dp, 1, navController)
-                }
-            }
-        }
-    }
-}
+//class ViewBooks : ComponentActivity() {
+//
+//    //    @OptIn(ExperimentalPagerApi::class)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    ShowBooks(0, 40.dp, 1, navController)
+//                }
+//            }
+//        }
+//    }
+//}
 
 //@ExperimentalPagerApi
 @Composable

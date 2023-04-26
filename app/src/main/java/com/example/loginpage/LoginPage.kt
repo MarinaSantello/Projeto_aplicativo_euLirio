@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
 import com.example.loginpage.API.userLogin.UserLoginCall
@@ -60,25 +61,24 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class LoginPage : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-                ) {
-                    loginPage()
-                }
-            }
-        }
-    }
-}
+//class LoginPage : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
+//                ) {
+//                    loginPage()
+//                }
+//            }
+//        }
+//    }
+//}
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun loginPage() {
+fun LoginPage(navController: NavController) {
 
     //passar o contexto
     val context = LocalContext.current

@@ -64,24 +64,24 @@ import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-class SearchViewBooks : ComponentActivity() {
-
-    //    @OptIn(ExperimentalPagerApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    SearchBooks(rememberNavController())
-                }
-            }
-        }
-    }
-}
+//class SearchViewBooks : ComponentActivity() {
+//
+//    //    @OptIn(ExperimentalPagerApi::class)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    SearchBooks(rememberNavController())
+//                }
+//            }
+//        }
+//    }
+//}
 
 var bottomBarState: MutableState<Boolean> = mutableStateOf(true)
 var menuState: MutableState<Boolean> = mutableStateOf(false)

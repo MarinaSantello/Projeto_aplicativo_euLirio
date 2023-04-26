@@ -50,21 +50,21 @@ import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.*
 
-class ShortStories : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    ShortStory(1, rememberNavController())
-                }
-            }
-        }
-    }
-}
+//class ShortStories : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    ShortStory(1, rememberNavController())
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ShortStory(

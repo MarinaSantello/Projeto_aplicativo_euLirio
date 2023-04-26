@@ -41,7 +41,6 @@ import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.LoginPage
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
-import com.example.loginpage.UserPage
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Tag
 import com.example.loginpage.ui.theme.Montserrat
@@ -148,11 +147,6 @@ fun DrawerDesign(
     }
 
     val auth = FirebaseAuth.getInstance()
-    val clickUserPage = remember { mutableStateOf(false) }
-
-    val intentUserPage = Intent(context, UserPage::class.java)
-    //val intentUserStories = Intent(context, UserStories(navController)::class.java)
-    val intentLogin = Intent(context, LoginPage::class.java)
 
     Column(
         modifier = Modifier
@@ -174,7 +168,7 @@ fun DrawerDesign(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable {
-                        context.startActivity(intentUserPage)
+                        navController.navigate("${Routes.User.name}/${userID.idUser}")
 
                         coroutineScope.launch {
                             scaffoldState.drawerState.close()
@@ -262,7 +256,7 @@ fun DrawerDesign(
                 Card(
                     modifier = Modifier
                         .clickable {
-                            context.startActivity(intentUserPage)
+                            navController.navigate("${Routes.User.name}/${userID.idUser}")
 
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
@@ -497,7 +491,7 @@ fun DrawerDesign(
 
                         auth.signOut() // metodo para deslogar o usuario
 
-                        context.startActivity(intentLogin)
+                        navController.navigate(Routes.Login.name)
                     }
                 ,
                 tint = Color.Black

@@ -56,23 +56,23 @@ import com.example.loginpage.resources.uploadFile
 import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.theme.*
 
-class PostEbook : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    val navController = rememberNavController()
-                    PostDataEbook(navController)
-                }
-            }
-        }
-    }
-}
+//class PostEbook : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    val navController = rememberNavController()
+//                    PostDataEbook(navController)
+//                }
+//            }
+//        }
+//    }
+//}
 @SuppressLint("InvalidColorHexValue")
 @Composable
 fun PostDataEbook(navController: NavController) {
@@ -320,8 +320,7 @@ fun PostDataEbook(navController: NavController) {
                         modifier = Modifier
                             .padding(top = 2.dp)
                             .clickable {
-                                val intent = Intent(context, Home::class.java)
-                                context.startActivity(intent)
+                                navController.popBackStack()
                             })
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(

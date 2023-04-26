@@ -31,6 +31,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.loginpage.API.genre.GenreCall
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.API.user.UserCall
@@ -262,8 +264,6 @@ fun RegisterPageThirdPartFun() {
                                 accountCreate(context,
                                         email.toString(), senha.toString(),
                                         userName.toString(), dataNascimento.toString(), nome.toString(), tags, generos)
-
-                                Log.i("id genero", "${generos}")
 
                             },
                                 modifier = Modifier

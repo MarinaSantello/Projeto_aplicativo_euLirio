@@ -27,28 +27,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.loginpage.IntroPt3
+import androidx.navigation.NavController
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.ui.theme.LoginPageTheme
 
-class IntroPt2 : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    IntroductionPt2()
-                }
-            }
-        }
-    }
-}
+//class IntroPt2 : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    IntroductionPt2()
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
-fun IntroductionPt2() {
+fun IntroductionPt2(navController: NavController) {
     val context = LocalContext.current
 
     //Content
@@ -142,8 +143,7 @@ fun IntroductionPt2() {
 
                     Button(
                         onClick = {
-                            val intent = Intent(context, IntroPt1::class.java)
-                            context.startActivity(intent)
+                                  navController.navigate(Routes.Introduction.name)
                         },
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
@@ -163,8 +163,7 @@ fun IntroductionPt2() {
 
                     Button(
                         onClick = {
-                            val intent = Intent(context, IntroPt3::class.java)
-                            context.startActivity(intent)
+                            navController.navigate(Routes.Intro3.name)
                         },
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
@@ -185,10 +184,10 @@ fun IntroductionPt2() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun DefaultPreview2() {
-    LoginPageTheme {
-        IntroductionPt2()
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun DefaultPreview2() {
+//    LoginPageTheme {
+//        IntroductionPt2()
+//    }
+//}
