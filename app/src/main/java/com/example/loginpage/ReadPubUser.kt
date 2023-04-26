@@ -3,7 +3,6 @@ package com.example.loginpage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,32 +28,30 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.ShortStoryGet
-import com.example.loginpage.models.User
-import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 
-//class FavoritePubUser : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            LoginPageTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-//                    //Greeting2("Android")
-//                }
-//            }
-//        }
-//    }
-//}
+class ReadPubUser : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            LoginPageTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
-fun PubFavoritas (navController: NavController) {
+fun PubLidas (navController: NavController) {
 
     val context = LocalContext.current
 
@@ -79,12 +75,12 @@ fun PubFavoritas (navController: NavController) {
             DrawerDesign(userID, context, scaffoldState, navController)
         },
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 5, navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 6, navController)
     }
 }
 
 @Composable
-fun TabsUserPubFavoritas(
+fun TabsUserPubLidas(
     userID: Int,
     bottomBarLength: Dp,
     navController: NavController
@@ -145,13 +141,13 @@ fun TabsUserPubFavoritas(
                     mutableStateOf(listOf<AnnouncementGet>())
                 }
 
-                CallAnnouncementAPI.getUserFavoritedAnnouncements(userID) {
+                CallAnnouncementAPI.getUserReadedAnnouncements(userID) {
                     announcements = it
                 }
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it, userID, navController, 1, false, true)
+                        AnnouncementCard(it, userID, navController, 1, true, false)
                     }
                 }
 //                Text(text = "api deu b.o.")
@@ -162,13 +158,13 @@ fun TabsUserPubFavoritas(
                 }
 
                 //CallShortStoryAPI.getShortStories {
-                CallShortStoryAPI.getUserFavoritedShortStories(userID) {
+                CallShortStoryAPI.getUserReadedShortStories(userID) {
                     shortStory = it
                 }
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
-                        ShortStorysCard(it, navController, userID, false, true)
+                        ShortStorysCard(it, navController, userID, true, false)
                     }
                 }
             }
@@ -179,7 +175,7 @@ fun TabsUserPubFavoritas(
 
 //@Preview(showBackground = true)
 //@Composable
-//fun DefaultPreview4() {
+//fun DefaultPreview2() {
 //    LoginPageTheme {
 //        Greeting2("Android")
 //    }

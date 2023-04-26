@@ -43,7 +43,8 @@ fun ShortStorysCard(
     shortStory: ShortStoryGet,
     navController: NavController,
     userID: Int,
-    fav: Boolean
+    fav: Boolean,
+    read: Boolean
 ) {
 
     var likeState by remember {
@@ -355,7 +356,7 @@ fun ShortStorysCard(
                             }
 
                             //Linha de visualização
-                            Row(
+                            if (read) Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .clickable {

@@ -194,5 +194,25 @@ class CallAnnouncementAPI() {
                 }
             })
         }
+
+        fun getUserReadedAnnouncements(userID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+            val callAnnouncement = announcementCall.getUserReadedAnnouncements(userID)
+
+            callAnnouncement.enqueue(object :
+                Callback<List<AnnouncementGet>> {
+                override fun onResponse(
+                    call: Call<List<AnnouncementGet>>,
+                    response: Response<List<AnnouncementGet>>
+                ) {
+                    val announcements = response.body()!!
+
+                    announcementsData.invoke(announcements)
+                }
+
+                override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
     }
 }

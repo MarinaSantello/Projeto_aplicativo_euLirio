@@ -99,6 +99,10 @@ fun Greeting() {
             PubFavoritas(navController)
         }
 
+        composable(Routes.Read.name) {
+            PubLidas(navController)
+        }
+
         composable(Routes.UpdateUser.name) {
             UpdatePage(navController)
         }

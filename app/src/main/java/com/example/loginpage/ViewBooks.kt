@@ -97,6 +97,9 @@ fun ShowBooks(
 
             //Layout das publicacoes favoritas
             5 -> TabsUserPubFavoritas(userID, bottomBarLength, navController)
+
+            //Layout das publicacoes lidas
+            6 -> TabsUserPubLidas(userID, bottomBarLength, navController)
         }
     }
 
@@ -174,7 +177,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it, userID, navController, 1, true)
+                        AnnouncementCard(it, userID, navController, 1, true, true)
                     }
                 }
 //                Text(text = "api deu b.o.")
@@ -191,7 +194,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
-                        ShortStorysCard(it, navController, userID, true)
+                        ShortStorysCard(it, navController, userID, true, true)
                     }
                 }
             }

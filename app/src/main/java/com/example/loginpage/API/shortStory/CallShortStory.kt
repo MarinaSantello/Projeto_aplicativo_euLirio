@@ -26,4 +26,7 @@ interface CallShortStory {
 
     @GET("favorited-short-stories/user-id/{id}")
     fun getUserFavoritedShortStories(@Path("id") userID: Int): Call<List<ShortStoryGet>>
+
+    @GET("readed-short-stories/user-id/{id}")
+    fun getUserReadedShortStories(@Path("id") userID: Int): Call<List<ShortStoryGet>>
 }

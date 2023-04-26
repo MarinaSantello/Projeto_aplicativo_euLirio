@@ -44,4 +44,7 @@ interface AnnouncementCall {
     @GET("favorited-announcements/user-id/{id}")
     fun getUserFavoritedAnnouncements(@Path("id") userID: Int): Call<List<AnnouncementGet>>
 
+    @GET("readed-announcements/user-id/{id}")
+    fun getUserReadedAnnouncements(@Path("id") userID: Int): Call<List<AnnouncementGet>>
+
 }

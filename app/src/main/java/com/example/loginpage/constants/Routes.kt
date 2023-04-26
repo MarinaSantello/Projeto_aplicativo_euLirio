@@ -20,7 +20,5 @@ enum class Routes {
     SavePage,
     User,
     UpdateUser,
-    Register1,
-    Register2,
-    Register3
+    Read
 }

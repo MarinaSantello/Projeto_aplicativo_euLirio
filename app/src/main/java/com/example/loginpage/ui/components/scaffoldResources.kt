@@ -328,6 +328,7 @@ fun DrawerDesign(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
+                            navController.navigate(Routes.Read.name)
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
                             }

@@ -48,7 +48,8 @@ fun AnnouncementCard(
     userID: Int,
     navController: NavController,
     type: Int,
-    fav: Boolean
+    fav: Boolean,
+    read: Boolean
 ) {
 
     var likeState by remember {
@@ -380,7 +381,7 @@ fun AnnouncementCard(
                             }
 
                             //Linha de visualização
-                            Row(
+                            if (read) Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .clickable {
