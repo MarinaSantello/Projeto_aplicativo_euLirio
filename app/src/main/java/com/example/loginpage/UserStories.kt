@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -73,6 +74,6 @@ fun ShowUserStories(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 4, navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 4, rememberLazyListState(), navController)
     }
 }

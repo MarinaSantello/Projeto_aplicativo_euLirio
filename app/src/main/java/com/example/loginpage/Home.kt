@@ -16,6 +16,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
@@ -98,6 +99,7 @@ fun HomeBooks(navController: NavController) {
     val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
+    val scrollState = rememberLazyListState()
 
     val topBarState = remember { mutableStateOf(true) }
     val bottomBarState = remember { mutableStateOf(true) }
@@ -136,7 +138,7 @@ fun HomeBooks(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1, navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1, scrollState, navController)
     }
 
     if(!fabState.value) ButtonsPost(navController, context) {

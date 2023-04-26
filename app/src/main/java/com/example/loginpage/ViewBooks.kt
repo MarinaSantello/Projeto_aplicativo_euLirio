@@ -2,13 +2,12 @@ package com.example.loginpage
 
 import android.os.Bundle
 import android.provider.MediaStore.Audio.Genres
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,6 +73,7 @@ fun ShowBooks(
     userID: Int,
     bottomBarLength: Dp,
     type: Int,
+    scrollState: LazyListState,
     navController: NavController
 ) {
 
@@ -84,7 +85,7 @@ fun ShowBooks(
         //Layout do perfil
         when (type) {
             //Layout do feed
-            1 -> TabsFeed(userID, bottomBarLength, navController)
+            1 -> TabsFeed(userID, bottomBarLength, scrollState, navController)
 
             //Layout de pesquisa
             2 -> TabsFeedSearch(userID, bottomBarLength, navController)
@@ -112,6 +113,7 @@ fun ShowBooks(
 fun TabsFeed(
     userID: Int,
     bottomBarLength: Dp,
+    scrollState: LazyListState = rememberLazyListState(),
     navController: NavController
 ) {
     var tabIndex by remember { mutableStateOf(0) }
@@ -175,10 +177,29 @@ fun TabsFeed(
                     announcements = it
                 }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(bottom = bottomBarLength)
+                ) {
                     items(announcements) {
                         AnnouncementCard(it, userID, navController, 1, true, true)
                     }
+                }
+                val context = LocalContext.current
+
+                // Detect vertical scroll
+                if (scrollState.isScrollInProgress) {
+                    val firstVisibleItemIndex = scrollState.firstVisibleItemIndex
+                    val firstVisibleItemScrollOffset = scrollState.firstVisibleItemScrollOffset
+                    val yOffset = if (firstVisibleItemIndex == 0) {
+                        firstVisibleItemScrollOffset
+                    } else {
+                        // Calculate the total vertical scroll offset based on the height of the items
+                        val visibleItemsInfo = scrollState.layoutInfo?.visibleItemsInfo ?: emptyList()
+                        val heightOfPreviousItems = visibleItemsInfo.take(firstVisibleItemIndex).sumOf { it.size }
+                        heightOfPreviousItems + firstVisibleItemScrollOffset
+                    }
+                    Toast.makeText(context, yOffset.toString(), Toast.LENGTH_SHORT).show()
                 }
 //                Text(text = "api deu b.o.")
             }

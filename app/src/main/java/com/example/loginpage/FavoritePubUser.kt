@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FormatAlignCenter
@@ -79,7 +80,7 @@ fun PubFavoritas (navController: NavController) {
             DrawerDesign(userID, context, scaffoldState, navController)
         },
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 5, navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 5, rememberLazyListState(), navController)
     }
 }
 
