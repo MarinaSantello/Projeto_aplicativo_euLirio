@@ -96,7 +96,7 @@ fun Greeting() {
         }
 
         composable(Routes.SavePage.name) {
-            PubFavoritas(navController, userID)
+            PubFavoritas(navController)
         }
 
         composable(Routes.UpdateUser.name) {

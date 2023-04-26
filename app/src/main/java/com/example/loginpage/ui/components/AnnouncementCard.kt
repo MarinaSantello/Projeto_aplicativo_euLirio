@@ -47,7 +47,8 @@ fun AnnouncementCard(
     announcement: AnnouncementGet,
     userID: Int,
     navController: NavController,
-    type: Int
+    type: Int,
+    fav: Boolean
 ) {
 
     var likeState by remember {
@@ -321,7 +322,7 @@ fun AnnouncementCard(
                             }
 
                             //Linha de favoritar
-                            Row(
+                            if (fav) Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)

@@ -83,15 +83,20 @@ fun ShowBooks(
     ) {
         //Layout do perfil
         when (type) {
+            //Layout do feed
             1 -> TabsFeed(userID, bottomBarLength, navController)
 
-            //Layout do feed
-            2 -> TabsFeed(userID, bottomBarLength, navController)
+            //Layout de pesquisa
+            2 -> TabsFeedSearch(userID, bottomBarLength, navController)
+
+            //Layout do carrinho
+            3 -> ShowItemsCart(userID, bottomBarLength, navController)
 
             //Layout das obras do usuario
-            3 -> TabsUserStories(userID, bottomBarLength, navController)
+            4 -> TabsUserStories(userID, bottomBarLength, navController)
 
-            4 -> ShowItemsCart(userID, bottomBarLength, navController)
+            //Layout das publicacoes favoritas
+            5 -> TabsUserPubFavoritas(userID, bottomBarLength, navController)
         }
     }
 
@@ -169,7 +174,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it, userID, navController, 1)
+                        AnnouncementCard(it, userID, navController, 1, true)
                     }
                 }
 //                Text(text = "api deu b.o.")
@@ -186,7 +191,7 @@ fun TabsFeed(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
-                        ShortStorysCard(it, navController, userID)
+                        ShortStorysCard(it, navController, userID, true)
                     }
                 }
             }

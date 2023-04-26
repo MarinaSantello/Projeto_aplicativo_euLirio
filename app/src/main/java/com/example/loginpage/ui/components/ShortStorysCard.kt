@@ -42,7 +42,8 @@ import com.example.loginpage.ui.theme.*
 fun ShortStorysCard(
     shortStory: ShortStoryGet,
     navController: NavController,
-    userID: Int
+    userID: Int,
+    fav: Boolean
 ) {
 
     var likeState by remember {
@@ -300,7 +301,7 @@ fun ShortStorysCard(
                             }
 
                             //Linha de favoritar
-                            Row(
+                            if (fav) Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(end = 12.dp)

@@ -171,7 +171,7 @@ fun TabsUserStories(
                                 announcement = it
                             }
 //
-                            if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2)
+                            if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2, true)
                         }
                     }
 
@@ -210,7 +210,7 @@ fun TabsUserStories(
                                 shortStories = it
                             }
 
-                            if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID)
+                            if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID, true)
                         }
                     }
 
@@ -308,7 +308,8 @@ fun TabsUserStories(
                                 announcement[i],
                                 userID,
                                 navController,
-                                2
+                                2,
+                                true
                             )
                         }
                     }
@@ -348,7 +349,7 @@ fun TabsUserStories(
                                 shortStories = it
                             }
 
-                            if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID)
+                            if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID, true)
                         }
                     }
 

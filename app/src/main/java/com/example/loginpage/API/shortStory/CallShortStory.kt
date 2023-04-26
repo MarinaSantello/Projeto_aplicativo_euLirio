@@ -23,4 +23,7 @@ interface CallShortStory {
 
     @GET("desactivated-short-storie/user-id/{id}")
     fun getAllShortStoriesByUserDeactivated(@Path("id") userID: Int): Call<List<ShortStoryGet>>
+
+    @GET("favorited-short-stories/user-id/{id}")
+    fun getUserFavoritedShortStories(@Path("id") userID: Int): Call<List<ShortStoryGet>>
 }

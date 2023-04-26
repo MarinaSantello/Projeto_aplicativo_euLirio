@@ -128,7 +128,7 @@ fun SearchBooks(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        TabsFeedSearch(users[0].idUser, it.calculateBottomPadding(), navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 2, navController)
     }
 
     if (!fabState.value) ButtonsPost(navController, context) {
@@ -341,7 +341,7 @@ fun TabsFeedSearch(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
-                        AnnouncementCard(it, userID, navController, 1)
+                        AnnouncementCard(it, userID, navController, 1, true)
                     }
                 }
 //                Text(text = "api deu b.o.")
@@ -358,7 +358,7 @@ fun TabsFeedSearch(
 
                 LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
-                        ShortStorysCard(it, navController, userID)
+                        ShortStorysCard(it, navController, userID, true)
                     }
                 }
             }
