@@ -278,9 +278,8 @@ fun AnnouncementCard(
                                             CallLikeAPI.dislikeAnnouncement(announcementDislike)
 //                                            likeState = false
 
-                                            CallLikeAPI.countAnnouncementLikes(announcement.id!!) {
-                                                quantidadeLikesState = it.qtdeCurtidas
-                                            }
+                                            var newUnlikeConvert = quantidadeLikesState.toInt() - 1
+                                            quantidadeLikesState = newUnlikeConvert.toString()
                                         } else {
 
                                             val announcementLike = LikeAnnouncement(
@@ -289,12 +288,12 @@ fun AnnouncementCard(
                                             )
 
                                             CallLikeAPI.likeAnnouncement(announcementLike)
-//                                            likeState = true
+
+                                            var newlikeConvert = quantidadeLikesState.toInt() + 1
+                                            quantidadeLikesState = newlikeConvert.toString()
                                         }
 
-                                        CallLikeAPI.countAnnouncementLikes(announcement.id!!) {
-                                            quantidadeLikesState = it.qtdeCurtidas
-                                        }
+
                                     }
                             ){
                                 Log.i("anuncio get", likeState.toString())
@@ -339,11 +338,10 @@ fun AnnouncementCard(
                                                 announcementUnFavorite
                                             )
 
-                                        } else {
+                                            var newUnSaveConvert = quantidadeFavoritosState.toInt() - 1
+                                            quantidadeFavoritosState = newUnSaveConvert.toString()
 
-                                            CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!) {
-                                                quantidadeFavoritosState = it.qtdeFavoritos
-                                            }
+                                        } else {
 
                                             val announcementFavorite = FavoriteAnnouncement(
                                                 idAnuncio = announcement.id,
@@ -352,6 +350,9 @@ fun AnnouncementCard(
                                             CallFavoriteAPI.favoriteAnnouncement(
                                                 announcementFavorite
                                             )
+
+                                            var newSaveConvert = quantidadeFavoritosState.toInt() + 1
+                                            quantidadeFavoritosState = newSaveConvert.toString()
 
                                         }
                                     }
@@ -394,9 +395,9 @@ fun AnnouncementCard(
                                             )
                                             CallVisualizationAPI.unViewAnnouncement(unViewAnnouncement)
 
-                                            CallVisualizationAPI.countViewAnnouncement(announcement.id!!){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
+                                            var newUnViewConvert = quantidadeViewsState.toInt() - 1
+                                            quantidadeViewsState = newUnViewConvert.toString()
+
                                         }else{
                                             val viewAnnouncement = VisualizationAnnouncement(
                                                 idAnuncio = announcement.id,
@@ -404,9 +405,8 @@ fun AnnouncementCard(
                                             )
                                             CallVisualizationAPI.viewAnnouncement(viewAnnouncement)
 
-                                            CallVisualizationAPI.countViewAnnouncement(announcement.id!!){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
+                                            var newViewConvert = quantidadeViewsState.toInt() + 1
+                                            quantidadeViewsState = newViewConvert.toString()
                                         }
 
                                     }

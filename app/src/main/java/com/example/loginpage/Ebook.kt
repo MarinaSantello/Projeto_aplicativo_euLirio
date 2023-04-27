@@ -47,13 +47,14 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.cart.CallCartAPI
+import com.example.loginpage.API.favorite.CallFavoriteAPI
+import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Cart
-import com.example.loginpage.models.Generos
+import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
@@ -113,10 +114,33 @@ fun EbookView(
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(stringResource(R.string.title_ebook), topBarState, context, userAuthor.value, navController) },
-        bottomBar = { BottomBarEbook(bottomBarState, userAuthor.value, context, navController, idAnnouncement, userID) },
+        topBar = {
+            TopBarEbook(
+                stringResource(R.string.title_ebook),
+                topBarState,
+                context,
+                userAuthor.value,
+                navController
+            )
+        },
+        bottomBar = {
+            BottomBarEbook(
+                bottomBarState,
+                userAuthor.value,
+                context,
+                navController,
+                idAnnouncement,
+                userID
+            )
+        },
     ) {
-        if (announcement != null) ShowEbook(idAnnouncement, announcement!!, userAuthor.value, it.calculateBottomPadding(), context)
+        if (announcement != null) ShowEbook(
+            idAnnouncement,
+            announcement!!,
+            userAuthor.value,
+            it.calculateBottomPadding(),
+            context
+        )
     }
 }
 
@@ -133,15 +157,40 @@ fun ShowEbook(
     val userID = UserIDrepository(context).getAll()[0].idUser
 
     var likeState by remember {
-        mutableStateOf(false)
+        mutableStateOf(announcement.curtido)
     }
 
-    var saveState by remember {
-        mutableStateOf(false)
+    var saveState by remember{
+        mutableStateOf(announcement.favorito)
     }
 
-    var viewState by remember {
-        mutableStateOf(false)
+    var viewState by remember{
+        mutableStateOf(announcement.lido)
+    }
+
+    var quantidadeLikesState by remember {
+        mutableStateOf("")
+    }
+
+    var quantidadeFavoritosState by remember {
+        mutableStateOf("")
+    }
+
+    var quantidadeViewsState by remember {
+        mutableStateOf("")
+    }
+
+
+    CallLikeAPI.countAnnouncementLikes(announcement.id!!) {
+        quantidadeLikesState = it.qtdeCurtidas
+    }
+
+    CallFavoriteAPI.countFavoritesAnnouncement(announcement.id!!) {
+        quantidadeFavoritosState = it.qtdeFavoritos
+    }
+
+    CallVisualizationAPI.countViewAnnouncement(announcement.id!!) {
+        quantidadeViewsState = it.qtdeLidos
     }
 
     var pageState by remember {
@@ -162,7 +211,20 @@ fun ShowEbook(
 
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
-    val mouths = listOf<String>("Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez.")
+    val mouths = listOf<String>(
+        "Jan.",
+        "Fev.",
+        "Mar.",
+        "Abr.",
+        "Mai.",
+        "Jun.",
+        "Jul.",
+        "Ago.",
+        "Set.",
+        "Out.",
+        "Nov.",
+        "Dez."
+    )
     val date = announcement.data.split("T")[0].split("-")
     val mouth = mouths[(date[1].toInt() - 1)]
 
@@ -314,14 +376,38 @@ fun ShowEbook(
                                         Icons.Outlined.Favorite,
                                         contentDescription = "icone de curtir",
                                         modifier = Modifier
-                                            .clickable { likeState = !likeState },
+                                            .clickable {
+                                                likeState = false
+
+                                                val announcementDislike = LikeAnnouncement(
+                                                    idAnuncio = announcement.id,
+                                                    idUsuario = userID
+                                                )
+
+                                                CallLikeAPI.dislikeAnnouncement(announcementDislike)
+
+                                                var newUnlikeConvert = quantidadeLikesState.toInt() - 1
+                                                quantidadeLikesState = newUnlikeConvert.toString()
+
+                                            },
                                         tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                     )
                                 } else Icon(
                                     Icons.Outlined.FavoriteBorder,
                                     contentDescription = "icone de curtir",
                                     modifier = Modifier
-                                        .clickable { likeState = !likeState },
+                                        .clickable {
+                                            likeState = true
+                                            val announcementLike = LikeAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+
+                                            CallLikeAPI.likeAnnouncement(announcementLike)
+
+                                            var newlikeConvert = quantidadeLikesState.toInt() + 1
+                                            quantidadeLikesState = newlikeConvert.toString()
+                                        },
                                     tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                 )
 
@@ -334,7 +420,7 @@ fun ShowEbook(
                             }
 
                             Text(
-                                text = "570",
+                                text = quantidadeLikesState,
                                 fontSize = 16.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
@@ -359,14 +445,45 @@ fun ShowEbook(
                                         Icons.Outlined.Bookmark,
                                         contentDescription = "icone de salvar",
                                         modifier = Modifier
-                                            .clickable { saveState = !saveState },
+                                            .clickable {
+                                                saveState = false
+
+                                                val announcementUnFavorite = FavoriteAnnouncement(
+                                                    idAnuncio = announcement.id,
+                                                    idUsuario = userID
+                                                )
+
+                                                CallFavoriteAPI.unfavoriteAnnouncement(
+                                                    announcementUnFavorite
+                                                )
+
+                                                var newUnSaveConvert = quantidadeFavoritosState.toInt() - 1
+                                                quantidadeFavoritosState = newUnSaveConvert.toString()
+
+                                            },
                                         tint = Color.White
                                     )
                                 } else Icon(
                                     Icons.Outlined.BookmarkAdd,
                                     contentDescription = "icone de salvar",
                                     modifier = Modifier
-                                        .clickable { saveState = !saveState },
+                                        .clickable {
+                                            saveState = true
+
+
+
+                                            val announcementFavorite = FavoriteAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+                                            CallFavoriteAPI.favoriteAnnouncement(
+                                                announcementFavorite
+                                            )
+
+                                            var newSaveConvert = quantidadeFavoritosState.toInt() + 1
+                                            quantidadeFavoritosState = newSaveConvert.toString()
+
+                                        },
                                     tint = Color.White
                                 )
 
@@ -379,7 +496,7 @@ fun ShowEbook(
                             }
 
                             Text(
-                                text = "182",
+                                text = quantidadeFavoritosState,
                                 fontSize = 16.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
@@ -404,14 +521,39 @@ fun ShowEbook(
                                         Icons.Rounded.CheckCircle,
                                         contentDescription = "icone de salvar",
                                         modifier = Modifier
-                                            .clickable { viewState = !viewState },
+                                            .clickable {
+                                                viewState = false
+
+                                                val unViewAnnouncement = VisualizationAnnouncement(
+                                                    idAnuncio = announcement.id,
+                                                    idUsuario = userID
+                                                )
+                                                CallVisualizationAPI.unViewAnnouncement(unViewAnnouncement)
+
+                                                var newUnViewConvert = quantidadeViewsState.toInt() - 1
+                                                quantidadeViewsState = newUnViewConvert.toString()
+
+                                                       },
                                         tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                     )
                                 } else Icon(
                                     Icons.Outlined.CheckCircle,
                                     contentDescription = "icone de salvar",
                                     modifier = Modifier
-                                        .clickable { viewState = !viewState },
+                                        .clickable {
+                                            viewState = true
+
+                                            val viewAnnouncement = VisualizationAnnouncement(
+                                                idAnuncio = announcement.id,
+                                                idUsuario = userID
+                                            )
+                                            CallVisualizationAPI.viewAnnouncement(viewAnnouncement)
+
+                                            var newViewConvert = quantidadeViewsState.toInt() + 1
+                                            quantidadeViewsState = newViewConvert.toString()
+
+
+                                                   },
                                     tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                 )
 
@@ -424,7 +566,7 @@ fun ShowEbook(
                             }
 
                             Text(
-                                text = "4,1k",
+                                text = quantidadeViewsState,
                                 fontSize = 16.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
@@ -510,8 +652,10 @@ fun ShowEbook(
 
 //        Spacer(modifier = Modifier.padding(vertical = 20.dp))
 
-        Column(Modifier.height(1000.dp)
-            .padding(15.dp)
+        Column(
+            Modifier
+                .height(1000.dp)
+                .padding(15.dp)
         ) {
             Row {
                 Image(
@@ -548,7 +692,8 @@ fun ShowEbook(
             Spacer(modifier = Modifier.height(25.dp))
 
             //row dos icones
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
@@ -707,16 +852,21 @@ fun ShowEbook(
                     Text(
                         text = "Classificação indicativa:",
                         fontFamily = Spartan,
-                        modifier = Modifier.padding(start = 8.dp))
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                     Text(
                         text = announcement.classificacao[0].classificacao,
                         fontFamily = SpartanBold,
-                        modifier = Modifier.padding(start = 4.dp))
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
                 }
                 Column() {
-                    Row(modifier= Modifier.fillMaxWidth()){ Text(text = "Disponível em: ",
-                        fontFamily = Spartan,
-                        modifier = Modifier.padding(start = 8.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Disponível em: ",
+                            fontFamily = Spartan,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                         Text(
                             text = if (announcement.mobi == "null") "PDF e ePUB" else "PDF, ePUB e MOBI",
                             fontFamily = SpartanBold
@@ -923,7 +1073,7 @@ fun TopBarEbook(
 }
 
 
-@Preview(showBackground = true)
+
 @Composable
 fun DefaultPreview6() {
     LoginPageTheme {

@@ -263,9 +263,9 @@ fun ShortStorysCard(
                                             )
                                             CallLikeAPI.likeShortStorie(shortStorieLike)
 
-                                            CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
-                                                quantidadeLikesState = it.qtdeCurtidas
-                                            }
+                                            var newlikeConvert = quantidadeLikesState.toInt() + 1
+                                            quantidadeLikesState = newlikeConvert.toString()
+
 
                                         } else {
 
@@ -275,9 +275,10 @@ fun ShortStorysCard(
                                             )
                                             CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
 
-                                            CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
-                                                quantidadeLikesState = it.qtdeCurtidas
-                                            }
+                                            var newUnlikeConvert = quantidadeLikesState.toInt() - 1
+                                            quantidadeLikesState = newUnlikeConvert.toString()
+
+
                                         }
                                     }
                             ) {
@@ -321,9 +322,9 @@ fun ShortStorysCard(
                                             CallFavoriteAPI.unfavoriteShortStorie(
                                                 favoriteShortStorieUnCheck
                                             )
-                                            CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
-                                                quantidadeFavoritosState = it.qtdeFavoritos
-                                            }
+                                            var newUnSaveConvert = quantidadeFavoritosState.toInt() - 1
+                                            quantidadeFavoritosState = newUnSaveConvert.toString()
+
                                         } else {
                                             val favoriteShortStorieCheck = FavoriteShortStorie(
                                                 idHistoriaCurta = shortStory.id,
@@ -333,9 +334,8 @@ fun ShortStorysCard(
                                                 favoriteShortStorieCheck
                                             )
 
-                                            CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
-                                                quantidadeFavoritosState = it.qtdeFavoritos
-                                            }
+                                            var newSaveConvert = quantidadeFavoritosState.toInt() + 1
+                                            quantidadeFavoritosState = newSaveConvert.toString()
 
                                         }
                                     }
@@ -376,9 +376,9 @@ fun ShortStorysCard(
                                             )
                                             CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
 
-                                            CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
+                                            var newUnViewConvert = quantidadeViewsState.toInt() - 1
+                                            quantidadeViewsState = newUnViewConvert.toString()
+
                                         } else {
                                             val viewShortStorie = VisualizationShortStorie(
                                                 idHistoriaCurta = shortStory.id,
@@ -386,9 +386,8 @@ fun ShortStorysCard(
                                             )
                                             CallVisualizationAPI.viewShortStorie(viewShortStorie)
 
-                                            CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
+                                            var newViewConvert = quantidadeViewsState.toInt() + 1
+                                            quantidadeViewsState = newViewConvert.toString()
                                         }
                                     }
                             ) {
