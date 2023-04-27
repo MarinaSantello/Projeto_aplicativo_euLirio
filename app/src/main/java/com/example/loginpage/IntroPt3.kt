@@ -155,7 +155,7 @@ fun IntroductionPt3(
 
                     Button(
                         onClick = {
-                            navController.navigate(Routes.Home.name)
+                            navController.navigate(Routes.Login.name)
                         },
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(colorResource(id = R.color.eulirio_purple_text_color_border))

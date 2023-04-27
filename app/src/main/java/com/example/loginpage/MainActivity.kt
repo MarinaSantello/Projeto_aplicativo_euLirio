@@ -51,7 +51,7 @@ fun Greeting() {
     val userAuth = currentUser != null
 
 
-    val userID = UserIDrepository(context).getAll()[0].idUser
+    val userID = if (userAuth) UserIDrepository(context).getAll()[0].idUser else 0
     // registrando o id do usuário no sqlLite
 //    val userIDRepository = UserIDrepository(context)
 //    val users = userIDRepository.getAll()
