@@ -117,7 +117,7 @@ fun SearchPage(navController: NavController) {
         Pesquisa(navController, userID.idUser)
     }
 
-    if (!fabState.value) ButtonsPost(navController, context) {
+    if (!fabState.value) ButtonsPost(navController, context, 72.dp, fabState) {
         fabState.value = it
     }
 }

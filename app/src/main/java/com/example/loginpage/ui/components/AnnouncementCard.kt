@@ -89,11 +89,6 @@ fun AnnouncementCard(
         quantidadeViewsState = it.qtdeLidos
     }
 
-
-
-
-
-
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
 

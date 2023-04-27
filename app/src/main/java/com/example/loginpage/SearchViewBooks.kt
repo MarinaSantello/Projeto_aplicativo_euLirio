@@ -140,7 +140,7 @@ fun SearchBooks(navController: NavController) {
         ShowBooks(users[0].idUser, it.calculateBottomPadding(), 2, rememberLazyListState(), navController)
     }
 
-    if (!fabState.value) ButtonsPost(navController, context) {
+    if (!fabState.value) ButtonsPost(navController, context, 12.dp, fabState) {
         fabState.value = it
     }
 }

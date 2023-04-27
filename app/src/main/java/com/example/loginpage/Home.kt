@@ -45,8 +45,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -112,15 +114,7 @@ fun HomeBooks(navController: NavController) {
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        if (!fabState.value)
-                            fabState.value = !fabState.value
-                    }
-                )
-            },
+            .fillMaxSize(),
         scaffoldState = scaffoldState,
         topBar = { TopBar(userID, scaffoldState, topBarState) },
         bottomBar = { BottomBarScaffold(bottomBarState, navController, users[0].idUser, 1) },
@@ -141,7 +135,7 @@ fun HomeBooks(navController: NavController) {
         ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1, scrollState, navController)
     }
 
-    if(!fabState.value) ButtonsPost(navController, context) {
+    if(!fabState.value) ButtonsPost(navController, context, 72.dp, fabState) {
         fabState.value = it
     }
 }
@@ -150,6 +144,8 @@ fun HomeBooks(navController: NavController) {
 fun ButtonsPost (
     navController: NavController,
     context: Context,
+    bottomLength: Dp,
+    fabState: MutableState<Boolean>,
     onChecked: (Boolean) -> Unit
 ) {
 
@@ -157,11 +153,21 @@ fun ButtonsPost (
         Modifier
             .fillMaxSize()
             .background(Color(0x80000000))
+            .zIndex(2f)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        if (!fabState.value)
+                            fabState.value = !fabState.value
+                    }
+                )
+            }
     ){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(end = 16.dp, bottom = 72.dp),
+                .padding(end = 16.dp, bottom = bottomLength)
+                .zIndex(3f),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {

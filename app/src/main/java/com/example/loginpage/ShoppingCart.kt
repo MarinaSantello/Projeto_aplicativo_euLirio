@@ -156,9 +156,11 @@ fun ShowItemsCart(
 //                    itemsCarts = it
 //                }
 //
-//                if (itemsCarts.isNotEmpty()) LazyColumn() {
+//                if (itemsCarts.isNotEmpty()) LazyColumn(
+//                        contentPadding = PaddingValues(bottom = bottomBarLength)
+//                    ) {
 //                    items(itemsCarts) {
-//                        AnnouncementCart(it, navController, 0)
+//                        AnnouncementCart(it, bottomBarLength, navController, 0)
 //                    }
 
                 Text(text = "no aguardo da api")
@@ -178,8 +180,13 @@ fun ShowItemsCart(
 
                     if (announcementIsNull) Text(text = "Você não possui livros favoritados.")
 
-                    else LazyColumn() {
+                    else LazyColumn(
+                        contentPadding = PaddingValues(bottom = bottomBarLength)
+                    ) {
                         items(announcements) {
+                            val priceVerify = it.preco.toString().split('.')
+                            var price = it.preco.toString()
+
                             Card(
                                 modifier = Modifier
                                     .height(204.dp)
@@ -194,7 +201,7 @@ fun ShowItemsCart(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(8.dp, 20.dp),
+                                        .padding(20.dp, 8.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -242,7 +249,14 @@ fun ShowItemsCart(
                                             }
                                         }
 
-                                        Text(text = "${it.preco}")
+                                        if (priceVerify[1].isEmpty())
+                                            price = "${priceVerify[0]}.00"
+                                        else if (priceVerify[1].length == 1)
+                                            price = "${it.preco}0"
+
+                                        Text(
+                                            text = "R$ ${price.replace('.', ',')}",
+                                        )
                                     }
                                 }
                             }

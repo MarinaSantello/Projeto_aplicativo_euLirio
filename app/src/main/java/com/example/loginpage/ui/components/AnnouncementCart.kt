@@ -1,5 +1,6 @@
 package com.example.loginpage.ui.components
 
+import android.text.InputFilter.LengthFilter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,8 +34,12 @@ import com.example.loginpage.ui.theme.MontSerratSemiBold
 fun AnnouncementCart(
     announcement: CartData,
     navController: NavController,
+    bottomBarLength: Dp,
     type: Int
 ) {
+    val priceVerify = announcement.preco.toString().split('.')
+    var price = announcement.preco.toString()
+
     Card(
         modifier = Modifier
             .height(204.dp)
@@ -48,7 +54,7 @@ fun AnnouncementCart(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp, 20.dp),
+                .padding(20.dp, 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -97,7 +103,15 @@ fun AnnouncementCart(
                 }
 
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "${announcement.preco}")
+
+                    if (priceVerify[1].isEmpty())
+                        price = "${priceVerify[0]}.00"
+                    else if (priceVerify[1].length == 1)
+                        price = "${announcement.preco}0"
+
+                    Text(
+                        text = "R$ ${price.replace('.', ',')}",
+                    )
 
                     if (type == 0) Icon(
                         Icons.Outlined.Delete,
