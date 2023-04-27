@@ -141,29 +141,40 @@ fun TabsUserPubLidas(
                 var announcements by remember {
                     mutableStateOf(listOf<AnnouncementGet>())
                 }
-
-                CallAnnouncementAPI.getUserReadedAnnouncements(userID) {
-                    announcements = it
+                var announcementIsNull by remember {
+                    mutableStateOf(false)
                 }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                CallAnnouncementAPI.getUserReadedAnnouncements(userID) {
+                    if (it.isNullOrEmpty()) announcementIsNull = true
+                    else announcements = it
+                }
+
+                if (announcementIsNull) Text(text = "Você não possui livros lidos.")
+
+                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
                         AnnouncementCard(it, userID, navController, 1, true, false)
                     }
                 }
-//                Text(text = "api deu b.o.")
             }
             1 -> {
                 var shortStory by remember {
                     mutableStateOf(listOf<ShortStoryGet>())
                 }
+                var shortStoryIsNull by remember {
+                    mutableStateOf(false)
+                }
 
                 //CallShortStoryAPI.getShortStories {
                 CallShortStoryAPI.getUserReadedShortStories(userID) {
-                    shortStory = it
+                    if (it.isNullOrEmpty()) shortStoryIsNull = true
+                    else shortStory = it
                 }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                if (shortStoryIsNull) Text(text = "Você não possui pequenas histórias lidas.")
+
+                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
                         ShortStorysCard(it, navController, userID, true, false)
                     }

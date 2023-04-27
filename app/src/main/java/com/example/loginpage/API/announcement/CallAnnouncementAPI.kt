@@ -175,7 +175,7 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getUserFavoritedAnnouncements(userID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+        fun getUserFavoritedAnnouncements(userID: Int, announcementsData: (List<AnnouncementGet>?) -> Unit) {
             val callAnnouncement = announcementCall.getUserFavoritedAnnouncements(userID)
 
             callAnnouncement.enqueue(object :
@@ -184,7 +184,7 @@ class CallAnnouncementAPI() {
                     call: Call<List<AnnouncementGet>>,
                     response: Response<List<AnnouncementGet>>
                 ) {
-                    val announcements = response.body()!!
+                    val announcements = response.body()
 
                     announcementsData.invoke(announcements)
                 }
@@ -195,7 +195,7 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getUserReadedAnnouncements(userID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+        fun getUserReadedAnnouncements(userID: Int, announcementsData: (List<AnnouncementGet>?) -> Unit) {
             val callAnnouncement = announcementCall.getUserReadedAnnouncements(userID)
 
             callAnnouncement.enqueue(object :
@@ -204,7 +204,7 @@ class CallAnnouncementAPI() {
                     call: Call<List<AnnouncementGet>>,
                     response: Response<List<AnnouncementGet>>
                 ) {
-                    val announcements = response.body()!!
+                    val announcements = response.body()
 
                     announcementsData.invoke(announcements)
                 }

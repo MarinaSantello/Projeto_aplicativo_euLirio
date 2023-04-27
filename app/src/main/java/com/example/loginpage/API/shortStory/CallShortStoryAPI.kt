@@ -95,7 +95,7 @@ class CallShortStoryAPI {
             })
         }
 
-        fun getUserFavoritedShortStories(userID: Int, ShortStoryData: (List<ShortStoryGet>) -> Unit) {
+        fun getUserFavoritedShortStories(userID: Int, ShortStoryData: (List<ShortStoryGet>?) -> Unit) {
             val callShortStories = shortStoryCall.getUserFavoritedShortStories(userID)
 
             callShortStories.enqueue(object :
@@ -104,7 +104,7 @@ class CallShortStoryAPI {
                     call: Call<List<ShortStoryGet>>,
                     response: Response<List<ShortStoryGet>>
                 ) {
-                    val ss = response.body()!!
+                    val ss = response.body()
 
                     ShortStoryData.invoke(ss)
                 }
@@ -115,7 +115,7 @@ class CallShortStoryAPI {
             })
         }
 
-        fun getUserReadedShortStories(userID: Int, ShortStoryData: (List<ShortStoryGet>) -> Unit) {
+        fun getUserReadedShortStories(userID: Int, ShortStoryData: (List<ShortStoryGet>?) -> Unit) {
             val callShortStories = shortStoryCall.getUserReadedShortStories(userID)
 
             callShortStories.enqueue(object :
@@ -124,7 +124,7 @@ class CallShortStoryAPI {
                     call: Call<List<ShortStoryGet>>,
                     response: Response<List<ShortStoryGet>>
                 ) {
-                    val ss = response.body()!!
+                    val ss = response.body()
 
                     ShortStoryData.invoke(ss)
                 }

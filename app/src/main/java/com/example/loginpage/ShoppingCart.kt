@@ -164,84 +164,89 @@ fun ShowItemsCart(
                 Text(text = "no aguardo da api")
             }
             1 -> {
-                var announcement by remember {
-                    mutableStateOf(listOf<AnnouncementGet>())
-                }
+                    var announcements by remember {
+                        mutableStateOf(listOf<AnnouncementGet>())
+                    }
+                    var announcementIsNull by remember {
+                        mutableStateOf(false)
+                    }
 
-                CallAnnouncementAPI.getUserFavoritedAnnouncements(userID) {
-                    announcement = it
-                }
+                    CallAnnouncementAPI.getUserFavoritedAnnouncements(userID) {
+                        if (it.isNullOrEmpty()) announcementIsNull = true
+                        else announcements = it
+                    }
 
-                if (announcement.isNotEmpty()) LazyColumn() {
-                    items(announcement) {
-                        Card(
-                            modifier = Modifier
-                                .height(204.dp)
-                                .fillMaxWidth()
-                                .padding(bottom = 2.dp)
-                                .clickable {
-                                    navController.navigate("${Routes.Ebook.name}/${it.id}")
-                                },
-                            backgroundColor = Color.White,
-                            elevation = 0.dp
-                        ) {
-                            Row(
+                    if (announcementIsNull) Text(text = "Você não possui livros favoritados.")
+
+                    else LazyColumn() {
+                        items(announcements) {
+                            Card(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(8.dp, 20.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                    .height(204.dp)
+                                    .fillMaxWidth()
+                                    .padding(bottom = 2.dp)
+                                    .clickable {
+                                        navController.navigate("${Routes.Ebook.name}/${it.id}")
+                                    },
+                                backgroundColor = Color.White,
+                                elevation = 0.dp
                             ) {
-                                //Imagem da capa do livro
-                                Image(
-                                    painter = rememberAsyncImagePainter(it.capa),
-                                    contentDescription = "",
+                                Row(
                                     modifier = Modifier
-                                        .height(150.dp)
-                                        .width(100.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    contentScale = ContentScale.Crop,
-                                )
-
-                                Column (
-                                    modifier = Modifier.fillMaxHeight(),
-                                    verticalArrangement = Arrangement.SpaceBetween
+                                        .fillMaxSize()
+                                        .padding(8.dp, 20.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Column(Modifier.fillMaxWidth()) {
-                                        val files = listOf("PDF", "ePUB", if (it.mobi == "null") "" else "MOBI")
-                                        Log.i("mobi fdp", it.mobi)
+                                    //Imagem da capa do livro
+                                    Image(
+                                        painter = rememberAsyncImagePainter(it.capa),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .height(150.dp)
+                                            .width(100.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
+                                        contentScale = ContentScale.Crop,
+                                    )
 
-                                        Text(text = it.titulo)
+                                    Column (
+                                        modifier = Modifier.fillMaxHeight(),
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Column(Modifier.fillMaxWidth()) {
+                                            val files = listOf("PDF", "ePUB", if (it.mobi == "null") "" else "MOBI")
 
-                                        LazyRow(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-                                            items(files) {
-                                                if (it.isNotEmpty()) Card(
-                                                    modifier = Modifier
-                                                        .height(14.dp)
-                                                        .padding(start = 4.dp, end = 4.dp)
-                                                    ,
-                                                    backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                                                    shape = RoundedCornerShape(100.dp),
-                                                ) {
-                                                    Text(
-                                                        text = it,
-                                                        fontSize = 10.sp,
-                                                        fontFamily = MontSerratSemiBold,
-                                                        textAlign = TextAlign.Center,
+                                            Text(text = it.titulo)
+
+                                            LazyRow(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                                                items(files) {
+                                                    if (it.isNotEmpty()) Card(
                                                         modifier = Modifier
-                                                            .padding(12.dp, 1.dp),
-                                                        color = Color.White
-                                                    )
+                                                            .height(14.dp)
+                                                            .padding(start = 4.dp, end = 4.dp)
+                                                        ,
+                                                        backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                                        shape = RoundedCornerShape(100.dp),
+                                                    ) {
+                                                        Text(
+                                                            text = it,
+                                                            fontSize = 10.sp,
+                                                            fontFamily = MontSerratSemiBold,
+                                                            textAlign = TextAlign.Center,
+                                                            modifier = Modifier
+                                                                .padding(12.dp, 1.dp),
+                                                            color = Color.White
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }
+
+                                        Text(text = "${it.preco}")
                                     }
-                                    
-                                    Text(text = "${it.preco}")
                                 }
                             }
                         }
-                    }
                 }
             }
         }

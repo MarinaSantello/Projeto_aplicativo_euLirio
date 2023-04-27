@@ -145,12 +145,18 @@ fun TabsUserPubFavoritas(
                 var announcements by remember {
                     mutableStateOf(listOf<AnnouncementGet>())
                 }
-
-                CallAnnouncementAPI.getUserFavoritedAnnouncements(userID) {
-                    announcements = it
+                var announcementIsNull by remember {
+                    mutableStateOf(false)
                 }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                CallAnnouncementAPI.getUserFavoritedAnnouncements(userID) {
+                    if (it.isNullOrEmpty()) announcementIsNull = true
+                    else announcements = it
+                }
+
+                if (announcementIsNull) Text(text = "Você não possui livros favoritados.")
+
+                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
                         AnnouncementCard(it, userID, navController, 1, false, true)
                     }
@@ -161,19 +167,25 @@ fun TabsUserPubFavoritas(
                 var shortStory by remember {
                     mutableStateOf(listOf<ShortStoryGet>())
                 }
+                var shortStoryIsNull by remember {
+                    mutableStateOf(false)
+                }
 
                 //CallShortStoryAPI.getShortStories {
                 CallShortStoryAPI.getUserFavoritedShortStories(userID) {
-                    shortStory = it
+                    if (it.isNullOrEmpty()) shortStoryIsNull = true
+                    else shortStory = it
                 }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                if (shortStoryIsNull) Text(text = "Você não possui pequenas histórias favoritadas.")
+
+                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {
                         ShortStorysCard(it, navController, userID, false, true)
                     }
                 }
             }
-            2 -> Text(text = "Pequenas Histórias")
+            2 -> Text(text = "Recomendacoes")
         }
     }
 }
