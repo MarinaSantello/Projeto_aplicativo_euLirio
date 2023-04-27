@@ -257,24 +257,27 @@ fun ShortStorysCard(
                                         likeState = !likeState
                                         if (likeState) {
 
-
                                             var shortStorieLike = LikeShortStorie(
                                                 idHistoriaCurta = shortStory.id,
                                                 idUsuario = userID
                                             )
                                             CallLikeAPI.likeShortStorie(shortStorieLike)
 
-                                        } else {
                                             CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
                                                 quantidadeLikesState = it.qtdeCurtidas
                                             }
 
+                                        } else {
 
                                             var shortStorieUnLike = LikeShortStorie(
                                                 idHistoriaCurta = shortStory.id,
                                                 idUsuario = userID
                                             )
                                             CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
+
+                                            CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
+                                                quantidadeLikesState = it.qtdeCurtidas
+                                            }
                                         }
                                     }
                             ) {
@@ -309,9 +312,6 @@ fun ShortStorysCard(
                                     .clickable {
                                         saveState = !saveState
 
-                                        CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
-                                            quantidadeFavoritosState = it.qtdeFavoritos
-                                        }
 
                                         if (!saveState) {
                                             val favoriteShortStorieUnCheck = FavoriteShortStorie(
@@ -321,6 +321,9 @@ fun ShortStorysCard(
                                             CallFavoriteAPI.unfavoriteShortStorie(
                                                 favoriteShortStorieUnCheck
                                             )
+                                            CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+                                                quantidadeFavoritosState = it.qtdeFavoritos
+                                            }
                                         } else {
                                             val favoriteShortStorieCheck = FavoriteShortStorie(
                                                 idHistoriaCurta = shortStory.id,
@@ -329,6 +332,10 @@ fun ShortStorysCard(
                                             CallFavoriteAPI.favoriteShortStorie(
                                                 favoriteShortStorieCheck
                                             )
+
+                                            CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+                                                quantidadeFavoritosState = it.qtdeFavoritos
+                                            }
 
                                         }
                                     }

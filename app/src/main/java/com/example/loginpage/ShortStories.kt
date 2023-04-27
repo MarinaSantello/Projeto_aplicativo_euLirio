@@ -40,31 +40,33 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.favorite.CallFavoriteAPI
+import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
+import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.ShortStoryGet
+import com.example.loginpage.models.*
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
 import com.example.loginpage.ui.theme.*
 
-//class ShortStories : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            LoginPageTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-//                    ShortStory(1, rememberNavController())
-//                }
-//            }
-//        }
-//    }
-//}
+class ShortStories : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            LoginPageTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    ShortStory(1, rememberNavController())
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ShortStory(
@@ -120,6 +122,8 @@ fun ShowStories(
     context: Context
 ) {
 
+    val userID = UserIDrepository(context).getAll()[0].idUser
+
     var likeState by remember {
         mutableStateOf(shortStory.curtido)
     }
@@ -130,6 +134,31 @@ fun ShowStories(
     var viewState by remember {
         mutableStateOf(shortStory.lido)
     }
+
+    var quantidadeLikesState by remember {
+        mutableStateOf("")
+    }
+
+    var quantidadeFavoritosState by remember {
+        mutableStateOf("")
+    }
+
+    var quantidadeViewsState by remember {
+        mutableStateOf("")
+    }
+
+    CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
+        quantidadeLikesState = it.qtdeCurtidas
+    }
+
+    CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+        quantidadeFavoritosState = it.qtdeFavoritos
+    }
+
+    CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+        quantidadeViewsState = it.qtdeLidos
+    }
+
 
     val mouths = listOf("Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez.")
     val date = shortStory.data.split("T")[0].split("-")
@@ -281,14 +310,40 @@ fun ShowStories(
                                         Icons.Outlined.Favorite,
                                         contentDescription = "icone de curtir",
                                         modifier = Modifier
-                                            .clickable { likeState = !likeState },
+                                            .clickable {
+                                                likeState = false
+
+                                                var shortStorieUnLike = LikeShortStorie(
+                                                    idHistoriaCurta = shortStory.id,
+                                                    idUsuario = userID
+                                                )
+                                                CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
+
+                                                CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
+                                                    quantidadeLikesState = it.qtdeCurtidas
+                                                }
+
+
+                                                       },
                                         tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                     )
                                 } else Icon(
                                     Icons.Outlined.FavoriteBorder,
                                     contentDescription = "icone de curtir",
                                     modifier = Modifier
-                                        .clickable { likeState = !likeState },
+                                        .clickable { likeState = true
+
+                                            var shortStorieLike = LikeShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallLikeAPI.likeShortStorie(shortStorieLike)
+
+                                            CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
+                                                quantidadeLikesState = it.qtdeCurtidas
+                                            }
+
+                                                   },
                                     tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                 )
 
@@ -301,7 +356,7 @@ fun ShowStories(
                             }
 
                             Text(
-                                text = "570",
+                                text = quantidadeLikesState,
                                 fontSize = 16.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
@@ -326,14 +381,43 @@ fun ShowStories(
                                         Icons.Outlined.Bookmark,
                                         contentDescription = "icone de salvar",
                                         modifier = Modifier
-                                            .clickable { saveState = !saveState },
+                                            .clickable {
+                                                saveState = false
+
+                                                val favoriteShortStorieUnCheck = FavoriteShortStorie(
+                                                    idHistoriaCurta = shortStory.id,
+                                                    idUsuario = userID
+                                                )
+                                                CallFavoriteAPI.unfavoriteShortStorie(
+                                                    favoriteShortStorieUnCheck
+                                                )
+
+                                                CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+                                                    quantidadeFavoritosState = it.qtdeFavoritos
+                                                }
+                                                       },
                                         tint = Color.White
                                     )
                                 } else Icon(
                                     Icons.Outlined.BookmarkAdd,
                                     contentDescription = "icone de salvar",
                                     modifier = Modifier
-                                        .clickable { saveState = !saveState },
+                                        .clickable {
+                                            saveState = true
+
+                                            val favoriteShortStorieCheck = FavoriteShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallFavoriteAPI.favoriteShortStorie(
+                                                favoriteShortStorieCheck
+                                            )
+
+                                            CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
+                                                quantidadeFavoritosState = it.qtdeFavoritos
+                                            }
+
+                                                   },
                                     tint = Color.White
                                 )
 
@@ -346,7 +430,7 @@ fun ShowStories(
                             }
 
                             Text(
-                                text = "182",
+                                text = quantidadeFavoritosState,
                                 fontSize = 16.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
@@ -371,14 +455,39 @@ fun ShowStories(
                                         Icons.Rounded.CheckCircle,
                                         contentDescription = "icone de salvar",
                                         modifier = Modifier
-                                            .clickable { viewState = !viewState },
+                                            .clickable {
+                                                viewState = false
+
+                                                val unViewShortStorie = VisualizationShortStorie(
+                                                    idHistoriaCurta = shortStory.id,
+                                                    idUsuario = userID
+                                                )
+                                                CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
+
+                                                CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+                                                    quantidadeViewsState = it.qtdeLidos
+                                                }
+                                                       },
                                         tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                     )
                                 } else Icon(
                                     Icons.Outlined.CheckCircle,
                                     contentDescription = "icone de salvar",
                                     modifier = Modifier
-                                        .clickable { viewState = !viewState },
+                                        .clickable {
+                                            viewState = true
+
+                                            val viewShortStorie = VisualizationShortStorie(
+                                                idHistoriaCurta = shortStory.id,
+                                                idUsuario = userID
+                                            )
+                                            CallVisualizationAPI.viewShortStorie(viewShortStorie)
+
+                                            CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
+                                                quantidadeViewsState = it.qtdeLidos
+                                            }
+
+                                                   },
                                     tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                 )
 
@@ -391,7 +500,7 @@ fun ShowStories(
                             }
 
                             Text(
-                                text = "4,1k",
+                                text = quantidadeViewsState,
                                 fontSize = 16.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
