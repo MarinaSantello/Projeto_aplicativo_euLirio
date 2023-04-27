@@ -3,6 +3,8 @@ package com.example.loginpage
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore.Audio.Genres
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -16,6 +18,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
@@ -29,11 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +52,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.Search.CallSearchaAPI
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.shortStory.CallShortStory
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
@@ -86,6 +94,10 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 var bottomBarState: MutableState<Boolean> = mutableStateOf(true)
 var menuState: MutableState<Boolean> = mutableStateOf(false)
+var searchState: MutableState<String> = mutableStateOf("")
+var announcements: MutableState<List<AnnouncementGet>> = mutableStateOf(listOf())
+var announcementIsNull: MutableState<Boolean> = mutableStateOf(false)
+
 @Composable
 fun SearchBooks(navController: NavController) {
 
@@ -141,20 +153,16 @@ fun SearchBooks(navController: NavController) {
 fun TopBarSearch(
     userID: UserID,
     scaffoldState: ScaffoldState,
-    state: MutableState<Boolean>
+    state: MutableState<Boolean>,
 ) {
 
     var foto by remember {
         mutableStateOf("")
     }
 
-    var searchState by remember {
-        mutableStateOf("")
-    }
+    val context = LocalContext.current
 
-
-
-    val RoundedCornerShape = RoundedCornerShape(20.dp)
+    val focusManager = LocalFocusManager.current
 
     CallAPI.getUser(userID.idUser.toLong()) {
         foto = it.foto
@@ -188,8 +196,8 @@ fun TopBarSearch(
                                 )
                         ) {
                             TextField(
-                                value = searchState,
-                                onValueChange = { searchState = it },
+                                value = searchState.value,
+                                onValueChange = { searchState.value = it },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .fillMaxHeight()
@@ -203,6 +211,24 @@ fun TopBarSearch(
                                     )
 
                                 },
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        focusManager.clearFocus()
+
+                                        CallSearchaAPI.searchAnnouncementsByName(searchState.value, userID.idUser) {
+                                            if (it.isNullOrEmpty()) announcementIsNull.value = true
+                                            else {
+                                                announcements.value = it
+                                                announcementIsNull.value = false
+                                            }
+
+                                            it?.get(0)?.let { it1 -> Log.i("pesquisa", it1.titulo) }
+                                        }
+                                    }
+                                ),
                                 singleLine = true,
                                 colors = TextFieldDefaults.textFieldColors(
                                     backgroundColor = Color.White,
@@ -218,17 +244,12 @@ fun TopBarSearch(
                         }
 
                         Icon(
-                            imageVector = Icons.Outlined.Menu,
+                            imageVector = Icons.Rounded.Menu,
                             contentDescription = "Menu burguer",
                             modifier = Modifier
                                 .size(50.dp)
                                 .clickable {
-                                    menuState.value = true
-                                    if (menuState.value) {
-                                        bottomBarState.value = false
-                                    }
-
-
+                                    menuState.value = !menuState.value
                                 }
 
                         )
@@ -331,17 +352,15 @@ fun TabsFeedSearch(
 //        when (tabIndex.currentPage) {
         when (tabIndex) {
             0 -> {
-                var announcements by remember {
-                    mutableStateOf(listOf<AnnouncementGet>())
-                }
-
                 //CallAnnouncementAPI.getAnnouncements {
-                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
-                    announcements = it
-                }
+//                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
+//                    announcements.value = it
+//                }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-                    items(announcements) {
+                if (announcementIsNull.value) Text(text = "Não existem livros com esse nome.")
+
+                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                    items(announcements.value) {
                         AnnouncementCard(it, userID, navController, 1, true, true)
                     }
                 }
@@ -381,10 +400,6 @@ fun TabsFeedSearch(
             }
         )
     }
-
-
-
-
 }
 
 

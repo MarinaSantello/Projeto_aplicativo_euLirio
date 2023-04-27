@@ -510,7 +510,10 @@ fun ShowStories(
                 }
             }
         }
-        Column (Modifier.height(1000.dp)) {
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Column (Modifier.height(1000.dp)
+        ) {
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween) {
@@ -520,37 +523,38 @@ fun ShowStories(
                         contentDescription = "foto da pessoa",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .padding(start = 8.dp, top = 8.dp)
-                            .size(36.dp)
+                            .padding(start = 16.dp, top = 8.dp)
+                            .size(40.dp)
                             .clip(
                                 RoundedCornerShape(20.dp)
                             )
                     )
 
-                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-
                     Column() {
                         Text(
                             text = shortStory.usuario[0].nomeUsuario,
-                            fontSize = 16.sp,
+                            fontSize = 15.sp,
                             fontFamily = SpartanMedium,
-                            modifier = Modifier.padding(top = 8.dp)
+                            modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+
                         )
                         Text(
                             text = "@${shortStory.usuario[0].userName}",
-                            fontSize = 14.sp,
-                            fontFamily = Spartan
+                            fontSize = 12.sp,
+                            fontFamily = Spartan,
+                            modifier = Modifier.padding(top = 2.dp, start = 8.dp)
                         )
 
                     }
                 }
-                Column {
+                Column() {
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Outlined.CalendarMonth,
                             contentDescription = "icone de publicacoes",
                             modifier = Modifier
-                                .padding(horizontal = 4.dp),
+                                .padding(start = 4.dp),
                             tint = Color.Black
                         )
                         Text(
@@ -558,22 +562,21 @@ fun ShowStories(
                             fontSize = 10.sp,
                             fontFamily = QuickSand,
                             fontWeight = FontWeight.W500,
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
-
-                    Spacer(modifier = Modifier.padding(4.dp))
-
                     Text(
                         text = "${date[2]} $mouth ${date[0]}",
                         fontSize = 12.sp,
                         fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(end = 16.dp)
                     )
                 }
             }
 
             //sinopse
-            Column() {
+            Column(modifier = Modifier. padding(15.dp)) {
                 Text(
                     text = shortStory.sinopse,
                     fontFamily = QuickSand,
