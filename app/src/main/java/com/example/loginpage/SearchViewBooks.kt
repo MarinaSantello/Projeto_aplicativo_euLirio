@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +61,7 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.Search.CallSearchaAPI
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.genre.CallGenreAPI
 import com.example.loginpage.API.shortStory.CallShortStory
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
@@ -66,10 +69,12 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Anuncios
+import com.example.loginpage.models.Genero
 import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.AnnouncementCard
+import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.components.TabsUserStories
 import com.example.loginpage.ui.theme.*
@@ -141,6 +146,19 @@ fun SearchBooks(navController: NavController) {
     if (menuState.value) Box(Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
+        var generos by remember {
+            mutableStateOf(listOf<Genero>())
+        }
+        CallGenreAPI.callGetGenre {
+            generos = it
+        }
+        val rows = (generos.size + 2) / 3
+
+        var selectedValue by rememberSaveable { mutableStateOf("") }
+
+        var minValue by remember { mutableStateOf("") }
+        var maxValue by remember { mutableStateOf("") }
+
         BackHandler(menuState.value,
             onBack = {
                 menuState.value = !menuState.value
@@ -169,7 +187,134 @@ fun SearchBooks(navController: NavController) {
                     .fillMaxHeight(.6f),
                 backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-            ){}
+            ){
+                Column() {
+                    Text(text = "Filtros")
+                    Text(text = "Gêneros")
+
+                    repeat(rows) { rowIndex ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            (rowIndex * 3..(rowIndex * 3) + 2).forEachIndexed { colIndex, itemIndex ->
+                                if (itemIndex < generos.size) {
+                                    var checkGenre by rememberSaveable() {
+                                        mutableStateOf(false)
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.weight(1f),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Start
+                                    ) {
+                                        Checkbox(
+                                            checked = checkGenre,
+                                            onCheckedChange = {
+                                                checkGenre = it
+
+//                                                onChecked.invoke(checkGenre, generos[itemIndex].idGenero)
+                                            },
+                                            colors = CheckboxDefaults.colors(
+                                                checkedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                                uncheckedColor = colorResource(id = R.color.eulirio_black)
+                                            )
+
+                                        )
+                                        Text(
+                                            text = generos[itemIndex].nomeGenero.uppercase(),
+                                            fontWeight = FontWeight.W500,
+                                            fontSize = 12.sp
+
+                                        )
+                                    }
+
+                                } else {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
+                        }
+                    }
+
+
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.Black
+                    )
+
+                    Text(text = "Ordem")
+
+                    val options = listOf("mais recentes", "mais lidos")
+                    Row() {
+                        options.forEach { item ->
+                            Row(
+                                modifier = Modifier.selectable(
+                                    selected = selectedValue == item,
+                                    onClick = {
+                                        selectedValue = item
+//                                    onSelectionChanged(item)
+                                    }
+                                ),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = if(options[0] == item && selectedValue.isEmpty()) true else selectedValue == item,
+                                    onClick = {
+                                        selectedValue = item
+//                                    onSelectionChanged(item)
+                                    }
+                                )
+                                Text(item)
+                            }
+                        }
+                    }
+
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.Black
+                    )
+
+                    Text(text = "Preço")
+
+                    Row() {
+                        TextField(
+                            value = minValue,
+                            onValueChange = {
+                                minValue = it
+                            },
+                            placeholder = {
+                                Text(
+                                    text = "Mínimo",
+                                    fontSize = 16.sp
+                                )
+
+                            }
+                        )
+
+                        TextField(
+                            value = maxValue,
+                            onValueChange = {
+                                maxValue = it
+                            },
+                            placeholder = {
+                                Text(
+                                    text = "Maximo",
+                                    fontSize = 16.sp
+                                )
+
+                            }
+                        )
+                    }
+                    
+                    Button(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Rounded.Check,
+                            contentDescription = "confirmar pesquisa"
+                        )
+                        
+                    }
+                }
+            }
         }
     }
 
