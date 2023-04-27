@@ -99,7 +99,7 @@ fun SearchBooks(navController: NavController) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    val userID = UserID(id = 1, idUser = 113)
+    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
     Scaffold(
         modifier = Modifier

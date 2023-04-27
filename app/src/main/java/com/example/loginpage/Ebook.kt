@@ -14,6 +14,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -507,34 +508,38 @@ fun ShowEbook(
         }
 
 
-        Spacer(modifier = Modifier.padding(vertical = 20.dp))
+//        Spacer(modifier = Modifier.padding(vertical = 20.dp))
 
-        Column(Modifier.height(1000.dp)) {
+        Column(Modifier.height(1000.dp)
+            .padding(15.dp)
+        ) {
             Row {
                 Image(
                     painter = rememberAsyncImagePainter(announcement.usuario[0].foto),
                     contentDescription = "foto da pessoa",
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .padding(start = 8.dp, top = 8.dp)
-                        .width(30.dp)
+                        .size(40.dp)
                         .clip(
-                            RoundedCornerShape(15.dp)
-                        )
-                )
+                            CircleShape
+                        ),
+                    contentScale = ContentScale.Crop,
+
+
+                    )
 
                 Spacer(modifier = Modifier.padding(horizontal = 8.dp))
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = announcement.usuario[0].nomeUsuario,
-                        fontSize = 22.sp,
+                        fontSize = 15.sp,
                         fontFamily = SpartanMedium,
                         modifier = Modifier.padding(top = 11.dp)
                     )
                     Text(
                         text = "@${announcement.usuario[0].userName}",
-                        fontSize = 20.sp,
+                        fontSize = 12.sp,
                         fontFamily = Spartan
                     )
                 }
@@ -547,29 +552,31 @@ fun ShowEbook(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
-
                 //coluna de páginas
                 Column() {
-
-                    Icon(
-                        Icons.Outlined.Description,
-                        contentDescription = "icone de páginas",
+                    Row() {
+                        Icon(
+                            Icons.Outlined.Description,
+                            contentDescription = "icone de páginas",
 //                        modifier = Modifier
 //                            .clickable { pageState = !pageState },
-                        tint = Color.Black
-                    )
-                    Text(
-                        text = "páginas",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-
+                            tint = Color.Black
                         )
+                        Text(
+                            text = "páginas (pdf)",
+                            fontSize = 10.sp,
+                            fontFamily = QuickSand,
+                            fontWeight = FontWeight.W500,
+                            modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+                        )
+                    }
                     Text(
                         text = announcement.qunatidadePaginas.toString(),
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 30.dp)
                     )
 
                 }
@@ -578,25 +585,29 @@ fun ShowEbook(
 
                 //coluna de volumes
                 Column() {
-
-                    Icon(
-                        Icons.Outlined.LibraryBooks,
-                        contentDescription = "icone de volume",
+                    Row() {
+                        Icon(
+                            Icons.Outlined.LibraryBooks,
+                            contentDescription = "icone de volume",
 //                        modifier = Modifier
 //                            .clickable { volumeState = !volumeState },
-                        tint = Color.Black
-                    )
-                    Text(
-                        text = "volume",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-                    )
+                            tint = Color.Black
+                        )
+                        Text(
+                            text = "volume",
+                            fontSize = 10.sp,
+                            fontFamily = QuickSand,
+                            fontWeight = FontWeight.W500,
+                            modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+                        )
+                    }
                     Text(
                         text = announcement.volume.toString(),
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 30.dp)
                     )
                 }
 
@@ -604,29 +615,32 @@ fun ShowEbook(
 
                 //coluna de vendas
                 Column() {
-
-                    Icon(
-                        Icons.Outlined.ShoppingBag,
-                        contentDescription = "icone de vendas",
+                    Row() {
+                        Icon(
+                            Icons.Outlined.ShoppingBag,
+                            contentDescription = "icone de vendas",
 //                        modifier = Modifier
 //                            .clickable { vendaState = !vendaState },
-                        tint = Color.Black
-                    )
+                            tint = Color.Black
+                        )
 
-                    Text(
-                        text = "vendas",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
+                        Text(
+                            text = "vendas",
+                            fontSize = 10.sp,
+                            fontFamily = QuickSand,
+                            fontWeight = FontWeight.W500,
+                            modifier = Modifier.padding(top = 4.dp, start = 4.dp)
 
                         )
+                    }
                     Text(
                         text = "1,2k",
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 30.dp)
                     )
-
 
                 }
 
@@ -634,27 +648,29 @@ fun ShowEbook(
 
                 //coluns de publicaçao
                 Column() {
-
-                    Icon(
-                        Icons.Outlined.CalendarMonth,
-                        contentDescription = "icone de publicacoes",
+                    Row() {
+                        Icon(
+                            Icons.Outlined.CalendarMonth,
+                            contentDescription = "icone de publicacoes",
 //                        modifier = Modifier
 //                            .clickable { postState = !postState },
-                        tint = Color.Black
-                    )
-
-                    Text(
-                        text = "publicação",
-                        fontSize = 10.sp,
-                        fontFamily = QuickSand,
-                        fontWeight = FontWeight.W500,
-
+                            tint = Color.Black
                         )
+                        Text(
+                            text = "publicação",
+                            fontSize = 10.sp,
+                            fontFamily = QuickSand,
+                            fontWeight = FontWeight.W500,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+                        )
+                    }
                     Text(
                         text = "${date[2]} $mouth ${date[0]}",
                         fontSize = 12.sp,
                         fontFamily = MontSerratSemiBold,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 4.dp)
                     )
 
                 }
@@ -662,7 +678,7 @@ fun ShowEbook(
             Spacer(modifier = Modifier.height(20.dp))
 
             Divider(
-                color = Color.Gray,
+                color = Color.LightGray,
                 thickness = 1.dp,
                 modifier = Modifier.fillMaxWidth()
             )

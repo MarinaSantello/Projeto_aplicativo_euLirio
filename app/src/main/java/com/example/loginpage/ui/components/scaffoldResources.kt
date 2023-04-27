@@ -539,7 +539,7 @@ fun BottomBarScaffold(
                         if (activity == 2) Icons.Default.Search else Icons.Outlined.Search,
                         "",
                         modifier = Modifier
-                            .size(if (activity == 1) 32.dp else 28.dp)
+                            .size(if (activity == 2) 32.dp else 28.dp)
                             .clickable { navController.navigate(Routes.Search.name) },
                         tint = if (activity == 2) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
@@ -548,7 +548,7 @@ fun BottomBarScaffold(
                         if (activity == 3) Icons.Default.ShoppingCart else Icons.Outlined.ShoppingCart,
                         "",
                         modifier = Modifier
-                            .size(if (activity == 1) 32.dp else 28.dp)
+                            .size(if (activity == 3) 32.dp else 28.dp)
                             .clickable { navController.navigate("${Routes.ShoppingCart.name}/$userID") },
                         tint = if (activity == 3) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )

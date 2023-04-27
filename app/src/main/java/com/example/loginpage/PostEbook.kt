@@ -726,7 +726,7 @@ fun PostDataEbook(navController: NavController) {
                 },
                 label = {
                     Text(
-                        text = "Páginas",
+                        text = "Páginas (arquivo PDF)",
                         color = colorResource(id = R.color.eulirio_purple_text_color_border),
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
