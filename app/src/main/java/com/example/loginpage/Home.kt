@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -148,6 +149,11 @@ fun ButtonsPost (
     fabState: MutableState<Boolean>,
     onChecked: (Boolean) -> Unit
 ) {
+
+    BackHandler(!fabState.value,
+        onBack = {
+            fabState.value = !fabState.value
+    })
 
     Box (
         Modifier
