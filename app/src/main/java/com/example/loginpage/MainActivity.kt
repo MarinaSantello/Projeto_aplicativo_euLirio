@@ -95,6 +95,10 @@ fun Greeting() {
             SearchBooks(navController)
         }
 
+        composable(Routes.SearchPage.name) {
+            SearchPage(navController)
+        }
+
         composable(Routes.SavePage.name) {
             PubFavoritas(navController)
         }

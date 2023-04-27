@@ -97,6 +97,8 @@ var menuState: MutableState<Boolean> = mutableStateOf(false)
 var searchState: MutableState<String> = mutableStateOf("")
 var announcements: MutableState<List<AnnouncementGet>> = mutableStateOf(listOf())
 var announcementIsNull: MutableState<Boolean> = mutableStateOf(false)
+var shortStories: MutableState<List<ShortStoryGet>> = mutableStateOf(listOf())
+var shortStoryIsNull: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
 fun SearchBooks(navController: NavController) {
@@ -126,7 +128,6 @@ fun SearchBooks(navController: NavController) {
             },
         scaffoldState = scaffoldState,
         topBar = { TopBarSearch(userID, scaffoldState, topBarState) },
-        bottomBar = { BottomBarScaffold(bottomBarState, navController, users[0].idUser, 2) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value) {
@@ -134,12 +135,7 @@ fun SearchBooks(navController: NavController) {
                     fabState.value = it
                 }
             }
-        },
-        drawerContent = {
-            DrawerDesign(userID, context, scaffoldState, navController)
-        },
-//
-//        drawerGesturesEnabled = true,
+        }
     ) {
         ShowBooks(users[0].idUser, it.calculateBottomPadding(), 2, rememberLazyListState(), navController)
     }
@@ -190,7 +186,7 @@ fun TopBarSearch(
                                 .padding(end = 10.dp)
                                 .background(Color.White)
                                 .border(
-                                    1.dp,
+                                    .5.dp,
                                     color = Color.Black,
                                     shape = RoundedCornerShape(20.dp)
                                 )
@@ -224,8 +220,14 @@ fun TopBarSearch(
                                                 announcements.value = it
                                                 announcementIsNull.value = false
                                             }
+                                        }
 
-                                            it?.get(0)?.let { it1 -> Log.i("pesquisa", it1.titulo) }
+                                        CallSearchaAPI.searchShortStoriesByName(searchState.value, userID.idUser) {
+                                            if (it.isNullOrEmpty()) shortStoryIsNull.value = true
+                                            else {
+                                                shortStories.value = it
+                                                shortStoryIsNull.value = false
+                                            }
                                         }
                                     }
                                 ),
@@ -352,11 +354,6 @@ fun TabsFeedSearch(
 //        when (tabIndex.currentPage) {
         when (tabIndex) {
             0 -> {
-                //CallAnnouncementAPI.getAnnouncements {
-//                CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
-//                    announcements.value = it
-//                }
-
                 if (announcementIsNull.value) Text(text = "Não existem livros com esse nome.")
 
                 else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
@@ -364,20 +361,12 @@ fun TabsFeedSearch(
                         AnnouncementCard(it, userID, navController, 1, true, true)
                     }
                 }
-//                Text(text = "api deu b.o.")
             }
             1 -> {
-                var shortStory by remember {
-                    mutableStateOf(listOf<ShortStoryGet>())
-                }
+                if (shortStoryIsNull.value) Text(text = "Não existem pequenas histórias com esse nome.")
 
-                //CallShortStoryAPI.getShortStories {
-                CallShortStoryAPI.getShortStoriesByGenreUser(userID) {
-                    shortStory = it
-                }
-
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
-                    items(shortStory) {
+                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                    items(shortStories.value) {
                         ShortStorysCard(it, navController, userID, true, true)
                     }
                 }

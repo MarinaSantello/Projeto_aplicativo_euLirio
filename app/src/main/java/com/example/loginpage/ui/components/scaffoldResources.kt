@@ -45,6 +45,7 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Tag
+import com.example.loginpage.searchState
 import com.example.loginpage.ui.theme.Montserrat
 import com.example.loginpage.ui.theme.Montserrat2
 import com.google.firebase.auth.FirebaseAuth
@@ -531,7 +532,10 @@ fun BottomBarScaffold(
                         "",
                         modifier = Modifier
                             .size(if (activity == 1) 32.dp else 28.dp)
-                            .clickable { navController.navigate(Routes.Home.name) },
+                            .clickable {
+                                navController.navigate(Routes.Home.name)
+                                searchState.value = ""
+                            },
                         tint = if (activity == 1) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
 
@@ -540,7 +544,10 @@ fun BottomBarScaffold(
                         "",
                         modifier = Modifier
                             .size(if (activity == 2) 32.dp else 28.dp)
-                            .clickable { navController.navigate(Routes.Search.name) },
+                            .clickable {
+                                navController.navigate(Routes.SearchPage.name)
+                                searchState.value = ""
+                            },
                         tint = if (activity == 2) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
 
@@ -549,7 +556,10 @@ fun BottomBarScaffold(
                         "",
                         modifier = Modifier
                             .size(if (activity == 3) 32.dp else 28.dp)
-                            .clickable { navController.navigate("${Routes.ShoppingCart.name}/$userID") },
+                            .clickable {
+                                navController.navigate("${Routes.ShoppingCart.name}/$userID")
+                                searchState.value = ""
+                            },
                         tint = if (activity == 3) colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border) else colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
                 }

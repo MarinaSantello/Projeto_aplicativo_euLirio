@@ -236,7 +236,7 @@ fun RegisterPageThirdPartFun() {
                                 items(
                                     items = genres
                                 ) {
-                                    GenreCard(it){ state ->
+                                    GenreCard(it, colorResource(id = R.color.eulirio_purple), true){ state ->
                                         if (state) generos += Genero(it.idGenero)
 
                                         else generos -= Genero(it.idGenero)

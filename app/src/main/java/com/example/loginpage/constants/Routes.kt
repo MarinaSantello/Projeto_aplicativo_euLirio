@@ -17,6 +17,7 @@ enum class Routes {
     EditEbook,
     ShoppingCart,
     Search,
+    SearchPage,
     SavePage,
     User,
     UpdateUser,

@@ -20,7 +20,12 @@ import com.example.loginpage.R
 import com.example.loginpage.models.Genero
 
 @Composable
-fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
+fun GenreCard(
+    genre: Genero,
+    color: Color,
+    check: Boolean,
+    onChecked: (Boolean) -> Unit
+) {
 
     var checkState by rememberSaveable() {
         mutableStateOf(false)
@@ -33,7 +38,7 @@ fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
             .padding(start = 4.dp, end = 4.dp, bottom = 8.dp)
             .border(
                 1.5.dp,
-                colorResource(id = R.color.eulirio_purple),
+                color,
                 RoundedCornerShape(30.dp)
             )
             .clickable {
@@ -56,9 +61,9 @@ fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
                 text = genre.nomeGenero.uppercase(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.eulirio_purple)
+                color = color
             )
-            if (checkState) {
+            if (checkState && check) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.CenterEnd
@@ -67,7 +72,7 @@ fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(.3f)
-                            .background(colorResource(id = R.color.eulirio_purple))
+                            .background(color)
                     ) {
                         Checkbox(
                             checked = checkState,
@@ -75,7 +80,7 @@ fun GenreCard(genre: Genero, onChecked: (Boolean) -> Unit) {
                                 checkState = it
                             },
                             colors = CheckboxDefaults.colors(
-                                checkedColor = colorResource(id = R.color.eulirio_purple),
+                                checkedColor = color,
                                 uncheckedColor = Color.Transparent
                             ),
                         )
