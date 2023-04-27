@@ -88,15 +88,7 @@ fun SearchPage(navController: NavController) {
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        if (!fabState.value)
-                            fabState.value = !fabState.value
-                    }
-                )
-            },
+            .fillMaxSize(),
         scaffoldState = scaffoldState,
         topBar = { com.example.loginpage.resources.TopBar(userID, scaffoldState, topBarState) },
         bottomBar = { BottomBarScaffold(bottomBarState, navController, users[0].idUser, 2) },

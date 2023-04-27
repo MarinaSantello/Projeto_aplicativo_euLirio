@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.provider.MediaStore.Audio.Genres
 import android.util.Log
 import android.widget.Toast
+import android.window.OnBackInvokedCallback
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -48,6 +52,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -109,6 +114,7 @@ fun SearchBooks(navController: NavController) {
 
     val topBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
+    val fabVisibility = remember { mutableStateOf(true) }
 
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
@@ -117,27 +123,54 @@ fun SearchBooks(navController: NavController) {
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        if (!fabState.value)
-                            fabState.value = !fabState.value
-                    }
-                )
-            },
+            .fillMaxSize(),
         scaffoldState = scaffoldState,
-        topBar = { TopBarSearch(userID, scaffoldState, topBarState) },
+        topBar = { TopBarSearch(userID, scaffoldState, topBarState, fabVisibility) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            if (fabState.value) {
+            if (fabState.value && fabVisibility.value) {
                 FloatingActionButton() {
                     fabState.value = it
                 }
             }
         }
+    ) { padding ->
+        ShowBooks(users[0].idUser, padding.calculateBottomPadding(), 2, rememberLazyListState(), navController)
+    }
+
+    if (menuState.value) Box(Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 2, rememberLazyListState(), navController)
+        BackHandler(menuState.value,
+            onBack = {
+                menuState.value = !menuState.value
+        })
+
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color(0x80000000))
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            menuState.value = !menuState.value
+                        }
+                    )
+                }
+        )
+        AnimatedVisibility(
+            visible = menuState.value,
+            enter = slideInVertically(initialOffsetY = { it }),
+            exit = slideOutVertically(targetOffsetY = { it })
+        ){
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(.6f),
+                backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
+                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+            ){}
+        }
     }
 
     if (!fabState.value) ButtonsPost(navController, context, 12.dp, fabState) {
@@ -150,6 +183,7 @@ fun TopBarSearch(
     userID: UserID,
     scaffoldState: ScaffoldState,
     state: MutableState<Boolean>,
+    fabVisibility: MutableState<Boolean>
 ) {
 
     var foto by remember {
@@ -251,6 +285,7 @@ fun TopBarSearch(
                             modifier = Modifier
                                 .size(50.dp)
                                 .clickable {
+                                    fabVisibility.value = !fabVisibility.value
                                     menuState.value = !menuState.value
                                 }
 
@@ -340,18 +375,11 @@ fun TabsFeedSearch(
                     },
                     selectedContentColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     unselectedContentColor = Color.Black,
-//                    selected = tabIndex.currentPage == index,
                     selected = tabIndex == index,
                     onClick = { tabIndex = index },
-//                    onClick = {
-//                        coroutineScope.launch {
-//                            tabIndex.animateScrollToPage(index)
-//                        }
-//                    },
                 )
             }
         }
-//        when (tabIndex.currentPage) {
         when (tabIndex) {
             0 -> {
                 if (announcementIsNull.value) Text(text = "Não existem livros com esse nome.")
@@ -375,20 +403,6 @@ fun TabsFeedSearch(
         }
     }
 
-    if(menuState.value){
-        AnimatedVisibility(
-            visible = menuState.value,
-            enter = slideInVertically(initialOffsetY = { -it }),
-            exit = slideOutVertically(targetOffsetY = { -it }),
-            content = {
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    backgroundColor = Color.Black
-                ){}
-            }
-        )
-    }
 }
 
 
