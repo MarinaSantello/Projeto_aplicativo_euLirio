@@ -188,7 +188,10 @@ fun SearchBooks(navController: NavController) {
                 backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             ){
-                Column() {
+                Column(
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp)
+                ) {
 
                     Row(
                         modifier = Modifier
@@ -206,8 +209,20 @@ fun SearchBooks(navController: NavController) {
                     }
 
 
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 29.dp, bottom = 16.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.Top
+                    ){
+                        Text(
+                            text = "Gêneros",
+                            fontSize = 16.sp,
+                            fontFamily = MontSerratBold
 
-                    Text(text = "Gêneros")
+                        )
+                    }
 
                     repeat(rows) { rowIndex ->
                         Row(
@@ -257,80 +272,148 @@ fun SearchBooks(navController: NavController) {
 
                     Divider(
                         thickness = 1.dp,
-                        color = Color.Black
+                        color = colorResource(id = R.color.eulirio_purple_text_color_border)
                     )
 
-                    Text(text = "Ordem")
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 14.dp, bottom = 12.dp)
+                            .fillMaxWidth()
+                    ){
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.Top
+                        ){
+                            Text(
+                                text = "Ordem",
+                                fontSize = 16.sp,
+                                fontFamily = MontSerratBold
 
-                    val options = listOf("mais recentes", "mais lidos")
-                    Row() {
-                        options.forEach { item ->
-                            Row(
-                                modifier = Modifier.selectable(
-                                    selected = selectedValue == item,
-                                    onClick = {
-                                        selectedValue = item
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        val options = listOf("mais recentes", "mais lidos")
+                        Row() {
+                            options.forEach { item ->
+                                Row(
+                                    modifier = Modifier.selectable(
+                                        selected = selectedValue == item,
+                                        onClick = {
+                                            selectedValue = item
 //                                    onSelectionChanged(item)
-                                    }
-                                ),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = if(options[0] == item && selectedValue.isEmpty()) true else selectedValue == item,
-                                    onClick = {
-                                        selectedValue = item
+                                        }
+                                    ),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        selected = if(options[0] == item && selectedValue.isEmpty()) true else selectedValue == item,
+                                        onClick = {
+                                            selectedValue = item
 //                                    onSelectionChanged(item)
-                                    }
-                                )
-                                Text(item)
+                                        }
+                                    )
+                                    Text(item)
+                                }
                             }
                         }
+
+                        
+
+
                     }
+
+
+
+
+                   
 
                     Divider(
                         thickness = 1.dp,
-                        color = Color.Black
+                        color = colorResource(id = R.color.eulirio_purple_text_color_border)
                     )
 
-                    Text(text = "Preço")
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 14.dp, bottom = 12.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            Text(
+                                text = "Preço",
+                                fontSize = 16.sp,
+                                fontFamily = MontSerratBold
 
-                    Row() {
-                        TextField(
-                            value = minValue,
-                            onValueChange = {
-                                minValue = it
-                            },
-                            placeholder = {
-                                Text(
-                                    text = "Mínimo",
-                                    fontSize = 16.sp
-                                )
+                            )
+                        }
 
-                            }
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.Bottom,
+                            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                        ) {
+                            TextField(
+                                value = minValue,
+                                onValueChange = {
+                                    minValue = it
+                                },
+                                placeholder = {
+                                    Text(
+                                        text = "Mínimo",
+                                        fontSize = 16.sp
+                                    )
 
-                        TextField(
-                            value = maxValue,
-                            onValueChange = {
-                                maxValue = it
-                            },
-                            placeholder = {
-                                Text(
-                                    text = "Maximo",
-                                    fontSize = 16.sp
-                                )
+                                },
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .padding(end = 12.dp)
+                            )
 
-                            }
-                        )
+                            TextField(
+                                value = maxValue,
+                                onValueChange = {
+                                    maxValue = it
+                                },
+                                placeholder = {
+                                    Text(
+                                        text = "Maximo",
+                                        fontSize = 16.sp
+                                    )
+
+                                },
+                                modifier = Modifier
+                                    .width(120.dp)
+                            )
+                        }
                     }
-                    
-                    Button(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Rounded.Check,
-                            contentDescription = "confirmar pesquisa"
-                        )
-                        
+
+
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.Bottom
+                    ){
+                        Button(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Rounded.Check,
+                                contentDescription = "confirmar pesquisa"
+                            )
+
+                        }
                     }
-                }
+                    }
+
+
+                   
             }
         }
     }
