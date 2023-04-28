@@ -132,11 +132,11 @@ class CallLikeAPI() {
             callCountAnnouncementLike.enqueue(object:
             Callback<CountAnnouncementLikes>{
                 override fun onResponse(call: Call<CountAnnouncementLikes>, response: Response<CountAnnouncementLikes>) {
-                    val quantidadeLikesAnuncio = response.body() ?: CountAnnouncementLikes(
-                        idAnuncio = announcementId,
-                        qtdeCurtidas = "0"
-                    )
-                    Log.i("respon post",quantidadeLikesAnuncio.qtdeCurtidas)
+                    val quantidadeLikesAnuncio = response.body()!! //?: CountAnnouncementLikes(
+//                        idAnuncio = announcementId,
+//                        qtdeCurtidas = "0"
+//                    )
+                    Log.i("respon post like", quantidadeLikesAnuncio.qtdeCurtidas)
                     qtndLikes.invoke(quantidadeLikesAnuncio)
                 }
 

@@ -189,7 +189,24 @@ fun SearchBooks(navController: NavController) {
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             ){
                 Column() {
-                    Text(text = "Filtros")
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.Top
+                    ){
+                        Text(
+                            text = "FILTROS",
+                            fontSize = 28.sp,
+                            fontFamily = MontSerratBold
+
+                        )
+                    }
+
+
+
                     Text(text = "Gêneros")
 
                     repeat(rows) { rowIndex ->

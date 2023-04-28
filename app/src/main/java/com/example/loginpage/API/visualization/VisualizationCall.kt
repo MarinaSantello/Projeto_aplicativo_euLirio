@@ -27,7 +27,7 @@ interface VisualizationCall {
 
     //Remover uma visualização da historia curta
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
-    @POST("unread-storie")
+    @POST("unread-short-storie")
     fun unVisualizationShortStorie(@Body visualization: VisualizationShortStorie): Call<String>
 
     //Obter a quantidade total de visualizações que a historia curta recebeu

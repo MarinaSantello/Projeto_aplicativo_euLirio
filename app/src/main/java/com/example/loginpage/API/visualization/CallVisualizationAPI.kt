@@ -74,7 +74,7 @@ class CallVisualizationAPI() {
             callViewShortStorie.enqueue(object:
                 retrofit2.Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-                    CallFavoriteAPI.retorno = listOf<String>(
+                    retorno = listOf<String>(
                         response.message().toString(),
                         response.code().toString()
                     )

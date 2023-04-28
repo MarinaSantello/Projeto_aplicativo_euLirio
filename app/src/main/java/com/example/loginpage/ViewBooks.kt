@@ -178,7 +178,7 @@ fun TabsFeed(
                 }
 
                 LazyColumn(
-                    state = scrollState,
+//                    state = scrollState,
                     contentPadding = PaddingValues(bottom = bottomBarLength)
                 ) {
                     items(announcements) {
@@ -187,21 +187,6 @@ fun TabsFeed(
                 }
                 val context = LocalContext.current
 
-                // Detect vertical scroll
-                if (scrollState.isScrollInProgress) {
-                    val firstVisibleItemIndex = scrollState.firstVisibleItemIndex
-                    val firstVisibleItemScrollOffset = scrollState.firstVisibleItemScrollOffset
-                    val yOffset = if (firstVisibleItemIndex == 0) {
-                        firstVisibleItemScrollOffset
-                    } else {
-                        // Calculate the total vertical scroll offset based on the height of the items
-                        val visibleItemsInfo = scrollState.layoutInfo?.visibleItemsInfo ?: emptyList()
-                        val heightOfPreviousItems = visibleItemsInfo.take(firstVisibleItemIndex).sumOf { it.size }
-                        heightOfPreviousItems + firstVisibleItemScrollOffset
-                    }
-                    Toast.makeText(context, yOffset.toString(), Toast.LENGTH_SHORT).show()
-                }
-//                Text(text = "api deu b.o.")
             }
             1 -> {
                 var shortStory by remember {
