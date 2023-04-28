@@ -29,8 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
@@ -59,6 +61,12 @@ fun ShortStorysCard(
         mutableStateOf(shortStory.lido)
     }
 
+    CallShortStoryAPI.getShortStoryByID(shortStory.id!!, userID) {
+        likeState = it.curtido
+        saveState = it.favorito
+        viewState = it.lido
+    }
+
 
     var quantidadeLikesState by remember {
         mutableStateOf("")
@@ -83,8 +91,6 @@ fun ShortStorysCard(
     CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
         quantidadeViewsState = it.qtdeLidos
     }
-
-
 
     Card(
         modifier = Modifier

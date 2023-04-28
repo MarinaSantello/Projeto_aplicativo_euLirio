@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
@@ -89,6 +90,11 @@ fun AnnouncementCard(
         quantidadeViewsState = it.qtdeLidos
     }
 
+    CallAnnouncementAPI.getAnnouncement(announcement.id!!, userID) {
+        likeState = it.curtido
+        saveState = it.favorito
+        viewState = it.lido
+    }
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
 

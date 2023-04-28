@@ -283,14 +283,14 @@ fun ShowEbook(
                                 .padding(start = 4.dp),
                             fontWeight = FontWeight.Light,
                             fontFamily = SpartanBold,
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
                             color = colorResource(id = R.color.eulirio_black)
                         )
 
                         Spacer(modifier = Modifier.width(4.dp))
 
                         LazyRow() {
-                            items(announcement.generos) {
+                            if (!(announcement.generos.isNullOrEmpty())) items(announcement.generos) {
                                 Card(
                                     modifier = Modifier
                                         .padding(start = 4.dp, end = 4.dp),
@@ -386,7 +386,7 @@ fun ShowEbook(
 
                                                 CallLikeAPI.dislikeAnnouncement(announcementDislike)
 
-                                                var newUnlikeConvert = quantidadeLikesState.toInt() - 1
+                                                val newUnlikeConvert = quantidadeLikesState.toInt() - 1
                                                 quantidadeLikesState = newUnlikeConvert.toString()
 
                                             },
@@ -405,7 +405,7 @@ fun ShowEbook(
 
                                             CallLikeAPI.likeAnnouncement(announcementLike)
 
-                                            var newlikeConvert = quantidadeLikesState.toInt() + 1
+                                            val newlikeConvert = quantidadeLikesState.toInt() + 1
                                             quantidadeLikesState = newlikeConvert.toString()
                                         },
                                     tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
@@ -421,7 +421,7 @@ fun ShowEbook(
 
                             Text(
                                 text = quantidadeLikesState,
-                                fontSize = 16.sp,
+                                fontSize = 15.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
                             )
@@ -497,7 +497,7 @@ fun ShowEbook(
 
                             Text(
                                 text = quantidadeFavoritosState,
-                                fontSize = 16.sp,
+                                fontSize = 15.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
                             )
@@ -530,10 +530,10 @@ fun ShowEbook(
                                                 )
                                                 CallVisualizationAPI.unViewAnnouncement(unViewAnnouncement)
 
-                                                var newUnViewConvert = quantidadeViewsState.toInt() - 1
+                                                val newUnViewConvert = quantidadeViewsState.toInt() - 1
                                                 quantidadeViewsState = newUnViewConvert.toString()
 
-                                                       },
+                                            },
                                         tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                     )
                                 } else Icon(
@@ -549,7 +549,7 @@ fun ShowEbook(
                                             )
                                             CallVisualizationAPI.viewAnnouncement(viewAnnouncement)
 
-                                            var newViewConvert = quantidadeViewsState.toInt() + 1
+                                            val newViewConvert = quantidadeViewsState.toInt() + 1
                                             quantidadeViewsState = newViewConvert.toString()
 
 
@@ -567,7 +567,7 @@ fun ShowEbook(
 
                             Text(
                                 text = quantidadeViewsState,
-                                fontSize = 16.sp,
+                                fontSize = 15.sp,
                                 fontFamily = MontSerratSemiBold,
                                 fontWeight = FontWeight.Bold
                             )

@@ -319,12 +319,10 @@ fun ShowStories(
                                                 )
                                                 CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
 
-                                                CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
-                                                    quantidadeLikesState = it.qtdeCurtidas
-                                                }
+                                                val newUnlikeConvert = quantidadeLikesState.toInt() - 1
+                                                quantidadeLikesState = newUnlikeConvert.toString()
 
-
-                                                       },
+                                            },
                                         tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                     )
                                 } else Icon(
@@ -339,11 +337,10 @@ fun ShowStories(
                                             )
                                             CallLikeAPI.likeShortStorie(shortStorieLike)
 
-                                            CallLikeAPI.countShortStoriesLikes(shortStory.id!!){
-                                                quantidadeLikesState = it.qtdeCurtidas
-                                            }
+                                            val newlikeConvert = quantidadeLikesState.toInt() + 1
+                                            quantidadeLikesState = newlikeConvert.toString()
 
-                                                   },
+                                        },
                                     tint = colorResource(id = com.example.loginpage.R.color.eulirio_like)
                                 )
 
@@ -392,10 +389,9 @@ fun ShowStories(
                                                     favoriteShortStorieUnCheck
                                                 )
 
-                                                CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
-                                                    quantidadeFavoritosState = it.qtdeFavoritos
-                                                }
-                                                       },
+                                                var newUnSaveConvert = quantidadeFavoritosState.toInt() - 1
+                                                quantidadeFavoritosState = newUnSaveConvert.toString()
+                                            },
                                         tint = Color.White
                                     )
                                 } else Icon(
@@ -413,11 +409,10 @@ fun ShowStories(
                                                 favoriteShortStorieCheck
                                             )
 
-                                            CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!){
-                                                quantidadeFavoritosState = it.qtdeFavoritos
-                                            }
+                                            var newSaveConvert = quantidadeFavoritosState.toInt() + 1
+                                            quantidadeFavoritosState = newSaveConvert.toString()
 
-                                                   },
+                                        },
                                     tint = Color.White
                                 )
 
@@ -464,10 +459,9 @@ fun ShowStories(
                                                 )
                                                 CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
 
-                                                CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
-                                                    quantidadeViewsState = it.qtdeLidos
-                                                }
-                                                       },
+                                                val newUnViewConvert = quantidadeViewsState.toInt() - 1
+                                                quantidadeViewsState = newUnViewConvert.toString()
+                                            },
                                         tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                     )
                                 } else Icon(
@@ -483,11 +477,10 @@ fun ShowStories(
                                             )
                                             CallVisualizationAPI.viewShortStorie(viewShortStorie)
 
-                                            CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
-                                                quantidadeViewsState = it.qtdeLidos
-                                            }
+                                            val newViewConvert = quantidadeViewsState.toInt() + 1
+                                            quantidadeViewsState = newViewConvert.toString()
 
-                                                   },
+                                        },
                                     tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                 )
 
