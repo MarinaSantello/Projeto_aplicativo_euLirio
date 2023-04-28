@@ -111,14 +111,14 @@ fun HomeBooks(navController: NavController) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = if (users.isNotEmpty()) UserID(id = users[0].id, idUser = users[0].idUser) else UserID(id = 0, idUser = 0)
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         scaffoldState = scaffoldState,
         topBar = { TopBar(userID, scaffoldState, topBarState) },
-        bottomBar = { BottomBarScaffold(bottomBarState, navController, users[0].idUser, 1) },
+        bottomBar = { BottomBarScaffold(bottomBarState, navController, if (users.isNotEmpty()) users[0].idUser else 0, 1) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value) {
@@ -133,7 +133,7 @@ fun HomeBooks(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 1, scrollState, navController)
+        ShowBooks(if (users.isNotEmpty()) users[0].idUser else 0, it.calculateBottomPadding(), 1, scrollState, navController)
     }
 
     if(!fabState.value) ButtonsPost(navController, context, 72.dp, fabState) {

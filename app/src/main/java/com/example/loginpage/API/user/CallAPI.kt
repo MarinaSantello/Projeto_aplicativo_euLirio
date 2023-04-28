@@ -50,21 +50,23 @@ class CallAPI() {
             return retorno
         }
         fun getUser(userID: Long, userData: (User) -> Unit) {
-            val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
-            val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
-            val callCurrentUser = userCall.getByID(userID)
+            if (userID.toInt() != 0) {
+                val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
+                val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
+                val callCurrentUser = userCall.getByID(userID)
 
-            callCurrentUser.enqueue(object :
-                Callback<User> {
-                override fun onResponse(call: Call<User>, response: Response<User>) {
-                    val user = response.body()!!
+                callCurrentUser.enqueue(object :
+                    Callback<User> {
+                    override fun onResponse(call: Call<User>, response: Response<User>) {
+                        val user = response.body()!!
 
-                    userData.invoke(user)
-                }
+                        userData.invoke(user)
+                    }
 
-                override fun onFailure(call: Call<User>, t: Throwable) {
-                }
-            })
+                    override fun onFailure(call: Call<User>, t: Throwable) {
+                    }
+                })
+            }
         }
         fun verifyUsername(username: String, validUsername: (Boolean) -> Unit) {
             val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
