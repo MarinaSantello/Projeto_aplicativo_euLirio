@@ -138,7 +138,7 @@ class CallVisualizationAPI() {
                 }
 
                 override fun onFailure(call: Call<CountVisualizationAnnouncement>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
             })
@@ -164,7 +164,7 @@ class CallVisualizationAPI() {
                 }
 
                 override fun onFailure(call: Call<CountVisualizationShortStorie>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
             }

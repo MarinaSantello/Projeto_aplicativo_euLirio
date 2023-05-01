@@ -895,6 +895,11 @@ fun BottomBarEbook(
     idAnnouncement: Int?,
     userID: Int
 ) {
+    var idAnuncio = 0
+
+    idAnnouncement?.let {
+        idAnuncio = it
+    }
 
     AnimatedVisibility(
         visible = bottomBarState.value,
@@ -932,16 +937,13 @@ fun BottomBarEbook(
                                 .fillMaxWidth(.5f)
                                 .fillMaxHeight()
                                 .clickable {
-                                    val cart = idAnnouncement?.let {
-                                        Cart(
-                                            anuncioID = it,
-                                            userID = userID
-                                        )
-                                    }
+                                    val cart = Cart(
+                                        idAnuncio = listOf(CartItems(idAnuncio))
+                                    )
 
-                                    CallCartAPI.putInCart(cart!!) {
+                                    CallCartAPI.putInCart(userID, cart) {
                                         Toast
-                                            .makeText(context, it, Toast.LENGTH_SHORT)
+                                            .makeText(context, it.toString(), Toast.LENGTH_SHORT)
                                             .show()
                                     }
                                 },

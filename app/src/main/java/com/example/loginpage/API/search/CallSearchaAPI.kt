@@ -1,4 +1,4 @@
-package com.example.loginpage.API.Search
+package com.example.loginpage.API.search
 
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.models.AnnouncementGet

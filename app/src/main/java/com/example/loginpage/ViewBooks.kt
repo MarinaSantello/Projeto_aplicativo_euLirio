@@ -73,7 +73,8 @@ fun ShowBooks(
     userID: Int,
     bottomBarLength: Dp,
     type: Int,
-    scrollState: LazyListState,
+    topBarState: MutableState<Boolean>,
+    bottomBarState: MutableState<Boolean>,
     navController: NavController
 ) {
 
@@ -85,10 +86,10 @@ fun ShowBooks(
         //Layout do perfil
         when (type) {
             //Layout do feed
-            1 -> TabsFeed(userID, bottomBarLength, scrollState, navController)
+            1 -> TabsFeed(userID, bottomBarLength, topBarState, bottomBarState, navController)
 
             //Layout de pesquisa
-            2 -> TabsFeedSearch(userID, bottomBarLength, navController)
+            2 -> TabsFeedSearch(userID, topBarState, bottomBarLength, navController)
 
             //Layout do carrinho
             3 -> ShowItemsCart(userID, bottomBarLength, navController)
@@ -113,15 +114,32 @@ fun ShowBooks(
 fun TabsFeed(
     userID: Int,
     bottomBarLength: Dp,
-    scrollState: LazyListState = rememberLazyListState(),
+    topBarState: MutableState<Boolean>,
+    bottomBarState: MutableState<Boolean>,
     navController: NavController
 ) {
+    val context = LocalContext.current
     var tabIndex by remember { mutableStateOf(0) }
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyListState()
+    var scroll by remember { mutableStateOf(0) }
 
     val tabs = listOf("Livros", "Pequenas Histórias", "Recomendações")
 
+    LaunchedEffect(scrollState.firstVisibleItemIndex) {
+        if (scrollState.firstVisibleItemIndex > scroll) {
+            topBarState.value = false
+            bottomBarState.value = false
+//            fabState.value = false
+            scroll = scrollState.firstVisibleItemIndex
+        } else if (scrollState.firstVisibleItemIndex < scroll) {
+            topBarState.value = true
+            bottomBarState.value = true
+//            fabState.value = true
+            scroll = scrollState.firstVisibleItemIndex
+        }
+    }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ScrollableTabRow(
@@ -171,22 +189,26 @@ fun TabsFeed(
                 var announcements by remember {
                     mutableStateOf(listOf<AnnouncementGet>())
                 }
+                var announcementIsNull by remember {
+                    mutableStateOf(false)
+                }
 
                 //CallAnnouncementAPI.getAnnouncements {
                 CallAnnouncementAPI.getAllAnnouncementsByGenresUser(userID) {
-                    announcements = it
+                    if (it.isNullOrEmpty()) announcementIsNull = true
+                    else announcements = it
                 }
 
-                LazyColumn(
-//                    state = scrollState,
+                if (announcementIsNull) Text(text = "Você não possui livros no seu feed por enquanto.")
+
+                else LazyColumn(
+                    state = scrollState,
                     contentPadding = PaddingValues(bottom = bottomBarLength)
                 ) {
                     items(announcements) {
                         AnnouncementCard(it, userID, navController, 1, true, true)
                     }
                 }
-                val context = LocalContext.current
-
             }
             1 -> {
                 var shortStory by remember {
@@ -198,7 +220,10 @@ fun TabsFeed(
                     shortStory = it
                 }
 
-                LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(bottom = bottomBarLength)
+                ) {
                     items(shortStory) {
                         ShortStorysCard(it, navController, userID, true, true)
                     }

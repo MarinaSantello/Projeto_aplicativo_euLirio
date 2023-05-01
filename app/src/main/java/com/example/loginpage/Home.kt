@@ -102,7 +102,6 @@ fun HomeBooks(navController: NavController) {
     val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
-    val scrollState = rememberLazyListState()
 
     val topBarState = remember { mutableStateOf(true) }
     val bottomBarState = remember { mutableStateOf(true) }
@@ -111,7 +110,7 @@ fun HomeBooks(navController: NavController) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    val userID = if (users.isNotEmpty()) UserID(id = users[0].id, idUser = users[0].idUser) else UserID(id = 0, idUser = 0)
+    val userID = UserID(id = if (users.isNotEmpty()) users[0].id else 0, idUser = if (users.isNotEmpty()) users[0].idUser else 0)
 
     Scaffold(
         modifier = Modifier
@@ -133,7 +132,7 @@ fun HomeBooks(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(if (users.isNotEmpty()) users[0].idUser else 0, it.calculateBottomPadding(), 1, scrollState, navController)
+        ShowBooks(if (users.isNotEmpty()) users[0].idUser else 0, it.calculateBottomPadding(), 1, topBarState, bottomBarState, navController)
     }
 
     if(!fabState.value) ButtonsPost(navController, context, 72.dp, fabState) {

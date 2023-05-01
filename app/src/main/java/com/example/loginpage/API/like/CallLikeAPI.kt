@@ -132,16 +132,16 @@ class CallLikeAPI() {
             callCountAnnouncementLike.enqueue(object:
             Callback<CountAnnouncementLikes>{
                 override fun onResponse(call: Call<CountAnnouncementLikes>, response: Response<CountAnnouncementLikes>) {
-                    val quantidadeLikesAnuncio = response.body()!! //?: CountAnnouncementLikes(
-//                        idAnuncio = announcementId,
-//                        qtdeCurtidas = "0"
-//                    )
+                    val quantidadeLikesAnuncio = response.body() ?: CountAnnouncementLikes(
+                        idAnuncio = announcementId,
+                        qtdeCurtidas = "0"
+                    )
                     Log.i("respon post like", quantidadeLikesAnuncio.qtdeCurtidas)
                     qtndLikes.invoke(quantidadeLikesAnuncio)
                 }
 
                 override fun onFailure(call: Call<CountAnnouncementLikes>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
             }
@@ -166,7 +166,7 @@ class CallLikeAPI() {
                 }
 
                 override fun onFailure(call: Call<CountShortStorieLikes>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
             }
             )

@@ -59,7 +59,7 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getAllAnnouncementsByGenresUser(userID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+        fun getAllAnnouncementsByGenresUser(userID: Int, announcementsData: (List<AnnouncementGet>?) -> Unit) {
             val callAnnouncements = announcementCall.getAllAnnouncementsByGenresUser(userID)
 
             callAnnouncements.enqueue(object :
@@ -68,7 +68,7 @@ class CallAnnouncementAPI() {
                     call: Call<List<AnnouncementGet>>,
                     response: Response<List<AnnouncementGet>>
                 ) {
-                    val announcements = response.body()!!
+                    val announcements = response.body()
 
                     announcementsData.invoke(announcements)
                 }

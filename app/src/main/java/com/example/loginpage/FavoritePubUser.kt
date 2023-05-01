@@ -80,7 +80,7 @@ fun PubFavoritas (navController: NavController) {
             DrawerDesign(userID, context, scaffoldState, navController)
         },
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 5, rememberLazyListState(), navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 5, topBarState, bottomBarState, navController)
     }
 }
 

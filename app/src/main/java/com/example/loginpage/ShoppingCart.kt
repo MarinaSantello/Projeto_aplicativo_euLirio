@@ -1,7 +1,9 @@
 package com.example.loginpage
 
 import android.os.Bundle
+import android.telecom.Call
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -97,7 +99,7 @@ fun ShoppingCartPage(
         bottomBar = { BottomBarScaffold(bottomBarState, navController, userID, 3) },
         floatingActionButtonPosition = FabPosition.End,
     ) {
-        ShowBooks(userID, it.calculateBottomPadding(), 3, rememberLazyListState(), navController)
+        ShowBooks(userID, it.calculateBottomPadding(), 3, topBarState, bottomBarState, navController)
     }
 }
 
@@ -148,22 +150,70 @@ fun ShowItemsCart(
 
         when (tabIndex) {
             0 -> {
-//                var itemsCarts by remember {
-//                    mutableStateOf(listOf<CartData>())
-//                }
-//
-//                CallCartAPI.getItemsCart(userID) {
-//                    itemsCarts = it
-//                }
-//
-//                if (itemsCarts.isNotEmpty()) LazyColumn(
-//                        contentPadding = PaddingValues(bottom = bottomBarLength)
-//                    ) {
-//                    items(itemsCarts) {
-//                        AnnouncementCart(it, bottomBarLength, navController, 0)
-//                    }
+                var itemsCarts by remember {
+                    mutableStateOf(listOf<CartData>())
+                }
+                var totalCart by remember {
+                    mutableStateOf(0f)
+                }
+                var cartIsNull by remember {
+                    mutableStateOf(false)
+                }
 
-                Text(text = "no aguardo da api")
+                CallCartAPI.getItemsCart(userID) {
+                    if (it == null) cartIsNull = true
+
+                    else {
+                        itemsCarts = it.items
+                        totalCart = it.total
+                    }
+                }
+
+                if (cartIsNull) Text(text = "Seu carrinho está vazio!")
+
+                else Column(Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        contentPadding = PaddingValues(bottom = bottomBarLength)
+                    ) {
+                        items(itemsCarts) {
+                            AnnouncementCart(it, navController, bottomBarLength, 0)
+                        }
+                    }
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        Card(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)) {
+                            Column(Modifier.fillMaxSize()) {
+                                Row(Modifier.fillMaxWidth()) {
+                                    Text(text = "Total")
+                                    Text(text = totalCart.toString())
+                                }
+                                val context = LocalContext.current
+                                Button(onClick = {
+                                    var announcements = listOf<CartItems>()
+
+                                    for (i in 0 until itemsCarts.size) {
+                                        announcements += CartItems(itemsCarts[i].anuncioID)
+                                    }
+
+                                    val buyItems = Cart(
+                                        idAnuncio = announcements
+                                    )
+                                        CallCartAPI.buyItemsCart(userID, buyItems) {
+                                            Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+                                        }
+                                }) {
+                                    Text(text = "Finalizar compra")
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
             }
             1 -> {
                     var announcements by remember {

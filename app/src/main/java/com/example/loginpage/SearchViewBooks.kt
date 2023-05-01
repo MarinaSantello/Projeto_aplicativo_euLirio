@@ -1,16 +1,6 @@
 package com.example.loginpage
 
-import android.content.Intent
-import android.os.Bundle
-import android.provider.MediaStore.Audio.Genres
-import android.util.Log
-import android.widget.Toast
-import android.window.OnBackInvokedCallback
-import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -18,17 +8,14 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
@@ -42,46 +29,30 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import com.example.loginpage.API.Search.CallSearchaAPI
-import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.search.CallSearchaAPI
 import com.example.loginpage.API.genre.CallGenreAPI
-import com.example.loginpage.API.shortStory.CallShortStory
-import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Anuncios
 import com.example.loginpage.models.Genero
 import com.example.loginpage.models.ShortStoryGet
-import com.example.loginpage.resources.BottomBarScaffold
-import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.AnnouncementCard
-import com.example.loginpage.ui.components.GenerateGenresCards
 import com.example.loginpage.ui.components.ShortStorysCard
-import com.example.loginpage.ui.components.TabsUserStories
 import com.example.loginpage.ui.theme.*
 //import com.google.accompanist.pager.ExperimentalPagerApi
 //import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 //class SearchViewBooks : ComponentActivity() {
 //
@@ -109,6 +80,8 @@ var announcements: MutableState<List<AnnouncementGet>> = mutableStateOf(listOf()
 var announcementIsNull: MutableState<Boolean> = mutableStateOf(false)
 var shortStories: MutableState<List<ShortStoryGet>> = mutableStateOf(listOf())
 var shortStoryIsNull: MutableState<Boolean> = mutableStateOf(false)
+var authors: MutableState<List<ShortStoryGet>> = mutableStateOf(listOf())
+var authorsIsNull: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
 fun SearchBooks(navController: NavController) {
@@ -140,7 +113,7 @@ fun SearchBooks(navController: NavController) {
             }
         }
     ) { padding ->
-        ShowBooks(users[0].idUser, padding.calculateBottomPadding(), 2, rememberLazyListState(), navController)
+        ShowBooks(users[0].idUser, padding.calculateBottomPadding(), 2, topBarState, bottomBarState, navController)
     }
 
     if (menuState.value) Box(Modifier.fillMaxSize(),
@@ -191,6 +164,7 @@ fun SearchBooks(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .padding(start = 30.dp, end = 30.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
 
                     Row(
@@ -358,7 +332,9 @@ fun SearchBooks(navController: NavController) {
                         Row(
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.Bottom,
-                            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp)
                         ) {
                             TextField(
                                 value = minValue,
@@ -399,7 +375,8 @@ fun SearchBooks(navController: NavController) {
 
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp),
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.Bottom
                     ){
@@ -575,16 +552,38 @@ fun TopBarSearch(
 @Composable
 fun TabsFeedSearch(
     userID: Int,
+    topBarState: MutableState<Boolean>,
     bottomBarLength: Dp,
     navController: NavController
 ) {
     var tabIndex by remember { mutableStateOf(0) }
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val scrollStateAnn = rememberLazyListState()
+    val scrollStateSS = rememberLazyListState()
+    var scroll by remember { mutableStateOf(0) }
 
     val tabs = listOf("Livros", "Pequenas Histórias", "Autores")
 
+    LaunchedEffect(scrollStateAnn.firstVisibleItemIndex) {
+        if (scrollStateAnn.firstVisibleItemIndex > scroll) {
+            topBarState.value = false
+            scroll = scrollStateAnn.firstVisibleItemIndex
+        } else if (scrollStateAnn.firstVisibleItemIndex < scroll) {
+            topBarState.value = true
+            scroll = scrollStateAnn.firstVisibleItemIndex
+        }
+    }
 
+    LaunchedEffect(scrollStateSS.firstVisibleItemIndex) {
+        if(scrollStateSS.firstVisibleItemIndex > scroll) {
+            topBarState.value = false
+            scroll = scrollStateSS.firstVisibleItemIndex
+        }else if(scrollStateSS.firstVisibleItemIndex < scroll) {
+            topBarState.value = true
+            scroll = scrollStateSS.firstVisibleItemIndex
+        }
+    }
     Column(modifier = Modifier.fillMaxWidth()) {
         ScrollableTabRow(
 //            selectedTabIndex = tabIndex.currentPage,
@@ -629,7 +628,10 @@ fun TabsFeedSearch(
             0 -> {
                 if (announcementIsNull.value) Text(text = "Não existem livros com esse nome.")
 
-                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                else LazyColumn(
+                    state = scrollStateAnn,
+                    contentPadding = PaddingValues(bottom = bottomBarLength)
+                ) {
                     items(announcements.value) {
                         AnnouncementCard(it, userID, navController, 1, true, true)
                     }
@@ -638,7 +640,10 @@ fun TabsFeedSearch(
             1 -> {
                 if (shortStoryIsNull.value) Text(text = "Não existem pequenas histórias com esse nome.")
 
-                else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
+                else LazyColumn(
+                    state = scrollStateSS,
+                    contentPadding = PaddingValues(bottom = bottomBarLength)
+                ) {
                     items(shortStories.value) {
                         ShortStorysCard(it, navController, userID, true, true)
                     }

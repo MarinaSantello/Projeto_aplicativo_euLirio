@@ -137,7 +137,7 @@ class CallFavoriteAPI(){
                 }
 
                 override fun onFailure(call: Call<CountFavoriteAnnouncement>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
             }
 

@@ -76,7 +76,7 @@ fun PubLidas (navController: NavController) {
             DrawerDesign(userID, context, scaffoldState, navController)
         },
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 6, rememberLazyListState(), navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 6, topBarState, bottomBarState, navController)
     }
 }
 
