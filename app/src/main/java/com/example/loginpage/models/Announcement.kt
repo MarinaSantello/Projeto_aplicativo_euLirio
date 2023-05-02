@@ -52,7 +52,10 @@ data class AnnouncementGet(
     var volume: Int?,
     var curtido: Boolean,
     var favorito: Boolean,
-    var lido: Boolean
+    var lido: Boolean,
+    var carrinho: Boolean,
+    var compras: CountAnnouncementSales?,
+    var comprado: Boolean
 ){
     override fun toString(): String {
         return super.toString()
@@ -86,4 +89,12 @@ data class Usuario(
     var nomeUsuario: String = "",
     @SerializedName("user_name")
     var userName: String = ""
+)
+
+data class CountAnnouncementSales (
+    @SerializedName("id_anuncio")
+    var idAnuncio: Int?,
+
+    @SerializedName("quantidade_compras")
+    var qtdeCompras: String
 )

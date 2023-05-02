@@ -46,6 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.buy.CallBuyAPI
 import com.example.loginpage.API.cart.CallCartAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
@@ -779,7 +780,7 @@ fun ShowEbook(
                         )
                     }
                     Text(
-                        text = "1,2k",
+                        text = if(announcement.compras != null) announcement.compras!!.qtdeCompras else "0",
                         fontSize = 16.sp,
                         fontFamily = MontSerratSemiBold,
                         fontWeight = FontWeight.Bold,
@@ -942,8 +943,12 @@ fun BottomBarEbook(
                                     )
 
                                     CallCartAPI.putInCart(userID, cart) {
-                                        Toast
-                                            .makeText(context, it.toString(), Toast.LENGTH_SHORT)
+                                        if (it == 200) Toast
+                                            .makeText(
+                                                context,
+                                                "e-book adicionado ao carrinho",
+                                                Toast.LENGTH_SHORT
+                                            )
                                             .show()
                                     }
                                 },
@@ -970,9 +975,16 @@ fun BottomBarEbook(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clickable {
-                                    Toast
-                                        .makeText(context, "oi", Toast.LENGTH_SHORT)
-                                        .show()
+                                    val buy = Buy(
+                                        anuncioID = idAnnouncement!!,
+                                        userID = userID
+                                    )
+
+                                    CallBuyAPI.buyAnnouncement(buy) {
+                                        if(it == 201) Toast
+                                            .makeText(context, "Compra realizada.", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
                                 },
                             shape = RoundedCornerShape(0.dp),
                             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),

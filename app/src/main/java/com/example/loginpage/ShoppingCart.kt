@@ -10,6 +10,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.outlined.FormatAlignCenter
 import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +60,8 @@ import com.example.loginpage.ui.components.AnnouncementCart
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.MontSerratSemiBold
+import com.example.loginpage.ui.theme.SpartanBold
+import com.example.loginpage.ui.theme.SpartanRegular
 import kotlinx.coroutines.launch
 
 //class ShoppingCart : ComponentActivity() {
@@ -109,6 +113,8 @@ fun ShowItemsCart(
     bottomBarLength: Dp,
     navController: NavController
 ) {
+    val context = LocalContext.current
+
     var tabIndex by remember { mutableStateOf(0) }
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -192,7 +198,6 @@ fun ShowItemsCart(
                                     Text(text = "Total")
                                     Text(text = totalCart.toString())
                                 }
-                                val context = LocalContext.current
                                 Button(onClick = {
                                     var announcements = listOf<CartItems>()
 
@@ -203,9 +208,9 @@ fun ShowItemsCart(
                                     val buyItems = Cart(
                                         idAnuncio = announcements
                                     )
-                                        CallCartAPI.buyItemsCart(userID, buyItems) {
-                                            Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
-                                        }
+                                    CallCartAPI.buyItemsCart(userID, buyItems) {
+                                        Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+                                    }
                                 }) {
                                     Text(text = "Finalizar compra")
                                     
@@ -228,6 +233,9 @@ fun ShowItemsCart(
                         else announcements = it
                     }
 
+                    var cartIsNull by remember {
+                        mutableStateOf(true)
+                    }
                     if (announcementIsNull) Text(text = "Você não possui livros favoritados.")
 
                     else LazyColumn(
@@ -237,7 +245,7 @@ fun ShowItemsCart(
                             val priceVerify = it.preco.toString().split('.')
                             var price = it.preco.toString()
 
-                            Card(
+                            if(!it.comprado && !it.carrinho) Card(
                                 modifier = Modifier
                                     .height(204.dp)
                                     .fillMaxWidth()
@@ -247,7 +255,8 @@ fun ShowItemsCart(
                                     },
                                 backgroundColor = Color.White,
                                 elevation = 0.dp
-                            ) {
+                                ) {
+                                cartIsNull = false
                                 Row(
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -267,13 +276,26 @@ fun ShowItemsCart(
                                     )
 
                                     Column (
-                                        modifier = Modifier.fillMaxHeight(),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .padding(top = 4.dp),
                                         verticalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Column(Modifier.fillMaxWidth()) {
+                                        Column(
+                                            Modifier
+                                                .fillMaxWidth()
+
+
+                                        ) {
                                             val files = listOf("PDF", "ePUB", if (it.mobi == "null") "" else "MOBI")
 
-                                            Text(text = it.titulo)
+                                            Text(text = it.titulo,
+                                                fontFamily = SpartanBold,
+                                                modifier = Modifier.padding(start = 8.dp, top = 20.dp),
+                                                fontSize = 18.sp
+                                            )
+
+                                            Spacer(modifier = Modifier.padding(vertical = 6.dp))
 
                                             LazyRow(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                                                 items(files) {
@@ -304,14 +326,54 @@ fun ShowItemsCart(
                                         else if (priceVerify[1].length == 1)
                                             price = "${it.preco}0"
 
-                                        Text(
-                                            text = "R$ ${price.replace('.', ',')}",
-                                        )
+                                        Row(
+                                            Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                text = "R$ ${price.replace('.', ',')}",
+                                                modifier = Modifier.padding(bottom = 20.dp, start = 12.dp),
+                                                fontFamily = SpartanRegular
+                                            )
+
+                                            Card(
+                                                Modifier
+                                                    .width(60.dp)
+                                                    .height(32.dp)
+                                                    .clip(RoundedCornerShape(12.dp))
+                                                    .border(
+                                                        1.dp,
+                                                        colorResource(R.color.eulirio_yellow_card_background),
+                                                        RoundedCornerShape(20.dp)
+                                                    )
+                                                    .clickable {
+                                                        val cart = Cart(
+                                                            idAnuncio = listOf(CartItems(it.id!!))
+                                                        )
+
+                                                        CallCartAPI.putInCart(userID, cart) {
+                                                            if (it == 200) Toast
+                                                                .makeText(
+                                                                    context,
+                                                                    "e-book adicionado ao carrinho",
+                                                                    Toast.LENGTH_SHORT
+                                                                )
+                                                                .show()
+                                                        }
+                                                    }
+                                            ) {
+                                                Icon(
+                                                    Icons.Rounded.ShoppingCart,
+                                                    contentDescription = "carrinho de comprar"
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                }
+                    }
+                    if (cartIsNull) Text(text = "Você não possui livros favoritados disponíveis para compra.")
             }
         }
     }
