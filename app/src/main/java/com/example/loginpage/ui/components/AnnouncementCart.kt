@@ -1,6 +1,8 @@
 package com.example.loginpage.ui.components
 
+import android.content.Context
 import android.text.InputFilter.LengthFilter
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -25,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.cart.CallCartAPI
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.CartData
@@ -33,10 +38,13 @@ import com.example.loginpage.ui.theme.MontSerratSemiBold
 @Composable
 fun AnnouncementCart(
     announcement: CartData,
+    userID: Int,
     navController: NavController,
     bottomBarLength: Dp,
-    type: Int
+    type: Int,
+    context: Context
 ) {
+
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
 
@@ -74,7 +82,7 @@ fun AnnouncementCart(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.fillMaxWidth()) {
-                    val files = listOf("PDF", "ePUB", if (!(announcement.mobi.isNullOrEmpty())) "MOBI" else "")
+                    val files = listOf("PDF", "ePUB", if (announcement.mobi != "null") "MOBI" else "")
 
                     Text(text = announcement.titulo)
 
@@ -115,7 +123,16 @@ fun AnnouncementCart(
 
                     if (type == 0) Icon(
                         Icons.Outlined.Delete,
-                        contentDescription = "icone para excluir o livro do carrinho"
+                        contentDescription = "icone para excluir o livro do carrinho",
+                        modifier = Modifier.clickable {
+                            CallCartAPI.deleteItemCart(announcement.anuncioID, userID) {
+                                if (it == 200) {
+                                    Toast.makeText(context, "Livro excluído do carrinho.", Toast.LENGTH_SHORT).show()
+
+                                    navController.navigate("${Routes.ShoppingCart.name}/$userID")
+                                }
+                            }
+                        }
                     )
                 }
             }

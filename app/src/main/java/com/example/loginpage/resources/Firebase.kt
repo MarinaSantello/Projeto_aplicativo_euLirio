@@ -118,7 +118,7 @@ fun uploadFile(file: Uri, folder: String, fileName: String, context: Context, ur
     val imageRef = FirebaseStorage
         .getInstance()
         .reference
-        .child("$folder/$fileName$discriminante")
+        .child("$folder/$discriminante||$fileName")
 
     if(file.toString().isNotEmpty()) imageRef.putFile(file)
         .addOnSuccessListener { p0 ->

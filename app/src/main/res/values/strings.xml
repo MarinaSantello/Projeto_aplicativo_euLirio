@@ -96,7 +96,9 @@
     <string name="ebook_edit">editar publicação</string>
     <string name="ebook_buy">comprar</string>
     <string name="ebook_bag">adicionar ao carrinho</string>
+    <string name="ebook_download">download e-book</string>
     <string name="read_short_story">ler</string>
+    <string name="ebook_cart">visualizar o carrinho</string>
     <string name="title_activity_user_stories">UserStories</string>
     <string name="resenhatilte"> Título da história </string>
     <string name="title_activity_view_ebook">ViewEbook</string>

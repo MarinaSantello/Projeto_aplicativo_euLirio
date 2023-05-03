@@ -177,12 +177,12 @@ fun ShowItemsCart(
 
                 if (cartIsNull) Text(text = "Seu carrinho está vazio!")
 
-                else Column(Modifier.fillMaxSize()) {
+                else Box(Modifier.fillMaxSize()) {
                     LazyColumn(
-                        contentPadding = PaddingValues(bottom = bottomBarLength)
+                        contentPadding = PaddingValues(bottom = bottomBarLength + 50.dp)
                     ) {
                         items(itemsCarts) {
-                            AnnouncementCart(it, navController, bottomBarLength, 0)
+                            AnnouncementCart(it, userID, navController, bottomBarLength, 0, context)
                         }
                     }
                     Box(
@@ -201,8 +201,8 @@ fun ShowItemsCart(
                                 Button(onClick = {
                                     var announcements = listOf<CartItems>()
 
-                                    for (i in 0 until itemsCarts.size) {
-                                        announcements += CartItems(itemsCarts[i].anuncioID)
+                                    for (element in itemsCarts) {
+                                        announcements += CartItems(element.anuncioID)
                                     }
 
                                     val buyItems = Cart(
@@ -213,7 +213,6 @@ fun ShowItemsCart(
                                     }
                                 }) {
                                     Text(text = "Finalizar compra")
-                                    
                                 }
                             }
                         }
@@ -351,14 +350,18 @@ fun ShowItemsCart(
                                                             idAnuncio = listOf(CartItems(it.id!!))
                                                         )
 
-                                                        CallCartAPI.putInCart(userID, cart) {
-                                                            if (it == 200) Toast
-                                                                .makeText(
-                                                                    context,
-                                                                    "e-book adicionado ao carrinho",
-                                                                    Toast.LENGTH_SHORT
-                                                                )
-                                                                .show()
+                                                        CallCartAPI.putInCart(userID, cart) { statusCode ->
+                                                            if (statusCode == 200){
+                                                                Toast
+                                                                    .makeText(
+                                                                        context,
+                                                                        "e-book adicionado ao carrinho",
+                                                                        Toast.LENGTH_SHORT
+                                                                    )
+                                                                    .show()
+
+                                                                navController.navigate("${Routes.ShoppingCart.name}/$userID")
+                                                            }
                                                         }
                                                     }
                                             ) {

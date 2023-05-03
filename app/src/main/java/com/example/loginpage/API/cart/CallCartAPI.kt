@@ -69,5 +69,23 @@ class CallCartAPI {
                 }
             })
         }
+
+        fun deleteItemCart(announcementInt: Int, userID: Int, statusCode: (Int) -> Unit) {
+            val cartCall = cartCall.deleteItem(announcementInt, userID)
+
+            cartCall.enqueue(object :
+                Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+
+            })
+        }
     }
 }

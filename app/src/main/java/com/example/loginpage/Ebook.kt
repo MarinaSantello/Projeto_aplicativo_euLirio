@@ -3,6 +3,8 @@ package com.example.loginpage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -57,8 +59,10 @@ import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.io.File
 
 //class Ebook : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -140,7 +144,8 @@ fun EbookView(
             announcement!!,
             userAuthor.value,
             it.calculateBottomPadding(),
-            context
+            context,
+            navController
         )
     }
 }
@@ -151,10 +156,10 @@ fun ShowEbook(
     announcement: AnnouncementGet,
     userAuthor: Boolean,
     bottomBarLength: Dp,
-    context: Context
+    context: Context,
+    navController: NavController
 ) {
 
-    val context = LocalContext.current
     val userID = UserIDrepository(context).getAll()[0].idUser
 
     var likeState by remember {
@@ -578,7 +583,7 @@ fun ShowEbook(
             }
         }
 
-        if (!userAuthor) {
+        if (!userAuthor && announcement.comprado == false) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -623,9 +628,23 @@ fun ShowEbook(
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable {
-                                Toast
-                                    .makeText(context, "oi", Toast.LENGTH_SHORT)
-                                    .show()
+                                val buy = Buy(
+                                    anuncioID = idAnnouncement!!,
+                                    userID = userID
+                                )
+
+                                CallBuyAPI.buyAnnouncement(buy) {
+                                    if (it == 201) Toast
+                                        .makeText(
+                                            context,
+                                            "Compra realizada.",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+
+                                    navController.navigate("${Routes.Ebook.name}/${announcement?.id}")
+                                }
+
                             },
                         shape = RoundedCornerShape(0.dp),
                         backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
@@ -902,6 +921,14 @@ fun BottomBarEbook(
         idAnuncio = it
     }
 
+    var announcement by remember {
+        mutableStateOf<AnnouncementGet?>(null)
+    }
+
+    CallAnnouncementAPI.getAnnouncement(idAnuncio, userID) {
+        announcement = it
+    }
+
     AnimatedVisibility(
         visible = bottomBarState.value,
         enter = slideInVertically(initialOffsetY = { it }),
@@ -927,7 +954,66 @@ fun BottomBarEbook(
                     )
                 }
             } else {
-                BottomAppBar(
+                if (announcement?.carrinho == true) BottomAppBar(
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate("${Routes.ShoppingCart.name}/$userID")
+                        },
+                    contentPadding = PaddingValues(0.dp),
+                    backgroundColor = Color.White,
+                    elevation = 0.dp,
+//                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
+                ) {
+                    Text(
+                        text = stringResource(R.string.ebook_cart).uppercase(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        color = colorResource(id = R.color.eulirio_yellow_card_background),
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraLight,
+                        style = MaterialTheme.typography.h2
+                    )
+                }
+
+                else if(announcement?.comprado == true) BottomAppBar(
+                    modifier = Modifier.clickable {
+                        val httpsReference = announcement?.pdf?.let {
+                            FirebaseStorage
+                                .getInstance()
+                                .getReferenceFromUrl(it)
+                        }
+
+                        val arquivo = announcement?.titulo?.let { File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), it) }
+
+                        if (arquivo != null && httpsReference != null) {
+                            httpsReference.getFile(arquivo)
+                                .addOnSuccessListener {
+                                    Toast.makeText(context, "download completo", Toast.LENGTH_SHORT).show()
+                                    Log.i("download pdf", "hmkk")
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(context, "porra sefodeukk", Toast.LENGTH_SHORT).show()
+                                    Log.i("download pdf err", "hmkk")
+                                }
+                        }
+                    },
+                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
+                ) {
+                    Text(
+                        text = stringResource(R.string.ebook_download).uppercase(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+//                                .padding(end = 44.dp),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraLight,
+                        style = MaterialTheme.typography.h2
+                    )
+                }
+
+                else BottomAppBar(
                     contentPadding = PaddingValues(0.dp),
                     elevation = 0.dp
 //                    backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background)
@@ -950,6 +1036,8 @@ fun BottomBarEbook(
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
+
+                                        navController.navigate("${Routes.Ebook.name}/${announcement?.id}")
                                     }
                                 },
                             shape = RoundedCornerShape(0.dp),
@@ -981,9 +1069,15 @@ fun BottomBarEbook(
                                     )
 
                                     CallBuyAPI.buyAnnouncement(buy) {
-                                        if(it == 201) Toast
-                                            .makeText(context, "Compra realizada.", Toast.LENGTH_SHORT)
+                                        if (it == 201) Toast
+                                            .makeText(
+                                                context,
+                                                "Compra realizada.",
+                                                Toast.LENGTH_SHORT
+                                            )
                                             .show()
+
+                                        navController.navigate("${Routes.Ebook.name}/${announcement?.id}")
                                     }
                                 },
                             shape = RoundedCornerShape(0.dp),

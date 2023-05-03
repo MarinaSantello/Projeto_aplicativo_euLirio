@@ -1015,7 +1015,7 @@ fun PostDataEbook(navController: NavController) {
                                 uploadFile(
                                     it,
                                     "file",
-                                    "$mobiName-",
+                                    mobiName,
                                     context
                                 ) { storageMOBI ->
                                     mobiStorage = storageMOBI
@@ -1029,7 +1029,7 @@ fun PostDataEbook(navController: NavController) {
                                         uploadFile(
                                             uriPDF,
                                             "file",
-                                            "$pdfName-",
+                                            pdfName,
                                             context
                                         ) { storagePDF ->
                                             pdfStorage = storagePDF
@@ -1038,7 +1038,7 @@ fun PostDataEbook(navController: NavController) {
                                                 uploadFile(
                                                     uriEPUB,
                                                     "file",
-                                                    "$epubName-",
+                                                    epubName,
                                                     context
                                                 ) { storageEPUB ->
                                                     epubStorage = storageEPUB

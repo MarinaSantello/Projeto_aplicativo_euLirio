@@ -1,6 +1,7 @@
 package com.example.loginpage.API.cart
 
 import com.example.loginpage.constants.Constant
+import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.CartList
 import com.example.loginpage.models.Cart
 import retrofit2.Call
@@ -18,4 +19,8 @@ interface CartCall {
 
     @GET("list-cart-items/{id}")
     fun getItemsCart(@Path("id") userID: Int): Call<CartList>
+
+//    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @DELETE("delete-cart-item/")
+    fun deleteItem(@Query("announcementId") announcementID: Int, @Query("userId") userID: Int): Call<String>
 }

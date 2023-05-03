@@ -286,9 +286,9 @@ fun EditDataEbook(
 //        pagesState = it.qunatidadePaginas.toString()
 //        idParentalRatings = it.classificacao[0].idClassificacao!!
     }
-    if (getName(pdfState.value) != "0") pdfName = "${getName(pdfState.value).split(".pdf-")[0]}.pdf"
-    if (getName(epubState.value) != "0") epubName = "${getName(epubState.value).split(".epub-")[0]}.epub"
-    if (getName(mobiState.value) != "0") mobiName = "${getName(mobiState.value).split(".mobi-")[0]}.mobi"
+    if (getName(pdfState.value) != "0") pdfName = "${getName(pdfState.value).split("||")[1]}.pdf"
+    if (getName(epubState.value) != "0") epubName = "${getName(epubState.value).split("||")[1]}.epub"
+    if (getName(mobiState.value) != "0") mobiName = "${getName(mobiState.value).split("||")[1]}.mobi"
 
     var expanded by remember {
         mutableStateOf(false)
