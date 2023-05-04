@@ -97,6 +97,7 @@ fun SearchBooks(navController: NavController) {
     val topBarState = remember { mutableStateOf(true) }
     val fabState = remember { mutableStateOf(true) }
     val fabVisibility = remember { mutableStateOf(true) }
+    val tabIndex = remember { mutableStateOf(0) }
 
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
@@ -123,7 +124,8 @@ fun SearchBooks(navController: NavController) {
             2,
             topBarState,
             bottomBarState,
-            navController
+            navController,
+            tabIndex
         )
     }
 
@@ -579,9 +581,9 @@ fun TabsFeedSearch(
     userID: Int,
     topBarState: MutableState<Boolean>,
     bottomBarLength: Dp,
-    navController: NavController
+    navController: NavController,
+    tabIndex: MutableState<Int>
 ) {
-    var tabIndex by remember { mutableStateOf(0) }
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val scrollStateAnn = rememberLazyListState()
@@ -614,7 +616,7 @@ fun TabsFeedSearch(
     Column(modifier = Modifier.fillMaxWidth()) {
         ScrollableTabRow(
 //            selectedTabIndex = tabIndex.currentPage,
-            selectedTabIndex = tabIndex,
+            selectedTabIndex = tabIndex.value,
             backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
             modifier = Modifier.height(40.dp),
         ) {
@@ -646,12 +648,12 @@ fun TabsFeedSearch(
                     },
                     selectedContentColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     unselectedContentColor = Color.Black,
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index },
+                    selected = tabIndex.value == index,
+                    onClick = { tabIndex.value = index },
                 )
             }
         }
-        when (tabIndex) {
+        when (tabIndex.value) {
             0 -> {
                 if (announcementIsNull.value) Text(text = "Não existem livros com esse nome.")
                 else LazyColumn(

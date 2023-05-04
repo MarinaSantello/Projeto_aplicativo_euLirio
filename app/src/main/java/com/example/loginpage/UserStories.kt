@@ -74,6 +74,6 @@ fun ShowUserStories(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 4, topBarState, bottomBarState, navController)
+        ShowBooks(users[0].idUser, it.calculateBottomPadding(), 4, topBarState, bottomBarState, navController, null)
     }
 }

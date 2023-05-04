@@ -132,7 +132,7 @@ fun HomeBooks(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {
-        ShowBooks(if (users.isNotEmpty()) users[0].idUser else 0, it.calculateBottomPadding(), 1, topBarState, bottomBarState, navController)
+        ShowBooks(if (users.isNotEmpty()) users[0].idUser else 0, it.calculateBottomPadding(), 1, topBarState, bottomBarState, navController, null)
     }
 
     if(!fabState.value) ButtonsPost(navController, context, 72.dp, fabState) {

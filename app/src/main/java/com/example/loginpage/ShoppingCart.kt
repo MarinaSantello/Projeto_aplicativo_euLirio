@@ -103,7 +103,7 @@ fun ShoppingCartPage(
         bottomBar = { BottomBarScaffold(bottomBarState, navController, userID, 3) },
         floatingActionButtonPosition = FabPosition.End,
     ) {
-        ShowBooks(userID, it.calculateBottomPadding(), 3, topBarState, bottomBarState, navController)
+        ShowBooks(userID, it.calculateBottomPadding(), 3, topBarState, bottomBarState, navController, null)
     }
 }
 

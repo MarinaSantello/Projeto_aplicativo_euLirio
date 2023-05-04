@@ -75,7 +75,8 @@ fun ShowBooks(
     type: Int,
     topBarState: MutableState<Boolean>,
     bottomBarState: MutableState<Boolean>,
-    navController: NavController
+    navController: NavController,
+    tabIndex: MutableState<Int>?
 ) {
 
     Column(
@@ -89,7 +90,7 @@ fun ShowBooks(
             1 -> TabsFeed(userID, bottomBarLength, topBarState, bottomBarState, navController)
 
             //Layout de pesquisa
-            2 -> TabsFeedSearch(userID, topBarState, bottomBarLength, navController)
+            2 -> TabsFeedSearch(userID, topBarState, bottomBarLength, navController, tabIndex!!)
 
             //Layout do carrinho
             3 -> ShowItemsCart(userID, bottomBarLength, navController)
