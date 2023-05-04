@@ -170,6 +170,16 @@ fun Pesquisa(
                                 }
                             }
 
+                            CallSearchaAPI.searchAuthorByName(
+                                searchState.value, userID
+                            ) {
+                                if (it.isNullOrEmpty()) authorsIsNull.value = true
+                                else {
+                                    authors.value = it
+                                    authorsIsNull.value = false
+                                }
+                            }
+
                             navController.navigate(Routes.Search.name)
                         }
                     ),

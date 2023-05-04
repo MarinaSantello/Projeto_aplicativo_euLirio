@@ -116,8 +116,8 @@ class CallSearchaAPI {
 
 
         /* * * * AUTORES * * * */
-        fun searchAuthorByName(authorName:String, AuthorData:(List<User>?) -> Unit){
-            val callSearch = searchCall.authorSearch(authorName)
+        fun searchAuthorByName(authorName:String, userID: Int, AuthorData:(List<User>?) -> Unit){
+            val callSearch = searchCall.authorSearch(authorName, userID)
 
             callSearch.enqueue(object:
                 Callback<List<User>>{

@@ -30,7 +30,7 @@ interface SearchCall {
     fun searchShortStoriesByGenres(@Body genres: Genres, @Path("id") userID: Int): Call<List<ShortStoryGet>>
 
     /* * * * AUTORES * * * */
-    @GET("/user/user-name/{author}")
-    fun authorSearch(@Path("author") author: String): Call<List<User>>
+    @GET("/user/user-name/")
+    fun authorSearch(@Query("username") author: String, @Query("userId") userID: Int): Call<List<User>>
 
 }

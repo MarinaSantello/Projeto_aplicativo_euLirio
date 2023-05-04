@@ -502,7 +502,7 @@ fun TopBarSearch(
                                         }
 
                                         CallSearchaAPI.searchAuthorByName(
-                                            searchState.value
+                                            searchState.value, userID.idUser
                                         ){
                                             if(it.isNullOrEmpty()) authorsIsNull.value = true
                                             else{
