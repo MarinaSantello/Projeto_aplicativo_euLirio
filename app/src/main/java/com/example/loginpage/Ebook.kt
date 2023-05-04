@@ -132,7 +132,6 @@ fun EbookView(
             BottomBarEbook(
                 bottomBarState,
                 userAuthor.value,
-                context,
                 navController,
                 idAnnouncement,
                 userID
@@ -144,7 +143,6 @@ fun EbookView(
             announcement!!,
             userAuthor.value,
             it.calculateBottomPadding(),
-            context,
             navController
         )
     }
@@ -156,9 +154,9 @@ fun ShowEbook(
     announcement: AnnouncementGet,
     userAuthor: Boolean,
     bottomBarLength: Dp,
-    context: Context,
     navController: NavController
 ) {
+    val context = LocalContext.current
 
     val userID = UserIDrepository(context).getAll()[0].idUser
 
@@ -583,7 +581,7 @@ fun ShowEbook(
             }
         }
 
-        if (!userAuthor && announcement.comprado == false) {
+        if (!userAuthor && !announcement.comprado) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -594,10 +592,10 @@ fun ShowEbook(
                 Row(Modifier.fillMaxSize()) {
                     Card(
                         modifier = Modifier
-                            .fillMaxWidth(.5f)
+                            .fillMaxWidth(if(announcement.carrinho) 1f else .5f)
                             .fillMaxHeight(),
                         backgroundColor = Color(0xDFBDB5A),
-                        shape = RoundedCornerShape(bottomStart = 40.dp),
+                        shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = if(announcement.carrinho) 40.dp else 0.dp),
                         border = BorderStroke(
                             .5.dp,
                             colorResource(id = R.color.eulirio_yellow_card_background)
@@ -624,7 +622,7 @@ fun ShowEbook(
                         }
                     }
 
-                    Card(
+                    if (!announcement.carrinho) Card(
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable {
@@ -910,11 +908,12 @@ fun ShowEbook(
 fun BottomBarEbook(
     bottomBarState: MutableState<Boolean>,
     userAuthor: Boolean,
-    context: Context,
     navController: NavController,
     idAnnouncement: Int?,
     userID: Int
 ) {
+    val context = LocalContext.current
+
     var idAnuncio = 0
 
     idAnnouncement?.let {
@@ -984,10 +983,12 @@ fun BottomBarEbook(
                                 .getReferenceFromUrl(it)
                         }
 
-                        val arquivo = announcement?.titulo?.let { File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), it) }
+                        val pdf = announcement?.titulo?.let { File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "$it.pdf") }
+                        val epub = announcement?.titulo?.let { File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "$it.epub") }
+                        val mobi = announcement?.titulo?.let { File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "$it.mobi") }
 
-                        if (arquivo != null && httpsReference != null) {
-                            httpsReference.getFile(arquivo)
+                        if (epub != null && httpsReference != null) {
+                            httpsReference.getFile(epub)
                                 .addOnSuccessListener {
                                     Toast.makeText(context, "download completo", Toast.LENGTH_SHORT).show()
                                     Log.i("download pdf", "hmkk")

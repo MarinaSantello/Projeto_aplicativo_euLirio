@@ -3,6 +3,7 @@ package com.example.loginpage.API.search
 import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.models.Genres
 import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.models.User
 import retrofit2.Call
@@ -76,6 +77,25 @@ class CallSearchaAPI {
         /* * * * PEQUENAS HISTÓRIAS * * * */
         fun searchShortStoriesByName(shortStorieTitle: String, userID: Int, ShortStoriesData: (List<ShortStoryGet>?) -> Unit) {
             val callSearch = searchCall.searchShortStoriesByName(shortStorieTitle, userID)
+
+            callSearch.enqueue(object :
+                Callback<List<ShortStoryGet>> {
+                override fun onResponse(
+                    call: Call<List<ShortStoryGet>>,
+                    response: Response<List<ShortStoryGet>>
+                ) {
+                    val ss = response.body()
+
+                    ShortStoriesData.invoke(ss)
+                }
+
+                override fun onFailure(call: Call<List<ShortStoryGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
+        fun searchShortStoriesByGenres(genres: Genres, userID: Int, ShortStoriesData: (List<ShortStoryGet>?) -> Unit) {
+            val callSearch = searchCall.searchShortStoriesByGenres(genres, userID)
 
             callSearch.enqueue(object :
                 Callback<List<ShortStoryGet>> {

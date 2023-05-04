@@ -53,7 +53,7 @@ class CallAPI() {
             if (userID.toInt() != 0) {
                 val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
                 val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact
-                val callCurrentUser = userCall.getByID(userID)
+                val callCurrentUser = userCall.getByID(userID, userID)
 
                 callCurrentUser.enqueue(object :
                     Callback<User> {

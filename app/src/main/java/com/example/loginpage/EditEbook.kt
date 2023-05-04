@@ -80,7 +80,7 @@ fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
         epubState.value = it.epub
         mobiState.value = it.mobi ?: ""
         titleState.value = it.titulo
-        priceState.value = it.preco.toString()
+        priceState.value = it.preco.toString().replace('.', ',')
         sinopseState.value = it.sinopse
         volumeState.value = it.volume.toString()
         pagesState.value = it.qunatidadePaginas.toString()
@@ -286,9 +286,9 @@ fun EditDataEbook(
 //        pagesState = it.qunatidadePaginas.toString()
 //        idParentalRatings = it.classificacao[0].idClassificacao!!
     }
-    if (getName(pdfState.value) != "0") pdfName = "${getName(pdfState.value).split("||")[1]}.pdf"
-    if (getName(epubState.value) != "0") epubName = "${getName(epubState.value).split("||")[1]}.epub"
-    if (getName(mobiState.value) != "0") mobiName = "${getName(mobiState.value).split("||")[1]}.mobi"
+    if (getName(pdfState.value) != "0") pdfName = getName(pdfState.value).split("||")[1]
+    if (getName(epubState.value) != "0") epubName = getName(epubState.value).split("||")[1]
+    if (getName(mobiState.value) != "0") mobiName = getName(mobiState.value).split("||")[1]
 
     var expanded by remember {
         mutableStateOf(false)
