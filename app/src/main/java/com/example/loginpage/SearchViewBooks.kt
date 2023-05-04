@@ -46,10 +46,7 @@ import com.example.loginpage.API.genre.CallGenreAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Genero
-import com.example.loginpage.models.ShortStoryGet
-import com.example.loginpage.models.User
+import com.example.loginpage.models.*
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.GenerateAuthorCard
 import com.example.loginpage.ui.components.ShortStorysCard
@@ -108,7 +105,7 @@ fun SearchBooks(navController: NavController) {
         modifier = Modifier
             .fillMaxSize(),
         scaffoldState = scaffoldState,
-        topBar = { TopBarSearch(userID, scaffoldState, topBarState, fabVisibility) },
+        topBar = { TopBarSearch(userID, scaffoldState, topBarState, fabVisibility, tabIndex) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value && fabVisibility.value) {
@@ -129,12 +126,15 @@ fun SearchBooks(navController: NavController) {
         )
     }
 
-    if (menuState.value) Box(
+    if (menuState.value && tabIndex.value != 2) Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         var generos by remember {
             mutableStateOf(listOf<Genero>())
+        }
+        var genres by remember {
+            mutableStateOf(listOf<GenreSearch>())
         }
         CallGenreAPI.callGetGenre {
             generos = it
@@ -200,7 +200,7 @@ fun SearchBooks(navController: NavController) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 29.dp, bottom = 16.dp),
+                            .padding(top = 28.dp, bottom = 8.dp),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.Top
                     ) {
@@ -234,7 +234,8 @@ fun SearchBooks(navController: NavController) {
                                             onCheckedChange = {
                                                 checkGenre = it
 
-//                                                onChecked.invoke(checkGenre, generos[itemIndex].idGenero)
+                                                if (checkGenre) genres += GenreSearch (generos[itemIndex].nomeGenero)
+                                                else genres -= GenreSearch (generos[itemIndex].nomeGenero)
                                             },
                                             colors = CheckboxDefaults.colors(
                                                 checkedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
@@ -257,133 +258,127 @@ fun SearchBooks(navController: NavController) {
                         }
                     }
 
+                    if (tabIndex.value == 0) {
+                        Divider(
+                            thickness = 1.dp,
+                            color = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
 
-                    Divider(
-                        thickness = 1.dp,
-                        color = colorResource(id = R.color.eulirio_purple_text_color_border)
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .padding(top = 14.dp, bottom = 12.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.Top
+                                .padding(top = 14.dp, bottom = 12.dp)
+                                .fillMaxWidth()
                         ) {
-                            Text(
-                                text = "Ordem",
-                                fontSize = 16.sp,
-                                fontFamily = MontSerratBold
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Text(
+                                    text = "Ordem",
+                                    fontSize = 16.sp,
+                                    fontFamily = MontSerratBold
 
-                            )
-                        }
+                                )
+                            }
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                        val options = listOf("mais recentes", "mais lidos")
-                        Row() {
-                            options.forEach { item ->
-                                Row(
-                                    modifier = Modifier.selectable(
-                                        selected = selectedValue == item,
-                                        onClick = {
-                                            selectedValue = item
+                            val options = listOf("mais recentes", "mais lidos")
+                            Row() {
+                                options.forEach { item ->
+                                    Row(
+                                        modifier = Modifier.selectable(
+                                            selected = selectedValue == item,
+                                            onClick = {
+                                                selectedValue = item
 //                                    onSelectionChanged(item)
-                                        }
-                                    ),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = if (options[0] == item && selectedValue.isEmpty()) true else selectedValue == item,
-                                        onClick = {
-                                            selectedValue = item
+                                            }
+                                        ),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = if (options[0] == item && selectedValue.isEmpty()) true else selectedValue == item,
+                                            onClick = {
+                                                selectedValue = item
 //                                    onSelectionChanged(item)
-                                        }
-                                    )
-                                    Text(item)
+                                            }
+                                        )
+                                        Text(item)
+                                    }
                                 }
                             }
+
+
                         }
 
+                        Divider(
+                            thickness = 1.dp,
+                            color = colorResource(id = R.color.eulirio_purple_text_color_border)
+                        )
 
-                    }
-
-
-
-
-
-
-                    Divider(
-                        thickness = 1.dp,
-                        color = colorResource(id = R.color.eulirio_purple_text_color_border)
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .padding(top = 14.dp, bottom = 12.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.Top
-                        ) {
-                            Text(
-                                text = "Preço",
-                                fontSize = 16.sp,
-                                fontFamily = MontSerratBold
-
-                            )
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.Bottom,
-                            modifier = Modifier
+                                .padding(top = 14.dp, bottom = 12.dp)
                                 .fillMaxWidth()
-                                .padding(top = 16.dp)
                         ) {
-                            TextField(
-                                value = minValue,
-                                onValueChange = {
-                                    minValue = it
-                                },
-                                placeholder = {
-                                    Text(
-                                        text = "Mínimo",
-                                        fontSize = 16.sp
-                                    )
-
-                                },
+                            Row(
                                 modifier = Modifier
-                                    .width(120.dp)
-                                    .padding(end = 12.dp)
-                            )
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Text(
+                                    text = "Preço",
+                                    fontSize = 16.sp,
+                                    fontFamily = MontSerratBold
 
-                            TextField(
-                                value = maxValue,
-                                onValueChange = {
-                                    maxValue = it
-                                },
-                                placeholder = {
-                                    Text(
-                                        text = "Maximo",
-                                        fontSize = 16.sp
-                                    )
+                                )
+                            }
 
-                                },
+                            Row(
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.Bottom,
                                 modifier = Modifier
-                                    .width(120.dp)
-                            )
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp)
+                            ) {
+                                TextField(
+                                    value = minValue,
+                                    onValueChange = {
+                                        minValue = it
+                                    },
+                                    placeholder = {
+                                        Text(
+                                            text = "Mínimo",
+                                            fontSize = 16.sp
+                                        )
+
+                                    },
+                                    modifier = Modifier
+                                        .width(120.dp)
+                                        .padding(end = 12.dp)
+                                )
+
+                                TextField(
+                                    value = maxValue,
+                                    onValueChange = {
+                                        maxValue = it
+                                    },
+                                    placeholder = {
+                                        Text(
+                                            text = "Maximo",
+                                            fontSize = 16.sp
+                                        )
+
+                                    },
+                                    modifier = Modifier
+                                        .width(120.dp)
+                                )
+                            }
                         }
                     }
-
-
 
                     Row(
                         modifier = Modifier
@@ -392,7 +387,17 @@ fun SearchBooks(navController: NavController) {
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.Bottom
                     ) {
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = {
+                            val genresChecked = Genres(genres)
+
+                            CallSearchaAPI.filterAnnouncements(genresChecked, minValue.toInt(), maxValue, userID.idUser) {
+                                if (it.isNullOrEmpty()) announcementIsNull.value = true
+                                else {
+                                    announcements.value = it
+                                    announcementIsNull.value = false
+                                }
+                            }
+                        }) {
                             Icon(
                                 Icons.Rounded.Check,
                                 contentDescription = "confirmar pesquisa"
@@ -417,7 +422,8 @@ fun TopBarSearch(
     userID: UserID,
     scaffoldState: ScaffoldState,
     state: MutableState<Boolean>,
-    fabVisibility: MutableState<Boolean>
+    fabVisibility: MutableState<Boolean>,
+    tabIndex: MutableState<Int>
 ) {
 
     var foto by remember {
@@ -528,7 +534,7 @@ fun TopBarSearch(
 
                         }
 
-                        Icon(
+                        if (tabIndex.value != 2) Icon(
                             imageVector = Icons.Rounded.Menu,
                             contentDescription = "Menu burguer",
                             modifier = Modifier

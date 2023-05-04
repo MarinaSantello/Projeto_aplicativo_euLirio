@@ -2,6 +2,7 @@ package com.example.loginpage.ui.components
 
 import android.content.Context
 import android.text.InputFilter.LengthFilter
+import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,6 +35,8 @@ import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.CartData
 import com.example.loginpage.ui.theme.MontSerratSemiBold
+import com.example.loginpage.ui.theme.SpartanBold
+import com.example.loginpage.ui.theme.SpartanMedium
 
 @Composable
 fun AnnouncementCart(
@@ -82,16 +85,19 @@ fun AnnouncementCart(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.fillMaxWidth()) {
-                    val files = listOf("PDF", "ePUB", if (announcement.mobi != "null") "MOBI" else "")
+                    val files = listOf("PDF", "ePUB", if (announcement.mobi != "null") "MOBI" else "",)
 
-                    Text(text = announcement.titulo)
+                    Text(text = announcement.titulo,
+                        fontFamily = SpartanBold,
+                        modifier = Modifier.padding(top = 18.dp, start = 12.dp, bottom = 4.dp)
+                    )
 
                     LazyRow() {
                         items(files) {
                             if (it.isNotEmpty()) Card(
                                 modifier = Modifier
-                                    .height(14.dp)
-                                    .padding(start = 4.dp, end = 4.dp)
+                                    .height(16.dp)
+                                    .padding(start = 12.dp)
                                 ,
                                 backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border),
                                 shape = RoundedCornerShape(100.dp),
@@ -102,7 +108,7 @@ fun AnnouncementCart(
                                     fontFamily = MontSerratSemiBold,
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
-                                      .padding(12.dp, 1.dp),
+                                        .padding(12.dp, 1.dp),
                                     color = Color.White
                                 )
                             }
@@ -119,20 +125,32 @@ fun AnnouncementCart(
 
                     Text(
                         text = "R$ ${price.replace('.', ',')}",
+                        fontFamily = SpartanMedium,
+                        modifier = Modifier.padding(start = 12.dp, bottom = 12.dp)
                     )
+
+                    Spacer(modifier = Modifier.padding(horizontal = 88.dp))
 
                     if (type == 0) Icon(
                         Icons.Outlined.Delete,
                         contentDescription = "icone para excluir o livro do carrinho",
-                        modifier = Modifier.clickable {
-                            CallCartAPI.deleteItemCart(announcement.anuncioID, userID) {
-                                if (it == 200) {
-                                    Toast.makeText(context, "Livro excluído do carrinho.", Toast.LENGTH_SHORT).show()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                CallCartAPI.deleteItemCart(announcement.anuncioID, userID) {
+                                    if (it == 200) {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Livro excluído do carrinho.",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
 
-                                    navController.navigate("${Routes.ShoppingCart.name}/$userID")
+                                        navController.navigate("${Routes.ShoppingCart.name}/$userID")
+                                    }
                                 }
                             }
-                        }
                     )
                 }
             }

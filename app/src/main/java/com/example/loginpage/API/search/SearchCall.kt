@@ -18,7 +18,7 @@ interface SearchCall {
     @GET("announcements/genre-name/")
     fun searchAnnouncementsByGenre(@Query("genreName") genreName: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
     @GET("filter-announcements/")
-    fun filterAnnouncements(@Query("minValue") minValue: Int, @Query("maxValue") maxValue: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
+    fun filterAnnouncements(@Body genres: Genres, @Query("minValue") minValue: Int, @Query("maxValue") maxValue: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
 
 
     /* * * * PEQUENAS HISTÓRIAS * * * */

@@ -72,6 +72,25 @@ class CallSearchaAPI {
                 }
             })
         }
+        fun filterAnnouncements(genres: Genres, minValue: Int, maxValue: String, userID: Int, AnnouncementsData: (List<AnnouncementGet>?) -> Unit) {
+            val callSearch = searchCall.filterAnnouncements(genres, minValue, maxValue, userID)
+
+            callSearch.enqueue(object :
+                Callback<List<AnnouncementGet>> {
+                override fun onResponse(
+                    call: Call<List<AnnouncementGet>>,
+                    response: Response<List<AnnouncementGet>>
+                ) {
+                    val announcements = response.body()
+
+                    AnnouncementsData.invoke(announcements)
+                }
+
+                override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
 
 
         /* * * * PEQUENAS HISTÓRIAS * * * */

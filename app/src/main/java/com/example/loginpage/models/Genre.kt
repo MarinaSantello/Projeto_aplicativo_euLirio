@@ -1,11 +1,14 @@
 package com.example.loginpage.models
 
+import com.google.gson.annotations.SerializedName
+
 data class Genres(
-    val generos: List<GenreSearch>
+    @SerializedName("nome_genero")
+    var nomesGen:  List<GenreSearch>
 )
 
 data class GenreSearch (
-    var id: Int
+    var nome: String
 )
 
 data class Genre(
