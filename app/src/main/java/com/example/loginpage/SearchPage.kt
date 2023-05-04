@@ -248,6 +248,8 @@ fun Pesquisa(
                             shortStoryIsNull.value = false
                         }
 
+                        searchState.value = gen.nomeGenero
+
                         navController.navigate(Routes.Search.name)
                     }
                 }

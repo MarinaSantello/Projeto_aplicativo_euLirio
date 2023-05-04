@@ -444,6 +444,14 @@ fun SearchBooks(navController: NavController) {
 
                                 menuState.value = !menuState.value
                             }
+
+                            CallSearchaAPI.searchShortStoriesByGenres(genresChecked, userID.idUser) {
+                                if (it.isNullOrEmpty()) shortStoryIsNull.value = true
+                                else {
+                                    shortStories.value = it
+                                    shortStoryIsNull.value = false
+                                }
+                            }
                         }) {
                             Icon(
                                 Icons.Rounded.Check,
