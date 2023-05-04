@@ -28,7 +28,9 @@ data class User(
     var shortStoriesActivate: List<Anuncios>?,
 
     @SerializedName("historias_curtas_desativadas")
-    var shortStoriesDeactivate: List<Anuncios>?
+    var shortStoriesDeactivate: List<Anuncios>?,
+
+    var seguindo: Boolean?
 ) {
     override fun toString(): String {
         return super.toString()

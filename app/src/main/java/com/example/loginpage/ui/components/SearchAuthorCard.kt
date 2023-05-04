@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,13 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.loginpage.API.follow.CallFollowAPI
+import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.models.Follow
 import com.example.loginpage.models.User
 import com.example.loginpage.ui.theme.MontSerratSemiBold
 import com.example.loginpage.ui.theme.SpartanBold
@@ -36,8 +37,9 @@ fun GenerateAuthorCard(
     ){
 
     var followState by remember {
-        mutableStateOf(true)
+        mutableStateOf(autor.seguindo)
     }
+    
 
     Card(
         modifier = Modifier
@@ -129,11 +131,18 @@ fun GenerateAuthorCard(
                 }
 
 
-                if(followState){
+                if(followState == true){
                     Card(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)
-                            .clickable { },
+                            .clickable {
+                                followState = !followState!!
+
+                                CallFollowAPI.unfollowUser(usuarioID, autor.id)
+
+
+
+                            },
                         backgroundColor = Color.Black,
                         border = BorderStroke(
                             1.dp,
@@ -157,7 +166,15 @@ fun GenerateAuthorCard(
                     Card(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)
-                            .clickable { },
+                            .clickable {
+                                       followState = !followState!!
+
+                                        val authorFollow = Follow(
+                                            idSegue = usuarioID,
+                                            idSeguindo =  autor.id
+                                        )
+                                CallFollowAPI.followUser(authorFollow)
+                            },
                         backgroundColor = Color.White,
                         border = BorderStroke(
                             1.dp,
