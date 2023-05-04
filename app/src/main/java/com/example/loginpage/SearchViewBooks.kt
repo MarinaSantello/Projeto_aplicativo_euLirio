@@ -1,5 +1,6 @@
 package com.example.loginpage
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -33,6 +34,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -146,6 +148,7 @@ fun SearchBooks(navController: NavController) {
         var minValue by remember { mutableStateOf("") }
         var maxValue by remember { mutableStateOf("") }
 
+        val focusManager = LocalFocusManager.current
         BackHandler(menuState.value,
             onBack = {
                 menuState.value = !menuState.value
@@ -225,7 +228,14 @@ fun SearchBooks(navController: NavController) {
                                     }
 
                                     Row(
-                                        modifier = Modifier.weight(1f),
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clickable {
+                                                checkGenre = !checkGenre
+
+                                                if (checkGenre) genres += GenreSearch (generos[itemIndex].nomeGenero)
+                                                else genres -= GenreSearch (generos[itemIndex].nomeGenero)
+                                            },
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Start
                                     ) {
@@ -347,7 +357,17 @@ fun SearchBooks(navController: NavController) {
                                 TextField(
                                     value = minValue,
                                     onValueChange = {
-                                        minValue = it
+                                        // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
+                                        val lastChar = if (it.isEmpty()) it
+                                        else it.get(it.length - 1) // '.get': recupera um caracter de acordo com a posição do vetor que é passada no argumento da função
+                                        Log.i("console log", lastChar.toString()) // equivalente ao 'console.log'
+
+                                        // verifica se o último caracter é indesejado
+                                        val newValue =
+                                            if (lastChar == ' ' || lastChar == '-') it.dropLast(1)  // se sim, remove 1 caracter 'do final para o começo'
+                                            else it // se não, o valor digitado é mantido intacto
+
+                                        minValue = newValue
                                     },
                                     placeholder = {
                                         Text(
@@ -356,6 +376,11 @@ fun SearchBooks(navController: NavController) {
                                         )
 
                                     },
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Next
+                                    ),
                                     modifier = Modifier
                                         .width(120.dp)
                                         .padding(end = 12.dp)
@@ -364,7 +389,17 @@ fun SearchBooks(navController: NavController) {
                                 TextField(
                                     value = maxValue,
                                     onValueChange = {
-                                        maxValue = it
+                                        // previnindo bug, caso o input fique vazio e, caso tenha algum valor, pegando o último valor do 'it' (último caracter digitado)
+                                        val lastChar = if (it.isEmpty()) it
+                                        else it.get(it.length - 1) // '.get': recupera um caracter de acordo com a posição do vetor que é passada no argumento da função
+                                        Log.i("console log", lastChar.toString()) // equivalente ao 'console.log'
+
+                                        // verifica se o último caracter é indesejado
+                                        val newValue =
+                                            if (lastChar == ' ' || lastChar == '-') it.dropLast(1)  // se sim, remove 1 caracter 'do final para o começo'
+                                            else it // se não, o valor digitado é mantido intacto
+
+                                        maxValue = newValue
                                     },
                                     placeholder = {
                                         Text(
@@ -373,8 +408,18 @@ fun SearchBooks(navController: NavController) {
                                         )
 
                                     },
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number,
+                                       imeAction = ImeAction.Done
+                                    ),
                                     modifier = Modifier
-                                        .width(120.dp)
+                                        .width(120.dp),
+                                    keyboardActions = KeyboardActions (
+                                        onDone = {
+                                            focusManager.clearFocus()
+                                        }
+                                    )
                                 )
                             }
                         }
@@ -390,12 +435,14 @@ fun SearchBooks(navController: NavController) {
                         Button(onClick = {
                             val genresChecked = Genres(genres)
 
-                            CallSearchaAPI.filterAnnouncements(genresChecked, minValue.toInt(), maxValue, userID.idUser) {
+                            CallSearchaAPI.filterAnnouncements(genresChecked, if (minValue.isEmpty()) "0" else minValue.replace(',', '.'), maxValue.replace(',', '.'), userID.idUser) {
                                 if (it.isNullOrEmpty()) announcementIsNull.value = true
                                 else {
                                     announcements.value = it
                                     announcementIsNull.value = false
                                 }
+
+                                menuState.value = !menuState.value
                             }
                         }) {
                             Icon(

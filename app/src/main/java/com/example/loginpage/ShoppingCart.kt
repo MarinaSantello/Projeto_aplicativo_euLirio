@@ -418,7 +418,17 @@ fun ShowItemsCart(
                         }
                     }
                 }
-                if (cartIsNull) Text(text = "Você não possui livros favoritados disponíveis para compra.")
+                if (cartIsNull)
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = "Você não possui livros favoritados disponíveis para compra.",
+                            textAlign = TextAlign.Center,
+                            fontFamily = MontSerratBold
+                        )
+                    }
             }
         }
     }

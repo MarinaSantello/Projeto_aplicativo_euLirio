@@ -72,7 +72,7 @@ class CallSearchaAPI {
                 }
             })
         }
-        fun filterAnnouncements(genres: Genres, minValue: Int, maxValue: String, userID: Int, AnnouncementsData: (List<AnnouncementGet>?) -> Unit) {
+        fun filterAnnouncements(genres: Genres, minValue: String, maxValue: String, userID: Int, AnnouncementsData: (List<AnnouncementGet>?) -> Unit) {
             val callSearch = searchCall.filterAnnouncements(genres, minValue, maxValue, userID)
 
             callSearch.enqueue(object :

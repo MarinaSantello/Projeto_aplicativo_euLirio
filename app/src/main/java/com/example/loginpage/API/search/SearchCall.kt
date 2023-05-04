@@ -1,14 +1,12 @@
 package com.example.loginpage.API.search
 
+import com.example.loginpage.constants.Constant
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Genres
 import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.models.User
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface SearchCall {
 
@@ -17,8 +15,9 @@ interface SearchCall {
     fun searchAnnouncementsByName(@Query("announcementTitle") announcementTitle: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
     @GET("announcements/genre-name/")
     fun searchAnnouncementsByGenre(@Query("genreName") genreName: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
-    @GET("filter-announcements/")
-    fun filterAnnouncements(@Body genres: Genres, @Query("minValue") minValue: Int, @Query("maxValue") maxValue: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @POST("filter-announcements/")
+    fun filterAnnouncements(@Body genres: Genres, @Query("minValue") minValue: String, @Query("maxValue") maxValue: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
 
 
     /* * * * PEQUENAS HISTÓRIAS * * * */
@@ -26,7 +25,8 @@ interface SearchCall {
     fun searchShortStoriesByName(@Query("shortStorieTitle") shortStoryTitle: String, @Query("userId") userID: Int): Call<List<ShortStoryGet>>
     @GET("/short-stories/genre-name/")
     fun searchShortStoriesByGenre(@Query("genreName") genreName: String, @Query("userId") userID: Int): Call<List<ShortStoryGet>>
-    @GET("/short-stories-by-genres/user-id/{id}")
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @POST("/short-stories-by-genres/user-id/{id}")
     fun searchShortStoriesByGenres(@Body genres: Genres, @Path("id") userID: Int): Call<List<ShortStoryGet>>
 
     /* * * * AUTORES * * * */
