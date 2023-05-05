@@ -83,7 +83,7 @@ var announcements: MutableState<List<AnnouncementGet>> = mutableStateOf(listOf()
 var announcementIsNull: MutableState<Boolean> = mutableStateOf(false)
 var shortStories: MutableState<List<ShortStoryGet>> = mutableStateOf(listOf())
 var shortStoryIsNull: MutableState<Boolean> = mutableStateOf(false)
-var authors: MutableState<List<User>> = mutableStateOf(listOf())
+var authors: MutableState<List<UserFollow>> = mutableStateOf(listOf())
 var authorsIsNull: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
@@ -744,7 +744,7 @@ fun TabsFeedSearch(
                     contentPadding = PaddingValues(bottom = bottomBarLength)
                 ){
                     items(authors.value){
-                        GenerateAuthorCard(autor = it, navController = navController, usuarioID = userID)
+                        GenerateAuthorCard(autor = it, navController = navController, usuarioID = userID, true)
                     }
                 }
 

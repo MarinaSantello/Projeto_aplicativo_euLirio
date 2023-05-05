@@ -17,6 +17,11 @@
         android:theme="@style/Theme.LoginPage"
         tools:targetApi="31">
         <activity
+            android:name=".FollowPage"
+            android:exported="false"
+            android:label="@string/title_activity_follow_page"
+            android:theme="@style/Theme.LoginPage" />
+        <activity
             android:name=".SearchPage"
             android:exported="false"
             android:label="@string/title_activity_search_page"

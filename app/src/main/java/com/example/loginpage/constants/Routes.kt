@@ -21,5 +21,6 @@ enum class Routes {
     SavePage,
     User,
     UpdateUser,
-    Read
+    Read,
+    FollowsPage
 }

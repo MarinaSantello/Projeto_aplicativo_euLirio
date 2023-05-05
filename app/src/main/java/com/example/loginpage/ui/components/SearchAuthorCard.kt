@@ -28,7 +28,9 @@ import com.example.loginpage.authors
 import com.example.loginpage.authorsIsNull
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Follow
+import com.example.loginpage.models.GenreSearch
 import com.example.loginpage.models.User
+import com.example.loginpage.models.UserFollow
 import com.example.loginpage.searchState
 import com.example.loginpage.ui.theme.MontSerratSemiBold
 import com.example.loginpage.ui.theme.SpartanBold
@@ -36,9 +38,10 @@ import com.example.loginpage.ui.theme.SpartanExtraLight
 
 @Composable
 fun GenerateAuthorCard(
-    autor: User,
+    autor: UserFollow,
     navController: NavController,
-    usuarioID: Int
+    usuarioID: Int,
+    searchPage: Boolean
     ){
 
     var followState by remember {
@@ -103,7 +106,7 @@ fun GenerateAuthorCard(
 
             val generos = autor.generos
 
-            Row(
+            if (searchPage) Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -138,7 +141,7 @@ fun GenerateAuthorCard(
                 }
 
 
-                if(followState == true){
+                if(followState){
                     Card(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)

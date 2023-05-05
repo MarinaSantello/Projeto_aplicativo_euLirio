@@ -99,6 +99,12 @@ fun UserHomePage(
     var followState by remember {
         mutableStateOf(false)
     }
+    var followersState by remember {
+        mutableStateOf(0)
+    }
+    var followingState by remember {
+        mutableStateOf(0)
+    }
 
     CallAPI.getNavUser(navUserID.toLong(), userID.idUser.toLong()){
         foto = it.foto
@@ -331,6 +337,9 @@ fun UserHomePage(
                         modifier = Modifier
                             .height(36.dp)
                             .padding(end = 12.dp)
+                            .clickable {
+                                navController.navigate("${Routes.FollowsPage.name}/1")
+                            }
                     ) {
                         Text(
                             text = "570",
@@ -355,6 +364,9 @@ fun UserHomePage(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .height(36.dp)
+                            .clickable {
+                                navController.navigate("${Routes.FollowsPage.name}/0")
+                            }
                     ) {
                         Text(
                             text = "4,1k",

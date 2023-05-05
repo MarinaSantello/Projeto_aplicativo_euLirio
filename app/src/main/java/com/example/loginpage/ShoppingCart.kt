@@ -95,8 +95,7 @@ fun ShoppingCartPage(
             .fillMaxSize(),
         scaffoldState = scaffoldState,
         topBar = { TopBarShop(navController) },
-        bottomBar = { BottomBarScaffold(bottomBarState, navController, userID, 3) },
-        floatingActionButtonPosition = FabPosition.End,
+        bottomBar = { BottomBarScaffold(bottomBarState, navController, userID, 3) }
     ) {
         ShowBooks(userID, it.calculateBottomPadding(), 3, topBarState, bottomBarState, navController, null)
     }

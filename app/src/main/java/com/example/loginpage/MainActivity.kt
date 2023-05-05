@@ -175,6 +175,15 @@ fun Greeting() {
             ShoppingCartPage(navController, userId)
         }
 
+        composable(
+            "${Routes.FollowsPage.name}/{typePage}",
+            arguments = listOf(navArgument("typePage") { type = NavType.IntType })
+        ) {
+            val typePage = it.arguments!!.getInt("typePage")
+
+            ViewFollowPage(navController, typePage)
+        }
+
 //        composable(Routes.PostEbook.name) {
 //            InputDataEbook(navController)
 //        }

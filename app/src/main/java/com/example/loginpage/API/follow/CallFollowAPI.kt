@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.models.Follow
 import com.example.loginpage.models.User
+import com.example.loginpage.models.UserFollow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +19,7 @@ class CallFollowAPI() {
 
         //Função para o usuario seguir um autor
         fun followUser(followUser: Follow): List<String>{
-            val callFollowUser = followCall.folowUser(followUser)
+            val callFollowUser = followCall.followUser(followUser)
 
             callFollowUser.enqueue(object:
                 retrofit2.Callback<String>{
@@ -45,9 +46,9 @@ class CallFollowAPI() {
 
         //Função para o usuario deixar de seguir um usuario
         fun unfollowUser(followerId: Int, followedID: Int): List<String>{
-            val callunFollowUser = followCall.unFolowUser(followerId, followedID)
+            val callUnFollowUser = followCall.unFollowUser(followerId, followedID)
 
-            callunFollowUser.enqueue(object:
+            callUnFollowUser.enqueue(object:
             Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     retorno = listOf<String>(
@@ -67,6 +68,46 @@ class CallFollowAPI() {
             }
             )
             return retorno
+        }
+
+        fun getFollowers(userID: Int, followersData: (List<UserFollow>?) -> Unit) {
+            val callFollow = followCall.getFollowers(userID)
+
+            callFollow.enqueue(object :
+                Callback<List<UserFollow>>{
+                override fun onResponse(
+                    call: Call<List<UserFollow>>,
+                    response: Response<List<UserFollow>>
+                ) {
+                    val followers = response.body()
+
+                    followersData.invoke(followers)
+                }
+
+                override fun onFailure(call: Call<List<UserFollow>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
+
+        fun getFollowing(userID: Int, followersData: (List<UserFollow>?) -> Unit) {
+            val callFollow = followCall.getFollowing(userID)
+
+            callFollow.enqueue(object :
+                Callback<List<UserFollow>>{
+                override fun onResponse(
+                    call: Call<List<UserFollow>>,
+                    response: Response<List<UserFollow>>
+                ) {
+                    val followers = response.body()
+
+                    followersData.invoke(followers)
+                }
+
+                override fun onFailure(call: Call<List<UserFollow>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
         }
     }
 }

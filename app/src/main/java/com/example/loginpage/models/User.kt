@@ -79,3 +79,13 @@ data class Anuncios (
 data class UserName (
     var id: Int
 )
+
+data class UserFollow(
+    var id: Int,
+    var foto: String,
+    var nome: String,
+    @SerializedName("user_name")
+    var userName: String,
+    var seguindo: Boolean,
+    var generos: List<Genero>
+)

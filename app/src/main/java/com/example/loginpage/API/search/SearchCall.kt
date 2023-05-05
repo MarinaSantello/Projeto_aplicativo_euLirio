@@ -1,10 +1,7 @@
 package com.example.loginpage.API.search
 
 import com.example.loginpage.constants.Constant
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Genres
-import com.example.loginpage.models.ShortStoryGet
-import com.example.loginpage.models.User
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -31,6 +28,6 @@ interface SearchCall {
 
     /* * * * AUTORES * * * */
     @GET("/user/user-name/")
-    fun authorSearch(@Query("username") author: String, @Query("userId") userID: Int): Call<List<User>>
+    fun authorSearch(@Query("username") author: String, @Query("userId") userID: Int): Call<List<UserFollow>>
 
 }

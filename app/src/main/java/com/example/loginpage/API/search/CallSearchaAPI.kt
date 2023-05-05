@@ -2,10 +2,7 @@ package com.example.loginpage.API.search
 
 import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Genres
-import com.example.loginpage.models.ShortStoryGet
-import com.example.loginpage.models.User
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -135,12 +132,12 @@ class CallSearchaAPI {
 
 
         /* * * * AUTORES * * * */
-        fun searchAuthorByName(authorName:String, userID: Int, AuthorData:(List<User>?) -> Unit){
+        fun searchAuthorByName(authorName:String, userID: Int, AuthorData:(List<UserFollow>?) -> Unit){
             val callSearch = searchCall.authorSearch(authorName, userID)
 
             callSearch.enqueue(object:
-                Callback<List<User>>{
-                override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+                Callback<List<UserFollow>>{
+                override fun onResponse(call: Call<List<UserFollow>>, response: Response<List<UserFollow>>) {
                     val retorno = response.body()
 
                     AuthorData.invoke(retorno)
@@ -148,9 +145,7 @@ class CallSearchaAPI {
                     Log.i("respon post", response.message()!!.toString())
                 }
 
-                override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                    TODO("Not yet implemented")
-
+                override fun onFailure(call: Call<List<UserFollow>>, t: Throwable) {
                     Log.i("respon post", t.message.toString())
                 }
 
