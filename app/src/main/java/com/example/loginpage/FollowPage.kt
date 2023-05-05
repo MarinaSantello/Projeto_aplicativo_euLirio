@@ -32,7 +32,7 @@ class FollowPage : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ViewFollowPage(rememberNavController(), 0mu)
+                    ViewFollowPage(rememberNavController(), 0)
                 }
             }
         }

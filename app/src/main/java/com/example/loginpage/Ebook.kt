@@ -22,10 +22,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.ChevronLeft
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -557,7 +554,7 @@ fun ShowEbook(
                                             quantidadeViewsState = newViewConvert.toString()
 
 
-                                                   },
+                                        },
                                     tint = colorResource(id = R.color.eulirio_purple_text_color_border)
                                 )
 
@@ -592,7 +589,7 @@ fun ShowEbook(
                 Row(Modifier.fillMaxSize()) {
                     Card(
                         modifier = Modifier
-                            .fillMaxWidth(if(announcement.carrinho) 1f else .5f)
+                            .fillMaxWidth(if (announcement.carrinho) 1f else .5f)
                             .fillMaxHeight(),
                         backgroundColor = Color(0xDFBDB5A),
                         shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = if(announcement.carrinho) 40.dp else 0.dp),
@@ -902,10 +899,246 @@ fun ShowEbook(
                         .fillMaxWidth()
                         .padding(0.dp, 8.dp)
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth()
+                ){
+
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Icon(
+                            Icons.Outlined.ChatBubbleOutline,
+                            contentDescription = "icone de vendas",
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .padding(end = 15.dp)
+
+
+                        )
+
+                        Text(
+                            text = "Avaliações do livro",
+                            fontFamily = SpartanBold,
+                            fontSize = 16.sp
+                        )
+
+                        Text(
+                            text = "(2)",
+                            fontFamily = SpartanBold,
+                            fontSize = 16.sp
+                        )
+                    }
+
+
+                    Card(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .padding(start = 20.dp, end = 20.dp, top = 3.dp)
+                        ,
+                        backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        shape = RoundedCornerShape(100.dp),
+                    ) {
+                        Text(
+                            text = "AVALIAR",
+                            fontSize = 14.sp,
+                            fontFamily = MontSerratSemiBold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(20.dp, 0.dp),
+                            color = Color.White
+                        )
+                    }
+                }
+
+                var likeStateComment by remember {
+                    mutableStateOf(false)
+                }
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(20.dp, 0.dp)
+                    ){
+                        Row(
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ){
+                            Row(
+                                horizontalArrangement = Arrangement.Start
+                            ){
+                                Image(
+                                    painter = rememberAsyncImagePainter("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                                    contentScale = ContentScale.Crop,
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .height(40.dp)
+                                        .width(40.dp)
+                                        .clip(RoundedCornerShape(100.dp))
+                                        .border(.5.dp, Color.White, RoundedCornerShape(100.dp))
+                                )
+                                Column(modifier = Modifier.padding(start = 12.dp), verticalArrangement = Arrangement.Center) {
+                                    Row(horizontalArrangement = Arrangement.Center){
+                                        Icon(
+                                            Icons.Default.Star,
+                                            contentDescription = "estrela de avaliação",
+                                            modifier = Modifier.size(20.dp),
+                                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                                        )
+                                        Icon(
+                                            Icons.Default.Star,
+                                            contentDescription = "estrela de avaliação",
+                                            modifier = Modifier.size(20.dp),
+                                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                                        )
+                                        Icon(
+                                            Icons.Default.Star,
+                                            contentDescription = "estrela de avaliação",
+                                            modifier = Modifier.size(20.dp),
+                                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                                        )
+                                        Icon(
+                                            Icons.Default.Star,
+                                            contentDescription = "estrela de avaliação",
+                                            modifier = Modifier.size(20.dp),
+                                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                                        )
+                                        Icon(
+                                            Icons.Outlined.StarOutline,
+                                            contentDescription = "estrela de avaliação",
+                                            modifier = Modifier.size(20.dp),
+                                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                                        )
+                                    }
+                                    Text(
+                                        text = "@Zoio",
+                                        fontFamily = SpartanRegular,
+                                        fontSize = 10.sp
+
+                                    )
+
+                                }
+                            }
+
+                            Card(
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .clickable {}
+                                    .width(40.dp),
+                                backgroundColor = Color.Transparent,
+                                elevation = 0.dp,
+
+                                ){
+                                Icon(
+                                    Icons.Outlined.MoreVert, contentDescription = "",
+                                    modifier = Modifier.size(10.dp),
+                                    tint = Color.Black
+                                )
+                            }
+
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Column() {
+                            Text(
+                                text = "Título da resenha",
+                                fontFamily = SpartanBold,
+                                fontSize = 12.sp
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Text(
+                                text = "Olha o text dissertativo argumentativo ai ó",
+                                fontFamily = QuickSand,
+                                fontSize = 10.sp
+                            )
+                        }
+
+                    }
+
+
+                    Row(
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 6.dp)
+                    ){
+                        Card(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(80.dp)
+                            ,
+                            backgroundColor = Color.White,
+                            shape = RoundedCornerShape(100.dp),
+                            border = if(likeStateComment){
+                                BorderStroke(1.dp, Color.Red)
+                            }else{
+                                BorderStroke(1.dp, Color.Black)
+                            }
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                if(likeStateComment){
+                                    Icon(
+                                        Icons.Rounded.Favorite,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(15.dp),
+                                        tint = Color.Red
+                                    )
+                                }else{
+                                    Icon(
+                                        Icons.Outlined.FavoriteBorder,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(15.dp),
+                                        tint = Color.Black
+                                    )
+                                }
+
+
+                                Text(
+                                    text = "182",
+                                    fontFamily = SpartanRegular,
+                                    modifier = Modifier.padding(start=6.dp)
+                                )
+
+                            }
+
+                        }
+
+                        Text(
+                            text = "12 Jun. 2022",
+                            fontFamily = SpartanRegular,
+                            fontSize = 10.sp
+                        )
+
+
+                    }
+
+
+                }
+
+
             }
+
+
         }
     }
 }
+
+
 
 
 @Composable
@@ -1184,7 +1417,6 @@ fun TopBarEbook(
         }
     )
 }
-
 
 
 @Composable

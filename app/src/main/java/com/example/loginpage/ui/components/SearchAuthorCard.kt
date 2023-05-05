@@ -52,94 +52,60 @@ fun GenerateAuthorCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp).clickable {
+            .clickable {
                 navController.navigate("${Routes.User.name}/${autor.id}")
             }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 12.dp, end = 8.dp),
+                .padding(start = 12.dp, end = 8.dp, top = 12.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start
         ) {
             Row(
-                verticalAlignment = Alignment.Top
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    rememberAsyncImagePainter(
-                        autor.foto
-                            ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                    ),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "foto de perfil",
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(40.dp)
-                        .clip(RoundedCornerShape(100.dp))
-                )
-
-                Spacer(modifier = Modifier.width(10.dp))
-
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start
+                Row(
+                    verticalAlignment = Alignment.Top
                 ) {
-                    Text(
-                        text = autor.nome,
-                        fontFamily = SpartanBold,
-                        fontSize = 16.sp
+                    Image(
+                        rememberAsyncImagePainter(
+                            autor.foto
+                                ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                        ),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "foto de perfil",
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(40.dp)
+                            .clip(RoundedCornerShape(100.dp))
                     )
 
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
 
-                    Text(
-                        text = "@${autor.userName}",
-                        fontFamily = SpartanExtraLight,
-                        fontSize = 10.sp
-                    )
-                }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = autor.nome,
+                            fontFamily = SpartanBold,
+                            fontSize = 16.sp
+                        )
 
-            }
+                        Spacer(modifier = Modifier.height(2.dp))
 
-            Spacer(modifier = Modifier.height(15.dp))
-
-            val generos = autor.generos
-
-            Row(
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = if (searchPage) Arrangement.SpaceBetween else Arrangement.End,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if (searchPage) LazyRow(
-                    modifier = Modifier
-                        .width(200.dp)
-                ) {
-                    items(generos) {
-                        Card(
-                            modifier = Modifier
-                                .padding(start = 3.dp, end = 3.dp),
-                            backgroundColor = Color.White,
-                            border = BorderStroke(
-                                1.dp,
-                                Color.Black
-                            ),
-                            shape = RoundedCornerShape(10.dp),
-                            elevation = 0.dp
-                        ) {
-                            Text(
-                                text = it.nomeGenero.uppercase(),
-                                modifier = Modifier.padding(24.dp, 2.dp),
-                                fontSize = 10.sp,
-                                fontFamily = MontSerratSemiBold,
-                                fontWeight = FontWeight.Black,
-                                textAlign = TextAlign.Center,
-                                color = Color.Black
-                            )
-                        }
+                        Text(
+                            text = "@${autor.userName}",
+                            fontFamily = SpartanExtraLight,
+                            fontSize = 10.sp
+                        )
                     }
-                }
 
+                }
 
                 if(followState){
                     Card(
@@ -152,15 +118,13 @@ fun GenerateAuthorCard(
 
                                 CallSearchaAPI.searchAuthorByName(
                                     searchState.value, usuarioID
-                                ){
-                                    if(it.isNullOrEmpty()) authorsIsNull.value = true
-                                    else{
+                                ) {
+                                    if (it.isNullOrEmpty()) authorsIsNull.value = true
+                                    else {
                                         authors.value = it
                                         authorsIsNull.value = false
                                     }
                                 }
-
-
                             },
                         backgroundColor = Color.Black,
                         border = BorderStroke(
@@ -186,18 +150,18 @@ fun GenerateAuthorCard(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)
                             .clickable {
-                               followState = !followState!!
+                                followState = !followState!!
 
                                 val authorFollow = Follow(
                                     idSegue = usuarioID,
-                                    idSeguindo =  autor.id
+                                    idSeguindo = autor.id
                                 )
 
                                 CallSearchaAPI.searchAuthorByName(
                                     searchState.value, usuarioID
-                                ){
-                                    if(it.isNullOrEmpty()) authorsIsNull.value = true
-                                    else{
+                                ) {
+                                    if (it.isNullOrEmpty()) authorsIsNull.value = true
+                                    else {
                                         authors.value = it
                                         authorsIsNull.value = false
                                     }
@@ -226,8 +190,36 @@ fun GenerateAuthorCard(
                     }
                 }
 
+            }
 
+            Spacer(modifier = Modifier.height(12.dp))
 
+            val generos = autor.generos
+
+            if (searchPage) LazyRow() {
+                items(generos) {
+                    Card(
+                        modifier = Modifier
+                            .padding(start = 4.dp, end = 4.dp),
+                        backgroundColor = Color.White,
+                        border = BorderStroke(
+                            1.dp,
+                            Color.Black
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        elevation = 0.dp
+                    ) {
+                        Text(
+                            text = it.nomeGenero.uppercase(),
+                            modifier = Modifier.padding(12.dp, 2.dp),
+                            fontSize = 8.sp,
+                            fontFamily = MontSerratSemiBold,
+                            fontWeight = FontWeight.Black,
+                            textAlign = TextAlign.Center,
+                            color = Color.Black
+                        )
+                    }
+                }
             }
         }
     }

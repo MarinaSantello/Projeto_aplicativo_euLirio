@@ -318,7 +318,7 @@ fun UserHomePage(
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
-                            color = Color.White
+                            color = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "OBRAS",
@@ -326,7 +326,7 @@ fun UserHomePage(
                             modifier = Modifier.padding(bottom = 4.dp),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.subtitle1,
-                            color = Color.White
+                            color = colorResource(id = R.color.eulirio_black)
                         )
                     }
 
@@ -346,7 +346,7 @@ fun UserHomePage(
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
-                            color = Color.White
+                            color = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "SEGUINDO",
@@ -354,7 +354,7 @@ fun UserHomePage(
                             modifier = Modifier.padding(bottom = 4.dp),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.subtitle1,
-                            color = Color.White
+                            color = colorResource(id = R.color.eulirio_black)
                         )
                     }
 
@@ -373,7 +373,7 @@ fun UserHomePage(
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
-                            color = Color.White
+                            color = colorResource(id = R.color.eulirio_black)
                         )
                         Text(
                             text = "SEGUIDORES",
@@ -381,7 +381,7 @@ fun UserHomePage(
                             modifier = Modifier.padding(bottom = 4.dp),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.subtitle1,
-                            color = Color.White
+                            color = colorResource(id = R.color.eulirio_black)
                         )
                     }
 
