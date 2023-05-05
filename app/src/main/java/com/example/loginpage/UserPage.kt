@@ -78,9 +78,6 @@ fun UserHomePage(
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
-    Log.i("id usuario", users[0].idUser.toString())
-    Log.i("id usuario2", navUserID.toString())
-
     var foto by remember {
         mutableStateOf("")
     }
@@ -103,7 +100,7 @@ fun UserHomePage(
         mutableStateOf(false)
     }
 
-    CallAPI.getUser(navUserID.toLong()){
+    CallAPI.getNavUser(navUserID.toLong(), userID.idUser.toLong()){
         foto = it.foto
         nome = it.nome
         userName = it.userName
@@ -264,6 +261,7 @@ fun UserHomePage(
                                             idSegue = users[0].idUser,
                                             idSeguindo = navUserID
                                         )
+
                                         CallFollowAPI.followUser(authorFollow)
                                     },
                                 backgroundColor = Color.Transparent,
@@ -388,11 +386,11 @@ fun UserHomePage(
         ) {
             Text(
                 text = biografia,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 fontFamily = QuickSand,
                 fontWeight = FontWeight.W500,
                 modifier = Modifier
-                    .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 12.dp)
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 16.dp)
             )
 
             LazyRow() {

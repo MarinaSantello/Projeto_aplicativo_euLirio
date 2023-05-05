@@ -22,10 +22,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.follow.CallFollowAPI
+import com.example.loginpage.API.search.CallSearchaAPI
 import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.authors
+import com.example.loginpage.authorsIsNull
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Follow
 import com.example.loginpage.models.User
+import com.example.loginpage.searchState
 import com.example.loginpage.ui.theme.MontSerratSemiBold
 import com.example.loginpage.ui.theme.SpartanBold
 import com.example.loginpage.ui.theme.SpartanExtraLight
@@ -143,6 +147,15 @@ fun GenerateAuthorCard(
 
                                 CallFollowAPI.unfollowUser(usuarioID, autor.id)
 
+                                CallSearchaAPI.searchAuthorByName(
+                                    searchState.value, usuarioID
+                                ){
+                                    if(it.isNullOrEmpty()) authorsIsNull.value = true
+                                    else{
+                                        authors.value = it
+                                        authorsIsNull.value = false
+                                    }
+                                }
 
 
                             },
@@ -170,12 +183,23 @@ fun GenerateAuthorCard(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)
                             .clickable {
-                                       followState = !followState!!
+                               followState = !followState!!
 
-                                        val authorFollow = Follow(
-                                            idSegue = usuarioID,
-                                            idSeguindo =  autor.id
-                                        )
+                                val authorFollow = Follow(
+                                    idSegue = usuarioID,
+                                    idSeguindo =  autor.id
+                                )
+
+                                CallSearchaAPI.searchAuthorByName(
+                                    searchState.value, usuarioID
+                                ){
+                                    if(it.isNullOrEmpty()) authorsIsNull.value = true
+                                    else{
+                                        authors.value = it
+                                        authorsIsNull.value = false
+                                    }
+                                }
+
                                 CallFollowAPI.followUser(authorFollow)
                             },
                         backgroundColor = Color.White,

@@ -55,6 +55,7 @@ import com.example.loginpage.models.ShortStoryGet
 import com.example.loginpage.models.VisualizationShortStorie
 import com.example.loginpage.ui.theme.*
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 
 //class ShortStoryReader : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,11 +87,16 @@ fun ScreenBuilder(
     val scaffoldState = rememberScaffoldState()
 
     val htmlFontStyle =
-        "<head><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap\" rel=\"stylesheet\"></head>\n" +
-                "<body>\n" +
+        "<head><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&display=swap\" rel=\"stylesheet\"></head>\n" +
+        "<body>\n" +
+            "<h1 id=\"title\">" +
+                shortStory.titulo +
+            "</h1>" +
+            "<main>" +
                 shortStory.historia +
-                "<style>body{font-family: 'Noto Serif', serif; margin: 12px;}</style>\n" +
-                "</body>"
+            "</main>" +
+            "<style>main{font-family: 'Noto Serif', serif; margin: 12px;}\nh1{display: flex; flex-direction: column;align-items: center;font-family: 'League Spartan', sans-serif;font-size: 2.3rem;margin-bottom:36px;margin-top:28px;text-align: center;}\n</style>\n" +
+        "</body>"
     Scaffold(
         modifier = Modifier
             .fillMaxSize()

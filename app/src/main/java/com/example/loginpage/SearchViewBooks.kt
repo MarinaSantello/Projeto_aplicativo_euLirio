@@ -572,7 +572,7 @@ fun TopBarSearch(
                                                 authors.value = it
                                                 authorsIsNull.value = false
                                             }
-                                    }
+                                        }
                                     }
                                 ),
                                 singleLine = true,
