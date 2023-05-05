@@ -106,12 +106,12 @@ fun GenerateAuthorCard(
 
             val generos = autor.generos
 
-            if (searchPage) Row(
+            Row(
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = if (searchPage) Arrangement.SpaceBetween else Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                LazyRow(
+                if (searchPage) LazyRow(
                     modifier = Modifier
                         .width(200.dp)
                 ) {
