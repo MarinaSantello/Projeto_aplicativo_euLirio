@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.follow.CallFollowAPI
 import com.example.loginpage.API.user.CallAPI
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Follow
 import com.example.loginpage.models.User
 import com.example.loginpage.ui.theme.MontSerratSemiBold
@@ -44,7 +45,9 @@ fun GenerateAuthorCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(100.dp).clickable {
+                navController.navigate("${Routes.User.name}/${autor.id}")
+            }
     ) {
         Column(
             modifier = Modifier

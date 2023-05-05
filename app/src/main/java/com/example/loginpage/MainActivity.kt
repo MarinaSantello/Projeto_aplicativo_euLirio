@@ -117,7 +117,7 @@ fun Greeting() {
         ) {
             val userId = it.arguments!!.getInt("itemId")
 
-            UserHomePage(navController)
+            UserHomePage(navController, userId)
         }
 
         composable(

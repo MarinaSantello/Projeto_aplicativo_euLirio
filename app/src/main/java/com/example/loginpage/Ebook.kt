@@ -675,7 +675,11 @@ fun ShowEbook(
                 .height(1000.dp)
                 .padding(15.dp)
         ) {
-            Row {
+            Row (
+                Modifier.clickable {
+                    navController.navigate("${Routes.User.name}/${announcement.usuario[0].idUsuario}")
+                }
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(announcement.usuario[0].foto),
                     contentDescription = "foto da pessoa",
