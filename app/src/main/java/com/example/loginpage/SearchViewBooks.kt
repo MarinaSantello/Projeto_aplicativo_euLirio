@@ -716,7 +716,17 @@ fun TabsFeedSearch(
         }
         when (tabIndex.value) {
             0 -> {
-                if (announcementIsNull.value) Text(text = "Não existem livros com esse nome.")
+                if (announcementIsNull.value) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Não existem livros com esse nome.",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
+
                 else LazyColumn(
                     state = scrollStateAnn,
                     contentPadding = PaddingValues(bottom = bottomBarLength)
@@ -727,7 +737,16 @@ fun TabsFeedSearch(
                 }
             }
             1 -> {
-                if (shortStoryIsNull.value) Text(text = "Não existem pequenas histórias com esse nome.")
+                if (shortStoryIsNull.value) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Não existem pequenas histórias com esse nome.",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
                 else LazyColumn(
                     state = scrollStateSS,
                     contentPadding = PaddingValues(bottom = bottomBarLength)
@@ -738,7 +757,16 @@ fun TabsFeedSearch(
                 }
             }
             2 -> {
-                if(authorsIsNull.value) Text(text = "Não existem autores com esse nome.")
+                if(authorsIsNull.value) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Não existem autores com esse nome.",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
                 else LazyColumn(
                     state = scrollStateSS,
                     contentPadding = PaddingValues(bottom = bottomBarLength)

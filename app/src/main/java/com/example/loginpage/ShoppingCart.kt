@@ -169,7 +169,25 @@ fun ShowItemsCart(
                     }
                 }
 
-                if (cartIsNull) Text(text = "Seu carrinho está vazio!")
+
+                val priceVerify = totalCart.toString().split('.')
+                var price = totalCart.toString()
+
+                if (priceVerify[1].isEmpty())
+                    price = "${priceVerify[0]}.00"
+                else if (priceVerify[1].length == 1)
+                    price = "${totalCart}0"
+
+                if (cartIsNull) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Seu carrinho está vazio!",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
 
                 else Box(Modifier.fillMaxSize()) {
                     LazyColumn(
@@ -213,7 +231,7 @@ fun ShowItemsCart(
                                         modifier = Modifier.padding(start = 12.dp, top = 8.dp
                                         ))
 
-                                    Text( text ="R$ $totalCart",
+                                    Text( text ="R$ $price",
                                         fontFamily = SpartanRegular,
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -273,7 +291,16 @@ fun ShowItemsCart(
                 var cartIsNull by remember {
                     mutableStateOf(true)
                 }
-                if (announcementIsNull) Text(text = "Você não possui livros favoritados.")
+                if (announcementIsNull) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Você não possui livros favoritados.",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
 
                 else LazyColumn(
                     contentPadding = PaddingValues(bottom = bottomBarLength)

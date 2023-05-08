@@ -15,6 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Favorite
@@ -173,27 +174,27 @@ fun AnnouncementCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            Icons.Rounded.Star,
+                            Icons.Default.Star,
                             contentDescription = "estrela de avaliação",
                             tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                         )
                         Icon(
-                            Icons.Rounded.Star,
+                            Icons.Default.Star,
                             contentDescription = "estrela de avaliação",
                             tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                         )
                         Icon(
-                            Icons.Rounded.Star,
+                            Icons.Default.Star,
                             contentDescription = "estrela de avaliação",
                             tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                         )
                         Icon(
-                            Icons.Rounded.Star,
+                            Icons.Default.Star,
                             contentDescription = "estrela de avaliação",
                             tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                         )
                         Icon(
-                            Icons.Rounded.Star,
+                            Icons.Default.Star,
                             contentDescription = "estrela de avaliação",
                             tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
                         )

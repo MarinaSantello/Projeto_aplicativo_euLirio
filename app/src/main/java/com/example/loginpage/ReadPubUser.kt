@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -33,6 +34,7 @@ import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.MontSerratBold
 
 class ReadPubUser : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,7 +152,16 @@ fun TabsUserPubLidas(
                     else announcements = it
                 }
 
-                if (announcementIsNull) Text(text = "Você não possui livros lidos.")
+                if (announcementIsNull) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Você não possui livros lidos.",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
 
                 else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(announcements) {
@@ -172,7 +183,16 @@ fun TabsUserPubLidas(
                     else shortStory = it
                 }
 
-                if (shortStoryIsNull) Text(text = "Você não possui pequenas histórias lidas.")
+                if (shortStoryIsNull) Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Você não possui pequenas histórias lidas.",
+                        textAlign = TextAlign.Center,
+                        fontFamily = MontSerratBold
+                    )
+                }
 
                 else LazyColumn(contentPadding = PaddingValues(bottom = bottomBarLength)) {
                     items(shortStory) {

@@ -5,6 +5,7 @@ import android.text.InputFilter.LengthFilter
 import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -81,7 +82,7 @@ fun AnnouncementCart(
             )
 
             Column (
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.fillMaxWidth()) {
@@ -96,7 +97,6 @@ fun AnnouncementCart(
                         items(files) {
                             if (it.isNotEmpty()) Card(
                                 modifier = Modifier
-                                    .height(16.dp)
                                     .padding(start = 12.dp)
                                 ,
                                 backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border),
@@ -116,7 +116,10 @@ fun AnnouncementCart(
                     }
                 }
 
-                Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
 
                     if (priceVerify[1].isEmpty())
                         price = "${priceVerify[0]}.00"
@@ -129,13 +132,10 @@ fun AnnouncementCart(
                         modifier = Modifier.padding(start = 12.dp, bottom = 12.dp)
                     )
 
-                    Spacer(modifier = Modifier.padding(horizontal = 88.dp))
-
-                    if (type == 0) Icon(
+                    Icon(
                         Icons.Outlined.Delete,
                         contentDescription = "icone para excluir o livro do carrinho",
                         modifier = Modifier
-                            .fillMaxWidth()
                             .clickable {
                                 CallCartAPI.deleteItemCart(announcement.anuncioID, userID) {
                                     if (it == 200) {
@@ -150,7 +150,8 @@ fun AnnouncementCart(
                                         navController.navigate("${Routes.ShoppingCart.name}/$userID")
                                     }
                                 }
-                            }
+                            },
+                        tint = colorResource(id = com.example.loginpage.R.color.eulirio_black)
                     )
                 }
             }

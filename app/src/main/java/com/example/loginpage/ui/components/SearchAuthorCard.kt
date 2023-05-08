@@ -47,14 +47,20 @@ fun GenerateAuthorCard(
     var followState by remember {
         mutableStateOf(autor.seguindo)
     }
+
+    val notSameUser by remember {
+        mutableStateOf(autor.id != usuarioID)
+    }
     
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(bottom = 1.dp)
             .clickable {
                 navController.navigate("${Routes.User.name}/${autor.id}")
-            }
+            },
+        shape = RoundedCornerShape(0.dp)
     ) {
         Column(
             modifier = Modifier
@@ -107,12 +113,12 @@ fun GenerateAuthorCard(
 
                 }
 
-                if(followState){
+                if(followState && notSameUser){
                     Card(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)
                             .clickable {
-                                followState = !followState!!
+                                followState = !followState
 
                                 CallFollowAPI.unfollowUser(usuarioID, autor.id)
 
@@ -145,7 +151,7 @@ fun GenerateAuthorCard(
 
                         )
                     }
-                }else{
+                }else if(!followState && notSameUser){
                     Card(
                         modifier = Modifier
                             .padding(start = 3.dp, end = 3.dp)
@@ -192,7 +198,7 @@ fun GenerateAuthorCard(
 
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             val generos = autor.generos
 
@@ -221,6 +227,8 @@ fun GenerateAuthorCard(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 

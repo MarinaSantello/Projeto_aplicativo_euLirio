@@ -38,6 +38,7 @@ import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.GenreCard
 import com.example.loginpage.ui.theme.LoginPageTheme
+import com.example.loginpage.ui.theme.MontSerratBold
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -220,7 +221,14 @@ fun Pesquisa(
             }
         })
 
-        Text(text = "O que você procura?")
+        Text(
+            text = "O que você procura?",
+            fontFamily = MontSerratBold,
+            modifier = Modifier
+                .padding(start = 18.dp, top = 22.dp),
+            fontSize = 22.sp,
+            color = colorResource(id = R.color.eulirio_purple_text_color_border)
+        )
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
 
