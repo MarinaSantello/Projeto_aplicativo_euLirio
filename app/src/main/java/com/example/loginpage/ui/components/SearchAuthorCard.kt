@@ -1,5 +1,6 @@
 package com.example.loginpage.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -51,7 +52,10 @@ fun GenerateAuthorCard(
     val notSameUser by remember {
         mutableStateOf(autor.id != usuarioID)
     }
-    
+
+    Log.i("mesma pessoa?", notSameUser.toString())
+    Log.i("id pessoa", autor.id.toString())
+    Log.i("id pessoa", usuarioID.toString())
 
     Card(
         modifier = Modifier
@@ -202,7 +206,7 @@ fun GenerateAuthorCard(
 
             val generos = autor.generos
 
-            if (searchPage) LazyRow() {
+            if (searchPage) LazyRow(contentPadding = PaddingValues(bottom = 12.dp)) {
                 items(generos) {
                     Card(
                         modifier = Modifier
@@ -227,8 +231,6 @@ fun GenerateAuthorCard(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 

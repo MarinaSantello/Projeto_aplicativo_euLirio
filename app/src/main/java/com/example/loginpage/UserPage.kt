@@ -338,7 +338,7 @@ fun UserHomePage(
                             .height(36.dp)
                             .padding(end = 12.dp)
                             .clickable {
-                                navController.navigate("${Routes.FollowsPage.name}/1")
+                                navController.navigate("${Routes.FollowsPage.name}/$navUserID/1")
                             }
                     ) {
                         Text(
@@ -365,7 +365,7 @@ fun UserHomePage(
                         modifier = Modifier
                             .height(36.dp)
                             .clickable {
-                                navController.navigate("${Routes.FollowsPage.name}/0")
+                                navController.navigate("${Routes.FollowsPage.name}/$navUserID/0")
                             }
                     ) {
                         Text(

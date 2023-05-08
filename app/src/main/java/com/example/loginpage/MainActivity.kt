@@ -176,12 +176,13 @@ fun Greeting() {
         }
 
         composable(
-            "${Routes.FollowsPage.name}/{typePage}",
-            arguments = listOf(navArgument("typePage") { type = NavType.IntType })
+            "${Routes.FollowsPage.name}/{userVisited}/{typePage}",
+            arguments = listOf(navArgument("userVisited") { type = NavType.IntType }, navArgument("typePage") { type = androidx.navigation.NavType.IntType })
         ) {
+            val userVisited = it.arguments!!.getInt("userVisited")
             val typePage = it.arguments!!.getInt("typePage")
 
-            ViewFollowPage(navController, typePage)
+            ViewFollowPage(navController, userVisited, typePage)
         }
 
 //        composable(Routes.PostEbook.name) {

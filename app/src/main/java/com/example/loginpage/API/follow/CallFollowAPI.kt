@@ -70,8 +70,10 @@ class CallFollowAPI() {
             return retorno
         }
 
-        fun getFollowers(userID: Int, followersData: (List<UserFollow>?) -> Unit) {
-            val callFollow = followCall.getFollowers(userID)
+        fun getFollowers(userID: Int, currentUser: Int, followersData: (List<UserFollow>?) -> Unit) {
+            Log.i("pesquisado", userID.toString())
+            Log.i("pesquisando", currentUser.toString())
+            val callFollow = followCall.getFollowers(userID, currentUser)
 
             callFollow.enqueue(object :
                 Callback<List<UserFollow>>{
@@ -90,8 +92,8 @@ class CallFollowAPI() {
             })
         }
 
-        fun getFollowing(userID: Int, followersData: (List<UserFollow>?) -> Unit) {
-            val callFollow = followCall.getFollowing(userID)
+        fun getFollowing(userID: Int, currentUSer: Int, followersData: (List<UserFollow>?) -> Unit) {
+            val callFollow = followCall.getFollowing(userID, currentUSer)
 
             callFollow.enqueue(object :
                 Callback<List<UserFollow>>{

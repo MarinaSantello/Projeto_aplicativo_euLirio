@@ -1,6 +1,7 @@
 package com.example.loginpage
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,26 +23,27 @@ import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.GenerateAuthorCard
 import com.example.loginpage.ui.theme.LoginPageTheme
 
-class FollowPage : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginPageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    ViewFollowPage(rememberNavController(), 0)
-                }
-            }
-        }
-    }
-}
+//class FollowPage : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            LoginPageTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    ViewFollowPage(rememberNavController(), 0)
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ViewFollowPage(
     navController: NavController,
+    visitedUser: Int,
     type: Int
 ) {
     val context = LocalContext.current
@@ -59,13 +61,14 @@ fun ViewFollowPage(
         scaffoldState = scaffoldState,
         topBar = { TopBarShop(navController) }
     ) {it
-        ShowFollow(users[0].idUser, navController, type)
+        ShowFollow(visitedUser, users[0].idUser, navController, type)
     }
 }
 
 @Composable
 fun ShowFollow (
     userID: Int,
+    currentUser: Int,
     navController: NavController,
     type: Int
 ){
@@ -76,10 +79,13 @@ fun ShowFollow (
         mutableStateOf(listOf<UserFollow>())
     }
 
-    var nullText = ""
+    var nullText by remember {
+        mutableStateOf("")
+    }
+    Log.i("tipo", type.toString())
 
     when (type){
-        0 -> CallFollowAPI.getFollowers(userID) {
+        0 -> CallFollowAPI.getFollowers(userID, currentUser) {
             if (it.isNullOrEmpty()) {
                 followsIsNull = true
 
@@ -89,7 +95,7 @@ fun ShowFollow (
             else follows = it
         }
 
-        1 -> CallFollowAPI.getFollowing(userID) {
+        1 -> CallFollowAPI.getFollowing(userID, currentUser) {
             if (it.isNullOrEmpty()) {
                 followsIsNull = true
 
@@ -104,7 +110,7 @@ fun ShowFollow (
 
     else LazyColumn() {
         items(follows) {
-            GenerateAuthorCard(it, navController, userID, false)
+            GenerateAuthorCard(it, navController, currentUser, false)
         }
     }
 }
@@ -113,6 +119,6 @@ fun ShowFollow (
 @Composable
 fun DefaultPreview2() {
     LoginPageTheme {
-        ViewFollowPage(rememberNavController(), 0)
+        ViewFollowPage(rememberNavController(), 0, 0)
     }
 }

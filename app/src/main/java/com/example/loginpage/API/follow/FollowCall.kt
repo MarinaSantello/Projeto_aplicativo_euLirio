@@ -22,10 +22,10 @@ interface FollowCall{
     fun unFollowUser (@Query("followerId") followerID: Int, @Query("followedId") followedID: Int): Call<String>
 
     //Get de seguidores de um usuário
-    @GET("followers/user-id/{id}")
-    fun getFollowers(@Path("id")userID: Int): Call<List<UserFollow>>
+    @GET("followers/user-id/")
+    fun getFollowers(@Query("userId") userID: Int, @Query("currentUser") currentUSer: Int): Call<List<UserFollow>>
 
     //Get de perfis seguidos
-    @GET("following/user-id/{id}")
-    fun getFollowing(@Path("id")userID: Int): Call<List<UserFollow>>
+    @GET("following/user-id/")
+    fun getFollowing(@Query("userId") userID: Int, @Query("currentUser") currentUSer: Int): Call<List<UserFollow>>
 }
