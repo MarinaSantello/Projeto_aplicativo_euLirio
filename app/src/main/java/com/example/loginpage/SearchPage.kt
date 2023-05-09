@@ -225,7 +225,7 @@ fun Pesquisa(
             text = "O que você procura?",
             fontFamily = MontSerratBold,
             modifier = Modifier
-                .padding(start = 18.dp, top = 22.dp),
+                .padding(start = 18.dp, top = 24.dp),
             fontSize = 22.sp,
             color = colorResource(id = R.color.eulirio_purple_text_color_border)
         )

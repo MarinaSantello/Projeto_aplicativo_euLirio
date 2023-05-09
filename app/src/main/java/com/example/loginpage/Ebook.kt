@@ -954,20 +954,8 @@ fun ShowEbook(
                             color = Color.White
                         )
                     }
-
-
-
-
-
                 }
-
-
-
-
-
             }
-
-
         }
     }
 }

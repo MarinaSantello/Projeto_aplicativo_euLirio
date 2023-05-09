@@ -7,7 +7,7 @@ data class Commit(
     var titulo: String,
     var resenha: String,
     var avaliacao: Int,
-    var spoiler: Boolean,
+    var spoiler: String,
 
     @SerializedName("id_resposta")
     var idResposta: Int? = null,

@@ -36,5 +36,24 @@ class CallCommentAPI() {
             }
             )
         }
+
+        fun postComment(commit: Commit, statusCode: (Int) -> Unit) {
+            Log.i("resposta api commit", commit.toString())
+            val callCommit = commentCall.postCommentAnnouncement(commit)
+
+            callCommit.enqueue(object :
+                Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    Log.i("resposta api commit", response.message())
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
     }
 }
