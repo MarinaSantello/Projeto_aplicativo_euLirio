@@ -49,6 +49,9 @@ fun CommentCard(
     var userName by remember {
         mutableStateOf("")
     }
+    var visibilitySpoiler by remember {
+        mutableStateOf(comment.spoiler)
+    }
 
     CallAPI.getUser(idUsuario){
         userPicture = it.foto
@@ -64,8 +67,19 @@ fun CommentCard(
     var likeStateComment by remember {
         mutableStateOf(false)
     }
+    Log.i("spoiler", visibilitySpoiler.toString())
 
-    Card(
+    if(visibilitySpoiler == "1") Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(120.dp)
+            .clickable { visibilitySpoiler = "0" },
+        elevation = 0.dp
+    ) {
+        Text(text = "isso tem spoiler")
+    }
+
+    else Card(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(120.dp),
