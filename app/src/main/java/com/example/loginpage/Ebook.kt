@@ -47,6 +47,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.buy.CallBuyAPI
 import com.example.loginpage.API.cart.CallCartAPI
+import com.example.loginpage.API.comment.CallCommentAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.user.CallAPI
@@ -55,11 +56,15 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
+import com.example.loginpage.ui.components.AnnouncementCard
+import com.example.loginpage.ui.components.CommentCard
 import com.example.loginpage.ui.theme.*
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.io.File
+import kotlin.math.ceil
+import kotlin.math.floor
 
 //class Ebook : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -194,25 +199,9 @@ fun ShowEbook(
         quantidadeViewsState = it.qtdeLidos
     }
 
-    var pageState by remember {
-        mutableStateOf(false)
-    }
-
-    var vendaState by remember {
-        mutableStateOf(false)
-    }
-
-    var volumeState by remember {
-        mutableStateOf(false)
-    }
-
-    var postState by remember {
-        mutableStateOf(false)
-    }
-
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
-    val mouths = listOf<String>(
+    val mouths = listOf(
         "Jan.",
         "Fev.",
         "Mar.",
@@ -229,6 +218,9 @@ fun ShowEbook(
     val date = announcement.data.split("T")[0].split("-")
     val mouth = mouths[(date[1].toInt() - 1)]
 
+    val filledStars = floor(announcement.avaliacao).toInt()
+    val unfilledStars = (5 - ceil(announcement.avaliacao)).toInt()
+    val halfStar = !(announcement.avaliacao.rem(1).equals(0.0))
 
     //Card de informações do usuario
     Column(
@@ -315,47 +307,40 @@ fun ShowEbook(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         //Sistema de avaliação
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 4.dp),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Outlined.StarOutline,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
+                        Row() {
+                            repeat(filledStars) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Star,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
 
-                            Spacer(modifier = Modifier.width(12.dp))
+                            if (halfStar) {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarHalf,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
 
-                            Text(text = "(4,5)")
+                            repeat(unfilledStars) {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarOutline,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                            Text(text = "(${announcement.avaliacao})".replace('.', ','))
 
                         }
                     }
@@ -669,8 +654,9 @@ fun ShowEbook(
 
         Column(
             Modifier
-                .height(1000.dp)
-                .padding(15.dp)
+                .heightIn(500.dp)
+                .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = bottomBarLength)
+//                .verticalScroll(rememberScrollState())
         ) {
             Row (
                 Modifier.clickable {
@@ -902,6 +888,25 @@ fun ShowEbook(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+
+                var commentsSize by remember {
+                    mutableStateOf(0)
+                }
+                var comments by remember {
+                    mutableStateOf(listOf<Commit>())
+                }
+                var commentsIsNull by remember {
+                    mutableStateOf(false)
+                }
+
+                CallCommentAPI.getCommentsAnnouncement(announcement.id!!) {
+                    if (it.isNullOrEmpty()) commentsIsNull = true
+                    else {
+                        commentsSize = (it.size) ?: 0
+                        comments = it
+                    }
+                }
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Top,
@@ -929,17 +934,20 @@ fun ShowEbook(
                         )
 
                         Text(
-                            text = "(2)",
+                            text = "($commentsSize)",
                             fontFamily = SpartanBold,
                             fontSize = 16.sp
                         )
                     }
 
 
-                    Card(
+                    if (announcement.comprado) Card(
                         modifier = Modifier
                             .height(20.dp)
                             .padding(start = 20.dp, end = 20.dp, top = 3.dp)
+                            .clickable {
+                                navController.navigate("${Routes.CommitAnnPost.name}/${announcement.id}")
+                            }
                         ,
                         backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                         shape = RoundedCornerShape(100.dp),
@@ -955,6 +963,23 @@ fun ShowEbook(
                         )
                     }
                 }
+
+                if (comments.isNotEmpty()) Column() {
+                    for (i in 0 until comments.size) {
+                        Log.i("id anuncio $i", comments[i].id.toString())
+
+                        CommentCard(comments[i], navController)
+
+
+//                        CallAnnouncementAPI.getAnnouncementsByUser(1, userID) {
+//                            announcement = it
+//                        }
+////
+//                        if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2, true, true)
+                    }
+                }
+
+                if (commentsIsNull) Text(text = "Essa história ainda não tem avaliações. Leia-a e seja o primeiro!")
             }
         }
     }

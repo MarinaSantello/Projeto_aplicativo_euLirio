@@ -185,6 +185,15 @@ fun Greeting() {
             ViewFollowPage(navController, userVisited, typePage)
         }
 
+        composable(
+            "${Routes.CommitAnnPost.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val announcementID = it.arguments!!.getInt("itemId")
+
+            PostCommitPage(navController, announcementID)
+        }
+
 //        composable(Routes.PostEbook.name) {
 //            InputDataEbook(navController)
 //        }

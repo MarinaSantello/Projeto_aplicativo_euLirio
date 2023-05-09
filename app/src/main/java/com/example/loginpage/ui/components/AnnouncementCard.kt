@@ -42,6 +42,8 @@ import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 
 @Composable
@@ -98,6 +100,10 @@ fun AnnouncementCard(
     }
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
+
+    val filledStars = floor(announcement.avaliacao).toInt()
+    val unfilledStars = (5 - ceil(announcement.avaliacao)).toInt()
+    val halfStar = !(announcement.avaliacao.rem(1).equals(0.0))
 
     Card(
         modifier = Modifier
@@ -168,37 +174,36 @@ fun AnnouncementCard(
                 ) {
 
                     //Sistema de avaliação
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
+                    Row() {
+                        repeat(filledStars) {
+                            Icon(
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(20.dp),
+                                tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                        }
 
+                        if (halfStar) {
+                            Icon(
+                                imageVector = Icons.Outlined.StarHalf,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(20.dp),
+                                tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                        }
+
+                        repeat(unfilledStars) {
+                            Icon(
+                                imageVector = Icons.Outlined.StarOutline,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(20.dp),
+                                tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                        }
                     }
 
                     var generos by remember {

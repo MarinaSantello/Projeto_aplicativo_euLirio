@@ -15,7 +15,7 @@ class CallCommentAPI() {
         val commentCall = retrofit.create(CommentCall::class.java)
         var retorno = listOf<String>()
 
-        fun getCommentsAnnouncement(idAnnouncement: Int, commentsData:(List<Commit>) -> Unit){
+        fun getCommentsAnnouncement(idAnnouncement: Int, commentsData:(List<Commit>?) -> Unit){
             val callCommentsAnnouncement = commentCall.getAllCommentsAnnouncement(idAnnouncement)
 
             callCommentsAnnouncement.enqueue(object:
@@ -25,7 +25,7 @@ class CallCommentAPI() {
                     call: Call<List<Commit>>,
                     response: Response<List<Commit>>
                 ) {
-                    val comments = response.body()!!
+                    val comments = response.body()
 
                     commentsData.invoke(comments)
                 }

@@ -1,5 +1,6 @@
 package com.example.loginpage.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -11,9 +12,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,14 +32,16 @@ import com.example.loginpage.models.User
 import com.example.loginpage.ui.theme.QuickSand
 import com.example.loginpage.ui.theme.SpartanBold
 import com.example.loginpage.ui.theme.SpartanRegular
+import kotlin.math.ceil
+import kotlin.math.floor
 
 @Composable
 fun CommentCard(
-    Comment: Commit,
+    comment: Commit,
     navController: NavController
 ){
 
-    val idUsuario = Comment.userID.toLong();
+    val idUsuario = comment.userID.toLong();
     var userPicture by remember {
         mutableStateOf("")
     }
@@ -54,6 +55,9 @@ fun CommentCard(
         userName = it.userName
     }
 
+    val filledStars = floor(comment.avaliacao.toDouble()).toInt()
+    val unfilledStars = (5 - ceil(comment.avaliacao.toDouble())).toInt()
+    val halfStar = !(comment.avaliacao.toDouble().rem(1).equals(0.0))
 
 
     //Card de comentarios
@@ -64,7 +68,8 @@ fun CommentCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .heightIn(120.dp),
+        elevation = 0.dp
     ){
         Column(
             modifier = Modifier
@@ -90,37 +95,42 @@ fun CommentCard(
                             .border(.5.dp, Color.White, RoundedCornerShape(100.dp))
                     )
                     Column(modifier = Modifier.padding(start = 12.dp), verticalArrangement = Arrangement.Center) {
-                        Row(horizontalArrangement = Arrangement.Center){
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Outlined.StarOutline,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = R.color.eulirio_purple_text_color_border)
-                            )
+
+                        Row() {
+                            repeat(filledStars) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Star,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+//                                        .clickable {
+//                                            Log.i("estrela", it.toString())
+//                                            commit.avaliacao = it + 1
+//                                        },
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
+
+                            if (halfStar) {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarHalf,
+                                    contentDescription = null,
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
+                            repeat(unfilledStars) {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarOutline,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+//                                        .clickable {
+//                                            Log.i("estrela", it.toString())
+//                                            commit.avaliacao += it + 1
+//                                        },
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
                         }
                         Text(
                             text = "@${userName}",
@@ -154,14 +164,14 @@ fun CommentCard(
 
             Column() {
                 Text(
-                    text = Comment.titulo,
+                    text = comment.titulo,
                     fontFamily = SpartanBold,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = Comment.resenha,
+                    text = comment.resenha,
                     fontFamily = QuickSand,
                     fontSize = 10.sp
                 )

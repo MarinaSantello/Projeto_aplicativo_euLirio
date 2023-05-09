@@ -55,7 +55,8 @@ data class AnnouncementGet(
     var lido: Boolean,
     var carrinho: Boolean,
     var compras: CountAnnouncementSales?,
-    var comprado: Boolean
+    var comprado: Boolean,
+    var avaliacao: Double
 ){
     override fun toString(): String {
         return super.toString()
