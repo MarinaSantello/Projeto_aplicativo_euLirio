@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.comment.CallCommentAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
@@ -50,7 +51,11 @@ import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.resources.TopBar
+import com.example.loginpage.ui.components.CommentCard
+import com.example.loginpage.ui.components.CommentCardSS
 import com.example.loginpage.ui.theme.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class ShortStories : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +116,7 @@ fun ShortStory(
         topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, context, userAuthor, navController) },
         bottomBar = { if (shortStory != null) BottomBarShortStory(bottomBarState, context, navController, shortStory!!, userID) },
     ) {
-        if (shortStory != null) ShowStories(shortStory!!, it.calculateBottomPadding(), context)
+        if (shortStory != null) ShowStories(shortStory!!, it.calculateBottomPadding(), navController, context)
     }
 }
 
@@ -119,6 +124,7 @@ fun ShortStory(
 fun ShowStories(
     shortStory: ShortStoryGet,
     bottomBarLength: Dp,
+    navController: NavController,
     context: Context
 ) {
 
@@ -163,6 +169,10 @@ fun ShowStories(
     val mouths = listOf("Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez.")
     val date = shortStory.data.split("T")[0].split("-")
     val mouth = mouths[(date[1].toInt() - 1)]
+
+    val filledStars = floor(shortStory.avaliacao).toInt()
+    val unfilledStars = (5 - ceil(shortStory.avaliacao)).toInt()
+    val halfStar = !(shortStory.avaliacao.rem(1).equals(0.0))
 
     Column(
         modifier = Modifier
@@ -248,47 +258,40 @@ fun ShowStories(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         //Sistema de avaliação
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 4.dp),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
-                            Icon(
-                                Icons.Outlined.StarOutline,
-                                contentDescription = "estrela de avaliação",
-                                modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                            )
+                        Row() {
+                            repeat(filledStars) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Star,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
+
+                            if (halfStar) {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarHalf,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
+
+                            repeat(unfilledStars) {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarOutline,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    tint = colorResource(R.color.eulirio_purple_text_color_border)
+                                )
+                            }
 
                             Spacer(modifier = Modifier.width(12.dp))
 
-                            Text(text = "(4,5)")
+                            Text(text = "(${shortStory.avaliacao})".replace('.', ','))
 
                         }
                     }
@@ -505,12 +508,17 @@ fun ShowStories(
         }
         Spacer(modifier = Modifier.height(12.dp))
 
-        Column (Modifier.height(1000.dp)
+        Column (Modifier
+            .heightIn(500.dp)
+            .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = bottomBarLength)
         ) {
             Row (
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween) {
-                Row {
+                Row(Modifier.clickable {
+                        navController.navigate("${Routes.User.name}/${shortStory.usuario[0].idUsuario}")
+                    }) {
                     Image(
                         painter = rememberAsyncImagePainter(shortStory.usuario[0].foto),
                         contentDescription = "foto da pessoa",
@@ -601,6 +609,96 @@ fun ShowStories(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+
+
+                var commentsSize by remember {
+                    mutableStateOf(0)
+                }
+                var comments by remember {
+                    mutableStateOf(listOf<CommitSS>())
+                }
+                var commentsIsNull by remember {
+                    mutableStateOf(false)
+                }
+
+                CallCommentAPI.getCommentsSS(shortStory.id!!) {
+                    if (it.isNullOrEmpty()) commentsIsNull = true
+                    else {
+                        commentsSize = (it.size) ?: 0
+                        comments = it
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth()
+                ){
+
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Icon(
+                            Icons.Outlined.ChatBubbleOutline,
+                            contentDescription = "icone de vendas",
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .padding(end = 15.dp)
+
+
+                        )
+
+                        Text(
+                            text = "Avaliações do livro",
+                            fontFamily = SpartanBold,
+                            fontSize = 16.sp
+                        )
+
+                        Text(
+                            text = "($commentsSize)",
+                            fontFamily = SpartanBold,
+                            fontSize = 16.sp
+                        )
+                    }
+
+
+                    val idAuthorSS = shortStory.usuario[0].idUsuario
+
+                    if (idAuthorSS != userID) Card(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .padding(start = 20.dp, end = 20.dp, top = 3.dp)
+                            .clickable {
+                                navController.navigate("${Routes.CommitSSPost.name}/${shortStory.id}")
+                            }
+                        ,
+                        backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        shape = RoundedCornerShape(100.dp),
+                    ) {
+                        Text(
+                            text = "AVALIAR",
+                            fontSize = 14.sp,
+                            fontFamily = MontSerratSemiBold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(20.dp, 0.dp),
+                            color = Color.White
+                        )
+                    }
+                }
+
+                if (comments.isNotEmpty()) Column() {
+                    for (i in 0 until comments.size) {
+//                        Log.i("id anuncio $i", comments[i].id.toString())
+
+                        CommentCardSS(comments[i], navController, userID, shortStory.id!!)
+                    }
+                }
+
+                if (commentsIsNull) Text(text = "Essa história ainda não tem avaliações. Leia-a e seja o primeiro!")
+
             }
         }
     }

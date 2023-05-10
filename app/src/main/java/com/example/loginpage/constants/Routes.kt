@@ -23,5 +23,6 @@ enum class Routes {
     UpdateUser,
     Read,
     FollowsPage,
-    CommitAnnPost
+    CommitAnnPost,
+    CommitSSPost
 }

@@ -194,6 +194,15 @@ fun Greeting() {
             PostCommitPage(navController, announcementID)
         }
 
+        composable(
+            "${Routes.CommitSSPost.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val shortStoryID = it.arguments!!.getInt("itemId")
+
+            PostCommitPageSS(navController, shortStoryID)
+        }
+
 //        composable(Routes.PostEbook.name) {
 //            InputDataEbook(navController)
 //        }

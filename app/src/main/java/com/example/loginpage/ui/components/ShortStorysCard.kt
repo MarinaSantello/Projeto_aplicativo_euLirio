@@ -38,6 +38,8 @@ import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 
 @Composable
@@ -91,6 +93,10 @@ fun ShortStorysCard(
     CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
         quantidadeViewsState = it.qtdeLidos
     }
+
+    val filledStars = floor(shortStory.avaliacao).toInt()
+    val unfilledStars = (5 - ceil(shortStory.avaliacao)).toInt()
+    val halfStar = !(shortStory.avaliacao.rem(1).equals(0.0))
 
     Card(
         modifier = Modifier
@@ -158,37 +164,36 @@ fun ShortStorysCard(
                 ) {
 
                     //Sistema de avaliação
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Rounded.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Rounded.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Rounded.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Rounded.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
-                        Icon(
-                            Icons.Rounded.Star,
-                            contentDescription = "estrela de avaliação",
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                        )
+                    Row() {
+                        repeat(filledStars) {
+                            Icon(
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(20.dp),
+                                tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                        }
 
+                        if (halfStar) {
+                            Icon(
+                                imageVector = Icons.Outlined.StarHalf,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(20.dp),
+                                tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                        }
+
+                        repeat(unfilledStars) {
+                            Icon(
+                                imageVector = Icons.Outlined.StarOutline,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(20.dp),
+                                tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                            )
+                        }
                     }
 
                     val generos by remember {

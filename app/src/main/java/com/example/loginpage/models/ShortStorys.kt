@@ -17,6 +17,7 @@ data class ShortStoryGet(
     var curtido: Boolean,
     var favorito: Boolean,
     var lido: Boolean,
+    var avaliacao: Double
 ){
     override fun toString(): String {
         return super.toString()

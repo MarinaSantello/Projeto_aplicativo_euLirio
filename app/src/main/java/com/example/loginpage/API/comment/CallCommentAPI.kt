@@ -6,6 +6,7 @@ import com.example.loginpage.API.favorite.FavoriteCall
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.Commit
+import com.example.loginpage.models.CommitSS
 import com.example.loginpage.models.LikeAnnouncement
 import com.example.loginpage.models.LikeComment
 import retrofit2.Call
@@ -134,6 +135,46 @@ class CallCommentAPI() {
             }
             )
             return  retorno
+        }
+
+        /* HISTÓRIA CURTA */
+        fun getCommentsSS(shortStoryID: Int, commentsData: (List<CommitSS>?) -> Unit) {
+            val callComment = commentCall.getAllCommentsShortStory(shortStoryID)
+
+            callComment.enqueue(object :
+                Callback<List<CommitSS>> {
+                override fun onResponse(
+                    call: Call<List<CommitSS>>,
+                    response: Response<List<CommitSS>>
+                ) {
+                    val comments = response.body()
+
+                    commentsData.invoke(comments)
+                }
+
+                override fun onFailure(call: Call<List<CommitSS>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+
+            })
+        }
+        fun postCommentSS(commit: CommitSS, statusCode: (Int) -> Unit) {
+            Log.i("resposta api commit", commit.toString())
+            val callCommit = commentCall.postCommentShortStory(commit)
+
+            callCommit.enqueue(object :
+                Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    Log.i("resposta api commit", response.message())
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
         }
     }
 }

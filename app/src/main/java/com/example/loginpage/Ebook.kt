@@ -886,7 +886,7 @@ fun ShowEbook(
                         .padding(0.dp, 8.dp)
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
 
                 var commentsSize by remember {
@@ -970,14 +970,7 @@ fun ShowEbook(
                     for (i in 0 until comments.size) {
                         Log.i("id anuncio $i", comments[i].id.toString())
 
-                        CommentCard(comments[i], navController, userID, idAnnouncement, idAuthorAnnouncement)
-
-
-//                        CallAnnouncementAPI.getAnnouncementsByUser(1, userID) {
-//                            announcement = it
-//                        }
-////
-//                        if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2, true, true)
+                        CommentCard(comments[i], navController, userID, idAnnouncement)
                     }
                 }
 

@@ -17,6 +17,21 @@ data class Commit(
     var announcementID: Int
 )
 
+data class CommitSS(
+    var id: Int?,
+    var titulo: String,
+    var resenha: String,
+    var avaliacao: Int,
+    var spoiler: String,
+
+    @SerializedName("id_resposta")
+    var idResposta: Int? = null,
+    @SerializedName("id_usuario")
+    var userID: Int,
+    @SerializedName("id_historia_curta")
+    var shortStoryID: Int
+)
+
 data class LikeComment(
     @SerializedName("id_comentario")
     var idComentario: Int,
