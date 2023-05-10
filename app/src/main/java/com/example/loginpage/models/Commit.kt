@@ -16,3 +16,10 @@ data class Commit(
     @SerializedName("id_anuncio")
     var announcementID: Int
 )
+
+data class LikeComment(
+    @SerializedName("id_comentario")
+    var idComentario: Int,
+    @SerializedName("id_usuario")
+    var idUsuario: Int
+)

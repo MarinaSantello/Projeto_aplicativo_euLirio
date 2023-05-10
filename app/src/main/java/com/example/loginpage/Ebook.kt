@@ -964,11 +964,13 @@ fun ShowEbook(
                     }
                 }
 
+                val idAuthorAnnouncement = announcement.usuario[0].idUsuario!!.toInt()
+
                 if (comments.isNotEmpty()) Column() {
                     for (i in 0 until comments.size) {
                         Log.i("id anuncio $i", comments[i].id.toString())
 
-                        CommentCard(comments[i], navController)
+                        CommentCard(comments[i], navController, userID, idAnnouncement, idAuthorAnnouncement)
 
 
 //                        CallAnnouncementAPI.getAnnouncementsByUser(1, userID) {
