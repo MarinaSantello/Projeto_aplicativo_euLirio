@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -158,16 +159,16 @@ fun CommentCard(
 
                 Card(
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(25.dp)
                         .clickable {}
-                        .width(40.dp),
+                        .width(25.dp),
                     backgroundColor = Color.Transparent,
                     elevation = 0.dp,
 
                     ){
                     Icon(
-                        Icons.Outlined.MoreVert, contentDescription = "",
-                        modifier = Modifier.size(10.dp),
+                        Icons.Rounded.MoreVert, contentDescription = "",
+                        modifier = Modifier.size(2.dp),
                         tint = Color.Black
                     )
                 }
@@ -176,7 +177,11 @@ fun CommentCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Column() {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.fillMaxHeight()
+            ) {
                 Text(
                     text = comment.titulo,
                     fontFamily = SpartanBold,
@@ -190,67 +195,76 @@ fun CommentCard(
                     fontSize = 10.sp
                 )
             }
+            
+            Spacer(modifier = Modifier.height(12.dp))
 
-        }
-
-
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 6.dp)
-        ){
-            Card(
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .height(20.dp)
-                    .width(80.dp)
-                ,
-                backgroundColor = Color.White,
-                shape = RoundedCornerShape(100.dp),
-                border = if(likeStateComment){
-                    BorderStroke(1.dp, Color.Red)
-                }else{
-                    BorderStroke(1.dp, Color.Black)
-                }
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    if(likeStateComment){
-                        Icon(
-                            Icons.Rounded.Favorite,
-                            contentDescription = "",
-                            modifier = Modifier.size(15.dp),
-                            tint = Color.Red
-                        )
+                    .height(25.dp)
+                    .fillMaxWidth()
+            ){
+                Card(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(80.dp)
+                    ,
+                    backgroundColor = Color.White,
+                    shape = RoundedCornerShape(100.dp),
+                    border = if(likeStateComment){
+                        BorderStroke(1.dp, Color.Red)
                     }else{
-                        Icon(
-                            Icons.Outlined.FavoriteBorder,
-                            contentDescription = "",
-                            modifier = Modifier.size(15.dp),
-                            tint = Color.Black
+                        BorderStroke(1.dp, Color.Black)
+                    }
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        if(likeStateComment){
+                            Icon(
+                                Icons.Rounded.Favorite,
+                                contentDescription = "",
+                                modifier = Modifier.size(15.dp),
+                                tint = Color.Red
+                            )
+                        }else{
+                            Icon(
+                                Icons.Outlined.FavoriteBorder,
+                                contentDescription = "",
+                                modifier = Modifier.size(15.dp),
+                                tint = Color.Black
+                            )
+                        }
+
+
+                        Text(
+                            text = "182",
+                            fontFamily = SpartanRegular,
+                            modifier = Modifier.padding(start=6.dp)
                         )
+
                     }
 
-
-                    Text(
-                        text = "182",
-                        fontFamily = SpartanRegular,
-                        modifier = Modifier.padding(start=6.dp)
-                    )
-
                 }
+
+                Text(
+                    text = "12 Jun. 2022",
+                    fontFamily = SpartanRegular,
+                    fontSize = 10.sp
+                )
+
 
             }
 
-            Text(
-                text = "12 Jun. 2022",
-                fontFamily = SpartanRegular,
-                fontSize = 10.sp
-            )
+
 
 
         }
+
+
+
 
 
     }
