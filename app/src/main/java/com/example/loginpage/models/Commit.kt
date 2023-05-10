@@ -14,7 +14,9 @@ data class Commit(
     @SerializedName("id_usuario")
     var userID: Int,
     @SerializedName("id_anuncio")
-    var announcementID: Int
+    var announcementID: Int,
+    @SerializedName("data_publicado")
+    var dataPublicado: String? = null
 )
 
 data class CommitSS(
@@ -29,7 +31,9 @@ data class CommitSS(
     @SerializedName("id_usuario")
     var userID: Int,
     @SerializedName("id_historia_curta")
-    var shortStoryID: Int
+    var shortStoryID: Int,
+    @SerializedName("data_publicacao")
+    var dataPublicado: String? = null
 )
 
 data class LikeComment(

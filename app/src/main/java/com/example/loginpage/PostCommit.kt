@@ -318,14 +318,6 @@ fun TopBarCommit(
                     )
                 }
 
-//                Image(
-//                    painter = painterResource(id = R.drawable.logo_icone_eulirio),
-//                    contentDescription = "logo aplicativo",
-////                    modifier = Modifier
-////                        .fillMaxWidth(.8f),
-//                    alignment = Alignment.Center
-//                )
-
                 Button(
                     onClick = {
                         if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
@@ -343,8 +335,6 @@ fun TopBarCommit(
                 }
             }
         },
-//                    navigationIcon = {
-//                    },
         backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
         elevation = 0.dp
     )

@@ -201,6 +201,7 @@ fun ShowEbook(
 
     val priceVerify = announcement.preco.toString().split('.')
     var price = announcement.preco.toString()
+
     val mouths = listOf(
         "Jan.",
         "Fev.",

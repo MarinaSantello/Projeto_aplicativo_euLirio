@@ -102,6 +102,22 @@ fun CommentCard(
     val unfilledStars = (5 - ceil(comment.avaliacao.toDouble())).toInt()
     val halfStar = !(comment.avaliacao.toDouble().rem(1).equals(0.0))
 
+    val mouths = listOf(
+        "Jan.",
+        "Fev.",
+        "Mar.",
+        "Abr.",
+        "Mai.",
+        "Jun.",
+        "Jul.",
+        "Ago.",
+        "Set.",
+        "Out.",
+        "Nov.",
+        "Dez."
+    )
+    val date = comment.dataPublicado!!.split("T")[0].split("-")
+    val mouth = mouths[(date[1].toInt() - 1)]
 
     //Card de comentarios
     var likeStateComment by remember {
@@ -422,16 +438,11 @@ fun CommentCard(
                     }
 
                     Text(
-                        text = "12 Jun. 2022",
+                        text = "${date[2]} $mouth ${date[0]}",
                         fontFamily = SpartanRegular,
-                        fontSize = 10.sp
+                        fontSize = 12.sp
                     )
-                    
-
-
-
                 }
-
             }
         }
     }
@@ -494,6 +505,22 @@ fun CommentCardSS(
     val unfilledStars = (5 - ceil(comment.avaliacao.toDouble())).toInt()
     val halfStar = !(comment.avaliacao.toDouble().rem(1).equals(0.0))
 
+    val mouths = listOf(
+        "Jan.",
+        "Fev.",
+        "Mar.",
+        "Abr.",
+        "Mai.",
+        "Jun.",
+        "Jul.",
+        "Ago.",
+        "Set.",
+        "Out.",
+        "Nov.",
+        "Dez."
+    )
+    val date = comment.dataPublicado!!.split("T")[0].split("-")
+    val mouth = mouths[(date[1].toInt() - 1)]
 
     //Card de comentarios
     var likeStateComment by remember {
@@ -759,9 +786,9 @@ fun CommentCardSS(
                 }
 
                 Text(
-                    text = "12 Jun. 2022",
+                    text = "${date[2]} $mouth ${date[0]}",
                     fontFamily = SpartanRegular,
-                    fontSize = 10.sp
+                    fontSize = 12.sp
                 )
 
 
