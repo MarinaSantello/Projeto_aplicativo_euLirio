@@ -164,7 +164,7 @@ fun ShortStorysCard(
                 ) {
 
                     //Sistema de avaliação
-                    Row() {
+                    if (shortStory.avaliacao > 0) Row {
                         repeat(filledStars) {
                             Icon(
                                 imageVector = Icons.Outlined.Star,
