@@ -1,8 +1,6 @@
 package com.example.loginpage.ui.components
 
 import android.util.Log
-import android.widget.Space
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.MoreVert
@@ -27,29 +24,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.comment.CallCommentAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.R
 import com.example.loginpage.constants.Routes
-import com.example.loginpage.models.Commit
 import com.example.loginpage.models.CommitSS
 import com.example.loginpage.models.LikeComment
-import com.example.loginpage.models.User
-import com.example.loginpage.statusState
 import com.example.loginpage.ui.theme.QuickSand
 import com.example.loginpage.ui.theme.SpartanBold
 import com.example.loginpage.ui.theme.SpartanRegular
-import org.w3c.dom.Comment
 import kotlin.math.ceil
 import kotlin.math.floor
 
+
 @Composable
-fun CommentCard(
-    comment: Commit,
+fun CommentCardSS(
+    comment: CommitSS,
     navController: NavController,
     userId: Int,
-    announcementId: Int
+    shortStoryId: Int
 ){
 
     val idUsuario = comment.userID.toLong();
@@ -202,6 +195,10 @@ fun CommentCard(
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(20.dp),
+//                                        .clickable {
+//                                            Log.i("estrela", it.toString())
+//                                            commit.avaliacao = it + 1
+//                                        },
                                     tint = colorResource(R.color.eulirio_purple_text_color_border)
                                 )
                             }
@@ -219,6 +216,10 @@ fun CommentCard(
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(20.dp),
+//                                        .clickable {
+//                                            Log.i("estrela", it.toString())
+//                                            commit.avaliacao += it + 1
+//                                        },
                                     tint = colorResource(R.color.eulirio_purple_text_color_border)
                                 )
                             }
@@ -255,17 +256,6 @@ fun CommentCard(
                 }
             }
 
-//            if (announcementAuthorId == userId) {
-//                stringStateAuthorAnnouncementView = true
-//                stringTopBarState = listOf("Apagar comentário", "Denunciar comentário")
-//            } else if (comment.userID == userId) {
-//                stringStateAuthorCommentView = true
-//                stringTopBarState = listOf("Apagar comentário")
-//            } else {
-//                stringStateCommentView = true
-//                stringTopBarState = listOf("Denunciar Comentário")
-//            }
-
             stringTopBarState = listOf("Apagar comentário")
             //Validação para excluir o comentário
             if (comment.userID == userId) {
@@ -285,7 +275,7 @@ fun CommentCard(
                                 expandedTopBarState = false
 
                                 if (index == 0) {
-                                    CallCommentAPI.deleteComment(comment.id!!, announcementId)
+                                    CallCommentAPI.deleteComment(comment.id!!, shortStoryId)
 
                                 }
 
@@ -296,153 +286,106 @@ fun CommentCard(
                     }
                 }
             }
-//            else if (stringStateAuthorCommentView) {
-//                DropdownMenu(
-//                    expanded = expandedTopBar,
-//                    onDismissRequest = {
-//                        expandedTopBar = false
-//                        expandedTopBarState = false
-//                    },
-//                    modifier = Modifier.fillMaxWidth(.85f)
-//                ) {
-//                    stringTopBarState.forEachIndexed { index, item ->
-//                        DropdownMenuItem(
-//                            onClick = {
-//                                selectedItem = index
-//                                expandedTopBar = false
-//                                expandedTopBarState = false
-//
-//                                if (index == 0) {
-//                                    CallCommentAPI.deleteComment(comment.id!!, announcementId)
-//
-//                                }
-//
-//                            }
-//                        ) {
-//                            Text(text = item)
-//                        }
-//                    }
-//                }
-//            } else {
-//                DropdownMenu(
-//                    expanded = expandedTopBar,
-//                    onDismissRequest = {
-//                        expandedTopBar = false
-//                        expandedTopBarState = false
-//                    },
-//                    modifier = Modifier.fillMaxWidth(.85f)
-//                ) {
-//                    stringTopBarState.forEachIndexed { index, item ->
-//                        DropdownMenuItem(
-//                            onClick = {
-//                                selectedItem = index
-//                                expandedTopBar = false
-//                                expandedTopBarState = false
-//                            }
-//                        ) {
-//                            Text(text = item)
-//                        }
-//                    }
-//
-//                }
-//
-//            }
 
+            Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                Text(
+                    text = comment.titulo,
+                    fontFamily = SpartanBold,
+                    fontSize = 12.sp
+                )
+                Spacer(modifier = Modifier.height(4.dp))
 
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier.fillMaxHeight()
-                ) {
-                    Text(
-                        text = comment.titulo,
-                        fontFamily = SpartanBold,
-                        fontSize = 12.sp
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = comment.resenha,
+                    fontFamily = QuickSand,
+                    fontSize = 10.sp
+                )
+            }
 
-                    Text(
-                        text = comment.resenha,
-                        fontFamily = QuickSand,
-                        fontSize = 10.sp
-                    )
-                }
+            Spacer(modifier = Modifier.height(12.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .height(25.dp)
+                    .fillMaxWidth()
+            ) {
+                Card(
                     modifier = Modifier
-                        .height(25.dp)
-                        .fillMaxWidth()
-                ) {
-                    Card(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(80.dp)
-                            .clickable {
-                                likeStateComment = !likeStateComment
+                        .height(20.dp)
+                        .width(80.dp)
+                        .clickable {
+                            likeStateComment = !likeStateComment
 
-                                var likeComment = LikeComment(
-                                    idComentario = comment.id!!,
-                                    idUsuario = userId
-                                )
-
-                                if (likeStateComment) {
-                                    CallCommentAPI.likeCommentAnnouncement(likeComment)
-                                } else {
-                                    CallCommentAPI.dislikeCommentAnnouncement(comment.id!!, userId)
-                                }
-
-                            },
-                        backgroundColor = Color.White,
-                        shape = RoundedCornerShape(100.dp),
-                        border = if (likeStateComment) {
-                            BorderStroke(1.dp, Color.Red)
-                        } else {
-                            BorderStroke(1.dp, Color.Black)
-                        }
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (likeStateComment) {
-                                Icon(
-                                    Icons.Rounded.Favorite,
-                                    contentDescription = "",
-                                    modifier = Modifier.size(15.dp),
-                                    tint = Color.Red
-                                )
-                            } else {
-                                Icon(
-                                    Icons.Outlined.FavoriteBorder,
-                                    contentDescription = "",
-                                    modifier = Modifier.size(15.dp),
-                                    tint = Color.Black
-                                )
-                            }
-
-
-                            Text(
-                                text = "182",
-                                fontFamily = SpartanRegular,
-                                modifier = Modifier.padding(start = 6.dp)
+                            var likeComment = LikeComment(
+                                idComentario = comment.id!!,
+                                idUsuario = userId
                             )
 
+                            if (likeStateComment) {
+                                CallCommentAPI.likeCommentAnnouncement(likeComment)
+                            } else {
+                                CallCommentAPI.dislikeCommentAnnouncement(comment.id!!, userId)
+                            }
+
+                        },
+                    backgroundColor = Color.White,
+                    shape = RoundedCornerShape(100.dp),
+                    border = if (likeStateComment) {
+                        BorderStroke(1.dp, Color.Red)
+                    } else {
+                        BorderStroke(1.dp, Color.Black)
+                    }
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (likeStateComment) {
+                            Icon(
+                                Icons.Rounded.Favorite,
+                                contentDescription = "",
+                                modifier = Modifier.size(15.dp),
+                                tint = Color.Red
+                            )
+                        } else {
+                            Icon(
+                                Icons.Outlined.FavoriteBorder,
+                                contentDescription = "",
+                                modifier = Modifier.size(15.dp),
+                                tint = Color.Black
+                            )
                         }
+
+
+                        Text(
+                            text = "182",
+                            fontFamily = SpartanRegular,
+                            modifier = Modifier.padding(start = 6.dp)
+                        )
 
                     }
 
-                    Text(
-                        text = "${date[2]} $mouth ${date[0]}",
-                        fontFamily = SpartanRegular,
-                        fontSize = 12.sp
-                    )
                 }
+
+                Text(
+                    text = "${date[2]} $mouth ${date[0]}",
+                    fontFamily = SpartanRegular,
+                    fontSize = 12.sp
+                )
+
+
+
+
             }
+
         }
     }
+}
