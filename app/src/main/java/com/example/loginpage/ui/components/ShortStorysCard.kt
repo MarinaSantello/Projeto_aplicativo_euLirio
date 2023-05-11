@@ -164,7 +164,7 @@ fun ShortStorysCard(
                 ) {
 
                     //Sistema de avaliação
-                    if (shortStory.avaliacao > 0) Row {
+                    if (shortStory.avaliacao > 0) Row (Modifier.padding(bottom = 8.dp)) {
                         repeat(filledStars) {
                             Icon(
                                 imageVector = Icons.Outlined.Star,
@@ -224,8 +224,6 @@ fun ShortStorysCard(
                             }
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = shortStory.sinopse,

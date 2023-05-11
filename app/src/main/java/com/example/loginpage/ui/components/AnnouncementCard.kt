@@ -174,7 +174,7 @@ fun AnnouncementCard(
                 ) {
 
                     //Sistema de avaliação
-                    if (announcement.avaliacao > 0) Row {
+                    if (announcement.avaliacao > 0) Row (Modifier.padding(bottom = 8.dp)) {
                         repeat(filledStars) {
                             Icon(
                                 imageVector = Icons.Outlined.Star,

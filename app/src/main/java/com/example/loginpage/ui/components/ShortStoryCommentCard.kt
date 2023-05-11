@@ -260,9 +260,7 @@ fun CommentCardSS(
 
                                 if (index == 0) {
                                     CallCommentAPI.deleteCommentSS(comment.id!!, shortStoryId) {
-                                        if (it == 200) {
-                                            delete.invoke(true)
-                                        }
+                                        if (it == 200) delete.invoke(true)
                                     }
                                 }
 

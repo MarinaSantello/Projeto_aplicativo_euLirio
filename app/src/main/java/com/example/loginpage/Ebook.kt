@@ -109,7 +109,11 @@ fun EbookView(
         userAuthor.value = (it.usuario[0].idUsuario == userID)
     }
 
-    Scaffold(
+    val deleteState = remember {
+        mutableStateOf(false)
+    }
+
+    if (deleteState.value || !deleteState.value) Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
@@ -145,7 +149,8 @@ fun EbookView(
             announcement!!,
             userAuthor.value,
             it.calculateBottomPadding(),
-            navController
+            navController,
+            deleteState
         )
     }
 }
@@ -156,7 +161,8 @@ fun ShowEbook(
     announcement: AnnouncementGet,
     userAuthor: Boolean,
     bottomBarLength: Dp,
-    navController: NavController
+    navController: NavController,
+    deleteState: MutableState<Boolean>
 ) {
     val context = LocalContext.current
 
@@ -971,7 +977,11 @@ fun ShowEbook(
                     for (i in 0 until comments.size) {
                         Log.i("id anuncio $i", comments[i].id.toString())
 
-                        CommentCard(comments[i], navController, userID, idAnnouncement)
+                        CommentCard(comments[i], navController, userID, idAnnouncement){
+                            deleteState.value = it
+
+                            if (it)comments -= comments[i]
+                        }
                     }
                 }
 

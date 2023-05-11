@@ -88,7 +88,7 @@ fun ShortStory(
     val fabState = remember { mutableStateOf(true) }
     var userAuthor by remember { mutableStateOf(false) }
 
-    var deleteState = remember {
+    val deleteState = remember {
         mutableStateOf(false)
     }
 

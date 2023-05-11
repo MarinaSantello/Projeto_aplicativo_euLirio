@@ -49,7 +49,8 @@ fun CommentCard(
     comment: Commit,
     navController: NavController,
     userId: Int,
-    announcementId: Int
+    announcementId: Int,
+    delete: (Boolean) -> Unit
 ){
 
     val idUsuario = comment.userID.toLong();
@@ -282,8 +283,9 @@ fun CommentCard(
                                 expandedTopBarState = false
 
                                 if (index == 0) {
-                                    CallCommentAPI.deleteComment(comment.id!!, announcementId)
-
+                                    CallCommentAPI.deleteComment(comment.id!!, announcementId) {
+                                        if (it == 200) delete.invoke(true)
+                                    }
                                 }
 
                             }

@@ -63,29 +63,22 @@ class CallCommentAPI() {
             })
         }
 
-        fun deleteComment(commentId: Int, announcementId: Int): List<String>{
+        fun deleteComment(commentId: Int, announcementId: Int, statusCode: (Int) -> Unit){
             val callDeleteComment = commentCall.deleteCommentAnnouncement(commentId, announcementId)
 
             callDeleteComment.enqueue(object:
             Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-                    retorno = listOf(
-                        response.message().toString(),
-                        response.code().toString()
-                    )
-                    Log.i("resposta api delete", response.message())
+                    val status = response.code()
+
+                    statusCode.invoke(status)
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    retorno = listOf<String>(
-                        t.message.toString()
-                    )
-                    Log.i("delete erro", t.message.toString())
+                    //
                 }
             }
             )
-
-            return retorno
         }
 
 
@@ -169,7 +162,6 @@ class CallCommentAPI() {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     val status = response.code()
 
-                    Log.i("resposta api commit", response.message())
                     statusCode.invoke(status)
                 }
 
