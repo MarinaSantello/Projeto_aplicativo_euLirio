@@ -177,29 +177,63 @@ class CallCommentAPI() {
             })
         }
 
-        fun deleteCommentSS(commentId: Int, shortStoryId: Int): List<String>{
+        fun deleteCommentSS(commentId: Int, shortStoryId: Int, statusCode: (Int) -> Unit) {
             val callDeleteComment = commentCall.deleteCommentShortStory(commentId, shortStoryId)
 
             callDeleteComment.enqueue(object:
                 Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-                    retorno = listOf(
-                        response.message().toString(),
-                        response.code().toString()
-                    )
-                    Log.i("resposta api delete", response.message())
+                    val status = response.code()
+
+                    Log.i("resposta api commit", response.message())
+                    statusCode.invoke(status)
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    retorno = listOf<String>(
-                        t.message.toString()
-                    )
-                    Log.i("delete erro", t.message.toString())
+                    //
+                }
+            }
+            )
+        }
+
+        fun likeCommentShortStory(likeCommentAnnouncement: LikeComment, statusCode: (Int) -> Unit) {
+            val callLikeCommentAnnouncement = commentCall.postLikeShortStoryComment(likeCommentAnnouncement)
+
+            callLikeCommentAnnouncement.enqueue(object:
+                Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    Log.i("resposta api commit", response.message())
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //
                 }
             }
             )
 
-            return retorno
+        }
+
+        fun dislikeCommentShortStory(commentId: Int, userID: Int, statusCode: (Int) -> Unit){
+            val callDislikeCommentAnnouncement = commentCall.dislikeAnnouncementComment(commentId, userID)
+
+            callDislikeCommentAnnouncement.enqueue(object:
+                Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    Log.i("resposta api commit", response.message())
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //
+                }
+
+            }
+            )
         }
     }
 }
