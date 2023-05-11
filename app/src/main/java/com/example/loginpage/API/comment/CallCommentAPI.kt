@@ -176,5 +176,30 @@ class CallCommentAPI() {
                 }
             })
         }
+
+        fun deleteCommentSS(commentId: Int, shortStoryId: Int): List<String>{
+            val callDeleteComment = commentCall.deleteCommentShortStory(commentId, shortStoryId)
+
+            callDeleteComment.enqueue(object:
+                Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    retorno = listOf(
+                        response.message().toString(),
+                        response.code().toString()
+                    )
+                    Log.i("resposta api delete", response.message())
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    retorno = listOf<String>(
+                        t.message.toString()
+                    )
+                    Log.i("delete erro", t.message.toString())
+                }
+            }
+            )
+
+            return retorno
+        }
     }
 }

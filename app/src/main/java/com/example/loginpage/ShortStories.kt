@@ -697,7 +697,7 @@ fun ShowStories(
                     }
                 }
 
-                if (commentsIsNull) Text(text = "Essa história ainda não tem avaliações. Leia-a e seja o primeiro!")
+                if (commentsIsNull) Text(text = if(shortStory.usuario[0].idUsuario == userID) "A sua história ainda não tem avaliações." else "Essa história ainda não tem avaliações. Leia-a e seja o primeiro!")
 
             }
         }
