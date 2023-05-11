@@ -55,6 +55,11 @@ import kotlin.math.ceil
 //    }
 //}
 
+var emptySpaceTitle: MutableState<Boolean> = mutableStateOf(false)
+var maxSpaceTitle: MutableState<Boolean> = mutableStateOf(false)
+var emptySpaceResenha: MutableState<Boolean> = mutableStateOf(false)
+var emptySpaceAvaliaton: MutableState<Boolean> = mutableStateOf(false)
+
 @Composable
 fun PostCommitPage(
     navController: NavController,
@@ -305,6 +310,25 @@ fun TopBarCommit(
 
                 Button(
                     onClick = {
+                        if(commit.value.titulo == null){
+                            emptySpaceTitle.value = true
+                        }else{
+                            emptySpaceTitle.value = false
+                        }
+
+                        if(commit.value!!.titulo.length > 80){
+                            maxSpaceTitle.value = true
+                        }else{
+                            maxSpaceTitle.value = false
+                        }
+
+                        if(commit.value!!.resenha == null){
+                            emptySpaceResenha.value = true
+                        }else{
+                            emptySpaceResenha.value = false
+                        }
+
+
                         if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
                             Log.i("resposta api commit", it.toString())
                             if (it == 200) navController.popBackStack()
