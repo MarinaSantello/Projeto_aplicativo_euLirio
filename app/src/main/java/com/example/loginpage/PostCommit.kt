@@ -58,6 +58,7 @@ import kotlin.math.ceil
 var emptySpaceTitle: MutableState<Boolean> = mutableStateOf(false)
 var maxSpaceTitle: MutableState<Boolean> = mutableStateOf(false)
 var emptySpaceResenha: MutableState<Boolean> = mutableStateOf(false)
+var maxSpaceResenha: MutableState<Boolean> = mutableStateOf(false)
 var emptySpaceAvaliaton: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
@@ -310,7 +311,7 @@ fun TopBarCommit(
 
                 Button(
                     onClick = {
-                        if(commit.value.titulo == null){
+                        if(commit.value!!.titulo == null){
                             emptySpaceTitle.value = true
                         }else{
                             emptySpaceTitle.value = false
@@ -328,6 +329,17 @@ fun TopBarCommit(
                             emptySpaceResenha.value = false
                         }
 
+                        if(commit.value!!.resenha.length > 2000){
+                            maxSpaceResenha.value = true
+                        }else{
+                            maxSpaceResenha.value = false
+                        }
+
+                        if(commit.value!!.avaliacao == null){
+                            emptySpaceAvaliaton.value = true
+                        }else{
+                            emptySpaceAvaliaton.value = false
+                        }
 
                         if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
                             Log.i("resposta api commit", it.toString())
