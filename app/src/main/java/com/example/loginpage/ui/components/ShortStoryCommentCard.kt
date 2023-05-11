@@ -68,16 +68,8 @@ fun CommentCardSS(
         mutableStateOf(listOf(""))
     }
 
-    var stringStateAuthorAnnouncementView by remember {
-        mutableStateOf(false)
-    }
-
-    var stringStateAuthorCommentView by remember {
-        mutableStateOf(false)
-    }
-
-    var stringStateCommentView by remember {
-        mutableStateOf(false)
+    var qndCurtidas by remember {
+        mutableStateOf(comment.curtidas!!.qtdeCurtidas)
     }
 
     var userName by remember {
@@ -115,9 +107,8 @@ fun CommentCardSS(
 
     //Card de comentarios
     var likeStateComment by remember {
-        mutableStateOf(false)
+        mutableStateOf(comment.curtido!!)
     }
-    Log.i("spoiler", visibilitySpoiler.toString())
 
     if(visibilitySpoiler == "1") Card(
         modifier = Modifier
@@ -132,7 +123,7 @@ fun CommentCardSS(
             verticalArrangement = Arrangement.Center
         ){
             Text(
-                text = "Contem Spoiler",
+                text = "SPOILER",
                 fontFamily = SpartanBold,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
@@ -154,13 +145,13 @@ fun CommentCardSS(
     else if (visibilitySpoiler == "0") Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(120.dp),
+            .heightIn(120.dp)
+            .padding(0.dp, 10.dp),
         elevation = 0.dp
     ){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp, 0.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.Top,
@@ -325,10 +316,10 @@ fun CommentCardSS(
                                 idUsuario = userId
                             )
 
-                            if (likeStateComment) {
-                                CallCommentAPI.likeCommentAnnouncement(likeComment)
-                            } else {
-                                CallCommentAPI.dislikeCommentAnnouncement(comment.id!!, userId)
+                            if (likeStateComment) CallCommentAPI.likeCommentShortStory(likeComment) {
+                                if (it == 201) qndCurtidas = qndCurtidas?.plus(1)
+                            } else CallCommentAPI.dislikeCommentShortStory(comment.id!!, userId) {
+                                if (it == 200) qndCurtidas = qndCurtidas?.minus(1)
                             }
 
                         },
@@ -362,7 +353,7 @@ fun CommentCardSS(
 
 
                         Text(
-                            text = "182",
+                            text = qndCurtidas.toString(),
                             fontFamily = SpartanRegular,
                             modifier = Modifier.padding(start = 6.dp)
                         )

@@ -1,5 +1,7 @@
 package com.example.loginpage.models
 
+import com.google.gson.annotations.SerializedName
+
 
 data class ShortStoryGet(
     var id:Int?,
@@ -17,9 +19,16 @@ data class ShortStoryGet(
     var curtido: Boolean,
     var favorito: Boolean,
     var lido: Boolean,
-    var avaliacao: Double
+    var avaliacao: Double,
+    var comentado: Boolean,
+    var comentarios: QTDcomentarios
 ){
     override fun toString(): String {
         return super.toString()
     }
 }
+
+data class QTDcomentarios (
+    @SerializedName("quantidade_comentarios")
+    var qtdComentarios: String
+)

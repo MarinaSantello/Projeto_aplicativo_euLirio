@@ -140,8 +140,8 @@ class CallCommentAPI() {
         }
 
         /* HISTÓRIA CURTA */
-        fun getCommentsSS(shortStoryID: Int, commentsData: (List<CommitSS>?) -> Unit) {
-            val callComment = commentCall.getAllCommentsShortStory(shortStoryID)
+        fun getCommentsSS(shortStoryID: Int, userID: Int, commentsData: (List<CommitSS>?) -> Unit) {
+            val callComment = commentCall.getAllCommentsShortStory(shortStoryID, userID)
 
             callComment.enqueue(object :
                 Callback<List<CommitSS>> {
@@ -219,7 +219,7 @@ class CallCommentAPI() {
         }
 
         fun dislikeCommentShortStory(commentId: Int, userID: Int, statusCode: (Int) -> Unit){
-            val callDislikeCommentAnnouncement = commentCall.dislikeAnnouncementComment(commentId, userID)
+            val callDislikeCommentAnnouncement = commentCall.dislikeShortStoryComment(commentId, userID)
 
             callDislikeCommentAnnouncement.enqueue(object:
                 Callback<String>{

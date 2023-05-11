@@ -251,7 +251,7 @@ fun ShortStorysCard(
                             )
 
                             Text(
-                                text = "28",
+                                text = shortStory.comentarios.qtdComentarios,
                                 fontSize = 10.sp,
                                 fontFamily = Montserrat2,
                                 fontWeight = FontWeight.W500,

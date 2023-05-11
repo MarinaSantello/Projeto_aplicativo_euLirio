@@ -40,7 +40,9 @@ data class CommitSS(
     @SerializedName("id_historia_curta")
     var shortStoryID: Int,
     @SerializedName("data_publicacao")
-    var dataPublicado: String? = null
+    var dataPublicado: String? = null,
+    var curtido: Boolean? = null,
+    var curtidas: qtdeCurtidas? = null
 )
 
 data class LikeComment(

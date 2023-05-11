@@ -38,8 +38,8 @@ interface CommentCall {
 
     /* PEQUENAS HISTÓRIAS */
     //Chamada de todos os comentarios de uma pequena história
-    @GET("short-storie-comments/id/{id}")
-    fun getAllCommentsShortStory(@Path("id")shortStoryID: Int): Call<List<CommitSS>>
+    @GET("short-storie-comments/id/")
+    fun getAllCommentsShortStory(@Query("shortStorieId") shortStoryID: Int, @Query("userId") userId: Int): Call<List<CommitSS>>
 
     //Chamada para fazer o post de comentario de uma pequena história
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
