@@ -20,8 +20,8 @@ class CallCommentAPI() {
         val commentCall = retrofit.create(CommentCall::class.java)
         var retorno = listOf<String>()
 
-        fun getCommentsAnnouncement(idAnnouncement: Int, commentsData:(List<Commit>?) -> Unit){
-            val callCommentsAnnouncement = commentCall.getAllCommentsAnnouncement(idAnnouncement)
+        fun getCommentsAnnouncement(idAnnouncement: Int, userID: Int, commentsData:(List<Commit>?) -> Unit){
+            val callCommentsAnnouncement = commentCall.getAllCommentsAnnouncement(idAnnouncement, userID)
 
             callCommentsAnnouncement.enqueue(object:
 
@@ -33,6 +33,8 @@ class CallCommentAPI() {
                     val comments = response.body()
 
                     commentsData.invoke(comments)
+
+                    Log.i("get comment erro", response.message().toString())
                 }
 
                 override fun onFailure(call: Call<List<Commit>>, t: Throwable) {

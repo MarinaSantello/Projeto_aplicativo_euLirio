@@ -16,7 +16,14 @@ data class Commit(
     @SerializedName("id_anuncio")
     var announcementID: Int,
     @SerializedName("data_publicado")
-    var dataPublicado: String? = null
+    var dataPublicado: String? = null,
+    var curtido: Boolean? = null,
+    var curtidas: qtdeCurtidas? = null
+)
+
+data class qtdeCurtidas(
+    @SerializedName("quantidade_curtidas")
+    var qtdeCurtidas: Int?
 )
 
 data class CommitSS(

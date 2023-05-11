@@ -900,7 +900,7 @@ fun ShowEbook(
                     mutableStateOf(false)
                 }
 
-                CallCommentAPI.getCommentsAnnouncement(announcement.id!!) {
+                CallCommentAPI.getCommentsAnnouncement(announcement.id!!, userID) {
                     if (it.isNullOrEmpty()) commentsIsNull = true
                     else {
                         commentsSize = (it.size) ?: 0

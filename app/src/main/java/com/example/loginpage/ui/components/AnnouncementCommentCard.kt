@@ -74,17 +74,6 @@ fun CommentCard(
         mutableStateOf(listOf(""))
     }
 
-    var stringStateAuthorAnnouncementView by remember {
-        mutableStateOf(false)
-    }
-
-    var stringStateAuthorCommentView by remember {
-        mutableStateOf(false)
-    }
-
-    var stringStateCommentView by remember {
-        mutableStateOf(false)
-    }
 
     var userName by remember {
         mutableStateOf("")
@@ -121,8 +110,15 @@ fun CommentCard(
 
     //Card de comentarios
     var likeStateComment by remember {
-        mutableStateOf(false)
+        mutableStateOf(comment.curtido)
     }
+
+    var quantidadeLikesComment by remember {
+        mutableStateOf(comment.curtidas!!.qtdeCurtidas.toString())
+    }
+
+
+
     Log.i("spoiler", visibilitySpoiler.toString())
 
     if(visibilitySpoiler == "1") Card(
@@ -160,7 +156,8 @@ fun CommentCard(
     else Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(120.dp),
+            .heightIn(120.dp)
+            .padding(0.dp, 10.dp),
         elevation = 0.dp
     ){
         Column(
@@ -384,23 +381,28 @@ fun CommentCard(
                             .height(20.dp)
                             .width(80.dp)
                             .clickable {
-                                likeStateComment = !likeStateComment
+                                likeStateComment = !likeStateComment!!
 
                                 var likeComment = LikeComment(
                                     idComentario = comment.id!!,
                                     idUsuario = userId
                                 )
 
-                                if (likeStateComment) {
+                                if (likeStateComment == true) {
                                     CallCommentAPI.likeCommentAnnouncement(likeComment)
+                                    var changeQuantidadeLikesComment = quantidadeLikesComment.toInt() + 1
+                                    quantidadeLikesComment = changeQuantidadeLikesComment.toString()
+
                                 } else {
                                     CallCommentAPI.dislikeCommentAnnouncement(comment.id!!, userId)
+                                    var changeQuantidadeLikesComment = quantidadeLikesComment.toInt() - 1
+                                    quantidadeLikesComment = changeQuantidadeLikesComment.toString()
                                 }
 
                             },
                         backgroundColor = Color.White,
                         shape = RoundedCornerShape(100.dp),
-                        border = if (likeStateComment) {
+                        border = if (likeStateComment == true) {
                             BorderStroke(1.dp, Color.Red)
                         } else {
                             BorderStroke(1.dp, Color.Black)
@@ -410,7 +412,7 @@ fun CommentCard(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (likeStateComment) {
+                            if (likeStateComment == true) {
                                 Icon(
                                     Icons.Rounded.Favorite,
                                     contentDescription = "",
@@ -428,7 +430,7 @@ fun CommentCard(
 
 
                             Text(
-                                text = "182",
+                                text = quantidadeLikesComment,
                                 fontFamily = SpartanRegular,
                                 modifier = Modifier.padding(start = 6.dp)
                             )

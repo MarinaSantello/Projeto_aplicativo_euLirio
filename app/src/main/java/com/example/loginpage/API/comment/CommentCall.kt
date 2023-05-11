@@ -10,8 +10,12 @@ import retrofit2.http.*
 interface CommentCall {
 
     //Chamada de todos os comentarios de um anuncio
-    @GET("announcement-comments/id/{id}")
-    fun getAllCommentsAnnouncement(@Path("id")announcementID: Int): Call<List<Commit>>
+//    @GET("announcement-comments/id/{id}")
+//    fun getAllCommentsAnnouncement(@Path("id")announcementID: Int): Call<List<Commit>>
+
+    //Chamada para listar comentários de anuncio
+    @GET("announcement-comments/id/")
+    fun getAllCommentsAnnouncement(@Query("announcementId")announcementId: Int, @Query("userId") userId: Int): Call<List<Commit>>
 
     //Chamada para fazer o post de comentario de um anuncio
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
