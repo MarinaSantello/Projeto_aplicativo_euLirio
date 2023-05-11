@@ -88,6 +88,10 @@ fun ShortStory(
     val fabState = remember { mutableStateOf(true) }
     var userAuthor by remember { mutableStateOf(false) }
 
+    var deleteState = remember {
+        mutableStateOf(false)
+    }
+
     // registrando o id do usuário no sqlLite
     val userID = UserIDrepository(context).getAll()[0].idUser
 
@@ -101,7 +105,7 @@ fun ShortStory(
         userAuthor = (it.usuario[0].idUsuario == userID)
     }
 
-    Scaffold(
+    if (deleteState.value || !deleteState.value)Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
@@ -116,7 +120,7 @@ fun ShortStory(
         topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, context, userAuthor, navController) },
         bottomBar = { if (shortStory != null) BottomBarShortStory(bottomBarState, context, navController, shortStory!!, userID) },
     ) {
-        if (shortStory != null) ShowStories(shortStory!!, it.calculateBottomPadding(), navController, context)
+        if (shortStory != null) ShowStories(shortStory!!, it.calculateBottomPadding(), navController, context, deleteState)
     }
 }
 
@@ -125,7 +129,8 @@ fun ShowStories(
     shortStory: ShortStoryGet,
     bottomBarLength: Dp,
     navController: NavController,
-    context: Context
+    context: Context,
+    deleteState: MutableState<Boolean>
 ) {
 
     val userID = UserIDrepository(context).getAll()[0].idUser
@@ -508,9 +513,10 @@ fun ShowStories(
         }
         Spacer(modifier = Modifier.height(12.dp))
 
-        Column (Modifier
-            .heightIn(500.dp)
-            .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = bottomBarLength)
+        Column (
+            Modifier
+                .heightIn(500.dp)
+                .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = bottomBarLength)
         ) {
             Row (
                 modifier = Modifier
@@ -693,7 +699,11 @@ fun ShowStories(
                     for (i in 0 until comments.size) {
 //                        Log.i("id anuncio $i", comments[i].id.toString())
 
-                        CommentCardSS(comments[i], navController, userID, shortStory.id!!)
+                        CommentCardSS(comments[i], navController, userID, shortStory.id!!) {
+                            deleteState.value = it
+
+                            if (it)comments -= comments[i]
+                        }
                     }
                 }
 

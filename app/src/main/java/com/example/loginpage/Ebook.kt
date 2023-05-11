@@ -1214,11 +1214,12 @@ fun TopBarEbook(
                         Text(
                             text = title.uppercase(),
                             modifier = Modifier
-                                .fillMaxWidth(.8f),
+                                .fillMaxWidth(.82f),
 //                                .padding(end = 44.dp),
                             color = colorResource(id = R.color.eulirio_black),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h2
+                            style = MaterialTheme.typography.h2,
+                            fontSize = 20.sp
                         )
 
                         Icon(

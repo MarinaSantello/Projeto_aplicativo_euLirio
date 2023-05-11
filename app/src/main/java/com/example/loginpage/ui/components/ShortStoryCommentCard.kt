@@ -42,7 +42,8 @@ fun CommentCardSS(
     comment: CommitSS,
     navController: NavController,
     userId: Int,
-    shortStoryId: Int
+    shortStoryId: Int,
+    delete: (Boolean) -> Unit
 ){
 
     val idUsuario = comment.userID.toLong();
@@ -150,7 +151,7 @@ fun CommentCardSS(
         }
     }
 
-    else Card(
+    else if (visibilitySpoiler == "0") Card(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(120.dp),
@@ -195,10 +196,6 @@ fun CommentCardSS(
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(20.dp),
-//                                        .clickable {
-//                                            Log.i("estrela", it.toString())
-//                                            commit.avaliacao = it + 1
-//                                        },
                                     tint = colorResource(R.color.eulirio_purple_text_color_border)
                                 )
                             }
@@ -216,10 +213,6 @@ fun CommentCardSS(
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(20.dp),
-//                                        .clickable {
-//                                            Log.i("estrela", it.toString())
-//                                            commit.avaliacao += it + 1
-//                                        },
                                     tint = colorResource(R.color.eulirio_purple_text_color_border)
                                 )
                             }
@@ -275,8 +268,11 @@ fun CommentCardSS(
                                 expandedTopBarState = false
 
                                 if (index == 0) {
-                                    CallCommentAPI.deleteComment(comment.id!!, shortStoryId)
-
+                                    CallCommentAPI.deleteCommentSS(comment.id!!, shortStoryId) {
+                                        if (it == 200) {
+                                            delete.invoke(true)
+                                        }
+                                    }
                                 }
 
                             }
