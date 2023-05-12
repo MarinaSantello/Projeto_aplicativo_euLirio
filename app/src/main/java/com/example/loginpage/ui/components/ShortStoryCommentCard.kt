@@ -145,8 +145,7 @@ fun CommentCardSS(
     else if (visibilitySpoiler == "0") Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(120.dp)
-            .padding(0.dp, 10.dp),
+            .heightIn(120.dp),
         elevation = 0.dp
     ){
         Column(

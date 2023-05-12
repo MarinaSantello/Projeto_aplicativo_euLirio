@@ -24,7 +24,7 @@ data class AnnouncementPost (
     var epub: String,
     var pdf: String,
     var mobi: String?,
-    val generos: List<Genero>,
+    val generos: List<Genero>
 ){
     override fun toString(): String {
         return super.toString()
@@ -56,7 +56,9 @@ data class AnnouncementGet(
     var carrinho: Boolean,
     var compras: CountAnnouncementSales?,
     var comprado: Boolean,
-    var avaliacao: Double
+    var avaliacao: Double,
+    var comentado: Boolean,
+    var comentarios: QTDcomentarios
 ){
     override fun toString(): String {
         return super.toString()

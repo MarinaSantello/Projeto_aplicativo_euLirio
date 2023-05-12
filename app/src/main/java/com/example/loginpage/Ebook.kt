@@ -345,7 +345,7 @@ fun ShowEbook(
                                 )
                             }
 
-                        Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
 
                             Text(text = "(${announcement.avaliacao})".replace('.', ','))
 
@@ -895,10 +895,6 @@ fun ShowEbook(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-
-                var commentsSize by remember {
-                    mutableStateOf(0)
-                }
                 var comments by remember {
                     mutableStateOf(listOf<Commit>())
                 }
@@ -908,10 +904,7 @@ fun ShowEbook(
 
                 CallCommentAPI.getCommentsAnnouncement(announcement.id!!, userID) {
                     if (it.isNullOrEmpty()) commentsIsNull = true
-                    else {
-                        commentsSize = (it.size) ?: 0
-                        comments = it
-                    }
+                    else comments = it
                 }
 
                 Row(
@@ -941,14 +934,14 @@ fun ShowEbook(
                         )
 
                         Text(
-                            text = "($commentsSize)",
+                            text = "(${announcement.comentarios.qtdComentarios})",
                             fontFamily = SpartanBold,
                             fontSize = 16.sp
                         )
                     }
 
 
-                    if (announcement.comprado) Card(
+                    if (announcement.comprado && !announcement.comentado) Card(
                         modifier = Modifier
                             .height(20.dp)
                             .padding(start = 20.dp, end = 20.dp, top = 3.dp)

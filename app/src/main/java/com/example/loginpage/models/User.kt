@@ -30,7 +30,14 @@ data class User(
     @SerializedName("historias_curtas_desativadas")
     var shortStoriesDeactivate: List<Anuncios>?,
 
-    var seguindo: Boolean?
+    var seguindo: Boolean?,
+
+    @SerializedName("te_segue")
+    var teSegue: Boolean? = null,
+
+    var seguidores: QTDSeguidores? = null,
+    @SerializedName("qtde_seguindo")
+    var qtdSeguindo: QTDSeguindo? = null
 ) {
     override fun toString(): String {
         return super.toString()
@@ -88,4 +95,14 @@ data class UserFollow(
     var userName: String,
     var seguindo: Boolean,
     var generos: List<Genero>
+)
+
+data class QTDSeguidores (
+    @SerializedName("quantidade_seguidores")
+    var qtdSeguidores: Int
+)
+
+data class QTDSeguindo (
+    @SerializedName("quantidade_seguindo")
+    var qtdeSeguindo: Int
 )

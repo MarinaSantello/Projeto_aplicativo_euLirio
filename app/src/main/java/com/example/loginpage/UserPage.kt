@@ -99,6 +99,9 @@ fun UserHomePage(
     var followState by remember {
         mutableStateOf(false)
     }
+    var followerState by remember {
+        mutableStateOf(false)
+    }
     var followersState by remember {
         mutableStateOf(0)
     }
@@ -114,6 +117,9 @@ fun UserHomePage(
         tags = it.tags
         genres = it.generos
         followState = it.seguindo!!
+        followerState = it.teSegue!!
+        followersState = it.seguidores!!.qtdSeguidores
+        followingState = it.qtdSeguindo!!.qtdeSeguindo
         Log.i("seguindo", it.seguindo.toString())
     }
 
@@ -129,7 +135,7 @@ fun UserHomePage(
                 .wrapContentSize(),
             shape = RoundedCornerShape(bottomEnd = 50.dp, bottomStart = 50.dp),
             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
-            elevation = 4.dp
+            elevation = 2.dp
         ) {
             Column(
             ) {
@@ -179,29 +185,61 @@ fun UserHomePage(
                             .fillMaxSize()
                             .padding(start = 12.dp),
                         horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = nome,
-                            fontSize = 18.sp,
-                            style = MaterialTheme.typography.h1
+                        Column() {
+                            Text(
+                                text = nome,
+                                fontSize = 20.sp,
+                                style = MaterialTheme.typography.h1
 
-                        )
+                            )
 
-                        Text(
-                            text = "@${userName}",
-                            modifier = Modifier.padding(bottom = 4.dp),
-                            fontSize = 10.sp,
-                            style = MaterialTheme.typography.body2,
-                            fontWeight = FontWeight.ExtraLight
+                            Text(
+                                text = "@${userName}",
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                fontSize = 10.sp,
+                                style = MaterialTheme.typography.body2,
+                                fontWeight = FontWeight.ExtraLight
 
-                        )
-
-                        if (navUserID == userID.idUser) Box(
+                            )
+                        }
+                        Row(
                             Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.BottomEnd
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Card(
+                            if (followerState) Card(
+                                modifier = Modifier
+                                    .padding(end = 40.dp)
+                                    .border(
+                                        .5.dp,
+                                        colorResource(id = R.color.eulirio_black),
+                                        RoundedCornerShape(10.dp)
+                                    ),
+                                backgroundColor = Color.Transparent,
+                                shape = RoundedCornerShape(10.dp),
+                                elevation = 0.dp
+                            ) {
+                                Text(
+                                    text = "SEGUE VOCÊ",
+                                    modifier = Modifier.padding(12.dp, 1.dp),
+                                    color = colorResource(id = R.color.eulirio_black),
+                                    fontSize = 8.sp,
+                                    fontFamily = MontSerratSemiBold,
+                                    fontWeight = FontWeight.Light,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+//                            Box(
+//                                Modifier.fillMaxWidth(),
+//                                contentAlignment = Alignment.BottomStart
+//                            ) {
+//                            }
+
+                            if (navUserID == userID.idUser) Box(
+                                Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.BottomEnd
+                            ) {Card(
                                 modifier = Modifier
                                     .padding(end = 40.dp)
                                     .clickable {
@@ -221,18 +259,16 @@ fun UserHomePage(
                                     textAlign = TextAlign.Center,
                                 )
                             }
-                        }
-                        else if(followState)Box(
-                            Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.BottomEnd
-                        ) {
-                            Card(
+                            }
+                            else if(followState) Card(
                                 modifier = Modifier
                                     .padding(end = 40.dp)
                                     .clickable {
                                         followState = !followState
 
                                         CallFollowAPI.unfollowUser(users[0].idUser, navUserID)
+
+                                        followersState -= 1
                                     },
                                 backgroundColor = Color.Black,
                                 border = BorderStroke(
@@ -253,11 +289,13 @@ fun UserHomePage(
 
                                 )
                             }
-                        }else Box(
-                                Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.BottomEnd
-                        ) {
-                            Card(
+//                            Box(
+//                                Modifier.fillMaxWidth(),
+//                                contentAlignment = Alignment.BottomEnd
+//                            ) {
+//
+//                            }
+                            else Card(
                                 modifier = Modifier
                                     .padding(end = 40.dp)
                                     .clickable {
@@ -269,6 +307,8 @@ fun UserHomePage(
                                         )
 
                                         CallFollowAPI.followUser(authorFollow)
+
+                                        followersState += 1
                                     },
                                 backgroundColor = Color.Transparent,
                                 border = BorderStroke(
@@ -289,8 +329,13 @@ fun UserHomePage(
                                     color = Color.Black
                                 )
                             }
+//                            Box(
+//                                Modifier.fillMaxWidth(),
+//                                contentAlignment = Alignment.BottomEnd
+//                            ) {
+//
+//                            }
                         }
-
 
                     }
 
@@ -314,7 +359,7 @@ fun UserHomePage(
                             .padding(end = 12.dp)
                     ) {
                         Text(
-                            text = "182",
+                            text = "41",
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
@@ -342,7 +387,7 @@ fun UserHomePage(
                             }
                     ) {
                         Text(
-                            text = "570",
+                            text = followingState.toString(),
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
@@ -369,7 +414,7 @@ fun UserHomePage(
                             }
                     ) {
                         Text(
-                            text = "4,1k",
+                            text = followersState.toString(),
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
@@ -476,6 +521,7 @@ fun UserHomePage(
 
     }
 }
+
 @Composable
 fun TabsPerfil() {
     var tabIndex by remember { mutableStateOf(0) }

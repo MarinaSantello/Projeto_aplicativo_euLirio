@@ -25,7 +25,7 @@ class CallCommentAPI() {
 
             callCommentsAnnouncement.enqueue(object:
 
-            Callback<List<Commit>>{
+                Callback<List<Commit>>{
                 override fun onResponse(
                     call: Call<List<Commit>>,
                     response: Response<List<Commit>>
@@ -64,10 +64,12 @@ class CallCommentAPI() {
         }
 
         fun deleteComment(commentId: Int, announcementId: Int, statusCode: (Int) -> Unit){
+            Log.i("id del comm", commentId.toString())
+            Log.i("id del ann", announcementId.toString())
             val callDeleteComment = commentCall.deleteCommentAnnouncement(commentId, announcementId)
 
             callDeleteComment.enqueue(object:
-            Callback<String>{
+                Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     val status = response.code()
 

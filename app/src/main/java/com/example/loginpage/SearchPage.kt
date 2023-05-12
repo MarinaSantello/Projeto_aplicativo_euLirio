@@ -79,7 +79,7 @@ fun SearchPage(navController: NavController) {
     // registrando o id do usuário no sqlLite
     val userIDRepository = UserIDrepository(context)
     val users = userIDRepository.getAll()
-    val userID = UserID(id = users[0].id, idUser = users[0].idUser)
+    val userID = UserID(id = if (users.isNotEmpty()) users[0].id else 0, idUser = if (users.isNotEmpty()) users[0].idUser else 0)
 
     Scaffold(
         modifier = Modifier

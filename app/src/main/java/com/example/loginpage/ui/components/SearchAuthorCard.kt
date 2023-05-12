@@ -3,6 +3,7 @@ package com.example.loginpage.ui.components
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,7 +45,7 @@ fun GenerateAuthorCard(
     navController: NavController,
     usuarioID: Int,
     searchPage: Boolean
-    ){
+){
 
     var followState by remember {
         mutableStateOf(autor.seguindo)
@@ -81,40 +83,66 @@ fun GenerateAuthorCard(
                 Row(
                     verticalAlignment = Alignment.Top
                 ) {
-                    Image(
-                        rememberAsyncImagePainter(
-                            autor.foto
-                                ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                        ),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = "foto de perfil",
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(40.dp)
-                            .clip(RoundedCornerShape(100.dp))
-                    )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        Text(
-                            text = autor.nome,
-                            fontFamily = SpartanBold,
-                            fontSize = 16.sp
+                    Row() {
+                        Image(
+                            rememberAsyncImagePainter(
+                                autor.foto
+                                    ?: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            ),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = "foto de perfil",
+                            modifier = Modifier
+                                .height(40.dp)
+                                .width(40.dp)
+                                .clip(RoundedCornerShape(100.dp))
                         )
 
-                        Spacer(modifier = Modifier.height(2.dp))
+                        Spacer(modifier = Modifier.width(10.dp))
 
-                        Text(
-                            text = "@${autor.userName}",
-                            fontFamily = SpartanExtraLight,
-                            fontSize = 10.sp
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = autor.nome,
+                                fontFamily = SpartanBold,
+                                fontSize = 16.sp
+                            )
+
+                            Spacer(modifier = Modifier.height(2.dp))
+
+                            Text(
+                                text = "@${autor.userName}",
+                                fontFamily = SpartanExtraLight,
+                                fontSize = 10.sp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+//                        if (followerState) Card(
+//                            modifier = Modifier
+//                                .padding(end = 40.dp)
+//                                .border(
+//                                    .5.dp,
+//                                    colorResource(id = R.color.eulirio_black),
+//                                    RoundedCornerShape(10.dp)
+//                                ),
+//                            backgroundColor = Color.Transparent,
+//                            shape = RoundedCornerShape(10.dp),
+//                            elevation = 0.dp
+//                        ) {
+//                            Text(
+//                                text = "SEGUE VOCÊ",
+//                                modifier = Modifier.padding(12.dp, 1.dp),
+//                                color = colorResource(id = R.color.eulirio_black),
+//                                fontSize = 8.sp,
+//                                fontFamily = MontSerratSemiBold,
+//                                fontWeight = FontWeight.Light,
+//                                textAlign = TextAlign.Center,
+//                            )
+//                        }
                     }
-
                 }
 
                 if(followState && notSameUser){
