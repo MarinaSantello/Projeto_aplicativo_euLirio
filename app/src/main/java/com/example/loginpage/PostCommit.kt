@@ -1,6 +1,7 @@
 package com.example.loginpage
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -128,8 +129,28 @@ fun CommitData (
         FocusRequester()
     }
 
+    var emptySpaceTitleCheck = remember {
+        mutableStateOf(false)
+    }
+
+
+
     val filledStars = floor(rating.value.toDouble()).toInt()
     val unfilledStars = (5 - ceil(rating.value.toDouble())).toInt()
+
+
+
+    val context = LocalContext.current
+    if(titleState == null){
+        emptySpaceTitle.value = true
+        Toast.makeText(context, "Titulo Vazio Irmão", Toast.LENGTH_SHORT).show()
+    }else{
+        emptySpaceTitle.value = false
+    }
+
+
+
+
 
     Column(
         Modifier
@@ -169,13 +190,23 @@ fun CommitData (
                 },
                 singleLine = true,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                    backgroundColor = Color.Transparent,
-                    cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                    focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-                ),
+                colors = if(emptySpaceTitle.value == true || maxSpaceTitle.value == true){
+                    TextFieldDefaults.textFieldColors(
+                        textColor = Color.Red,
+                        backgroundColor = Color.Transparent,
+                        cursorColor = Color.Red,
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Red
+                    )
+                } else {
+                    TextFieldDefaults.textFieldColors(
+                        textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        backgroundColor = Color.Transparent,
+                        cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
+                    )
+                },
 //                trailingIcon = {
 //                    Icon(
 //                        Icons.Outlined.Error, contentDescription = "",
@@ -309,41 +340,15 @@ fun TopBarCommit(
                     )
                 }
 
+
                 Button(
                     onClick = {
-                        if(commit.value!!.titulo == null){
-                            emptySpaceTitle.value = true
-                        }else{
-                            emptySpaceTitle.value = false
-                        }
 
-                        if(commit.value!!.titulo.length > 80){
-                            maxSpaceTitle.value = true
-                        }else{
-                            maxSpaceTitle.value = false
-                        }
-
-                        if(commit.value!!.resenha == null){
-                            emptySpaceResenha.value = true
-                        }else{
-                            emptySpaceResenha.value = false
-                        }
-
-                        if(commit.value!!.resenha.length > 2000){
-                            maxSpaceResenha.value = true
-                        }else{
-                            maxSpaceResenha.value = false
-                        }
-
-                        if(commit.value!!.avaliacao == null){
-                            emptySpaceAvaliaton.value = true
-                        }else{
-                            emptySpaceAvaliaton.value = false
-                        }
-
-                        if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
-                            Log.i("resposta api commit", it.toString())
-                            if (it == 200) navController.popBackStack()
+                        if(!emptySpaceTitle.value || !maxSpaceTitle.value || !emptySpaceResenha.value || !maxSpaceResenha.value || !emptySpaceResenha.value){
+                            if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
+                                Log.i("resposta api commit", it.toString())
+                                if (it == 200) navController.popBackStack()
+                            }
                         }
                     },
                     modifier = Modifier
