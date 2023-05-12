@@ -54,8 +54,8 @@ fun GenerateAuthorCard(
     val notSameUser by remember {
         mutableStateOf(autor.id != usuarioID)
     }
-    val followerStateERR by remember {
-        mutableStateOf(true)
+    val followerState by remember {
+        mutableStateOf(autor.teSegue)
     }
 
     Log.i("mesma pessoa?", notSameUser.toString())
@@ -123,7 +123,7 @@ fun GenerateAuthorCard(
 
                         Spacer(modifier = Modifier.width(8.dp))
 
-                        if (followerStateERR) Card(
+                        if (followerState) Card(
                             modifier = Modifier
                                 .padding(start = 4.dp, top = 6.dp)
                                 .border(
