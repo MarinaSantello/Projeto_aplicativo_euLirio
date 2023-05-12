@@ -94,7 +94,9 @@ data class UserFollow(
     @SerializedName("user_name")
     var userName: String,
     var seguindo: Boolean,
-    var generos: List<Genero>
+    var generos: List<Genero>,
+    @SerializedName("te_segue")
+    var teSegue: Boolean
 )
 
 data class QTDSeguidores (
