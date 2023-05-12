@@ -141,11 +141,39 @@ fun CommitData (
 
 
     val context = LocalContext.current
-    if(titleState == null){
+    if(titleState.value.isEmpty()){
         emptySpaceTitle.value = true
-        Toast.makeText(context, "Titulo Vazio Irmão", Toast.LENGTH_SHORT).show()
+        titleFocusRequester.requestFocus()
+
     }else{
         emptySpaceTitle.value = false
+    }
+
+    if(titleState.value.length > 81){
+        maxSpaceTitle.value = true
+        titleFocusRequester.requestFocus()
+    }else{
+        maxSpaceTitle.value = false
+    }
+
+    if(avaliacaoState.value.isEmpty()){
+        emptySpaceResenha.value = true
+        sinopseFocusRequester.requestFocus()
+    }else{
+        emptySpaceResenha.value = false
+    }
+
+    if(avaliacaoState.value.length > 2001){
+        maxSpaceResenha.value = true
+        sinopseFocusRequester.requestFocus()
+    }else{
+        maxSpaceResenha.value = false
+    }
+
+    if(rating.value == 0){
+        emptySpaceAvaliaton.value = true
+    }else{
+        emptySpaceAvaliaton.value = false
     }
 
 
@@ -241,13 +269,26 @@ fun CommitData (
             singleLine = false,
 //                isError = checkSinopse,
             shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                backgroundColor = Color.Transparent,
-                cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-            )
+            colors =
+            if(emptySpaceResenha.value == true || maxSpaceResenha.value == true ){
+                TextFieldDefaults.textFieldColors(
+                    textColor = Color.Red,
+                    backgroundColor = Color.Transparent,
+                    cursorColor = Color.Red,
+                    focusedIndicatorColor = Color.Red,
+                    unfocusedIndicatorColor = Color.Red
+                )
+            }else{
+                TextFieldDefaults.textFieldColors(
+                    textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    backgroundColor = Color.Transparent,
+                    cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
+                )
+
+            }
+
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -267,7 +308,11 @@ fun CommitData (
                                 Log.i("estrela", it.toString())
                                 rating.value = it + 1
                             },
-                        tint = colorResource(R.color.eulirio_purple_text_color_border)
+                        tint = (if(emptySpaceAvaliaton.value){
+                            Color.Red
+                        }else{
+                            colorResource(R.color.eulirio_purple_text_color_border)
+                        })
                     )
                 }
                 repeat(unfilledStars) {
@@ -280,10 +325,17 @@ fun CommitData (
                                 Log.i("estrela", it.toString())
                                 rating.value += it + 1
                             },
-                        tint = colorResource(R.color.eulirio_purple_text_color_border)
+                        tint = (if(emptySpaceAvaliaton.value){
+                            Color.Red
+                        }else{
+                            colorResource(R.color.eulirio_purple_text_color_border)
+                        })
+
+
                     )
                 }
             }
+
             Row(
                 modifier = Modifier
                     .padding(bottom = 240.dp)
@@ -344,7 +396,7 @@ fun TopBarCommit(
                 Button(
                     onClick = {
 
-                        if(!emptySpaceTitle.value || !maxSpaceTitle.value || !emptySpaceResenha.value || !maxSpaceResenha.value || !emptySpaceResenha.value){
+                        if(!emptySpaceTitle.value && !maxSpaceTitle.value && !emptySpaceResenha.value && !maxSpaceResenha.value && !emptySpaceResenha.value){
                             if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
                                 Log.i("resposta api commit", it.toString())
                                 if (it == 200) navController.popBackStack()
@@ -437,6 +489,45 @@ fun CommitDataSS (
     val filledStars = floor(rating.value.toDouble()).toInt()
     val unfilledStars = (5 - ceil(rating.value.toDouble())).toInt()
 
+
+    val context = LocalContext.current
+    if(titleState.value.isEmpty()){
+        emptySpaceTitle.value = true
+        titleFocusRequester.requestFocus()
+
+    }else{
+        emptySpaceTitle.value = false
+    }
+
+    if(titleState.value.length > 81){
+        maxSpaceTitle.value = true
+        titleFocusRequester.requestFocus()
+    }else{
+        maxSpaceTitle.value = false
+    }
+
+    if(avaliacaoState.value.isEmpty()){
+        emptySpaceResenha.value = true
+        sinopseFocusRequester.requestFocus()
+    }else{
+        emptySpaceResenha.value = false
+    }
+
+    if(avaliacaoState.value.length > 2001){
+        maxSpaceResenha.value = true
+        sinopseFocusRequester.requestFocus()
+    }else{
+        maxSpaceResenha.value = false
+    }
+
+    if(rating.value == 0){
+        emptySpaceAvaliaton.value = true
+    }else{
+        emptySpaceAvaliaton.value = false
+    }
+
+
+
     Column(
         Modifier
             .fillMaxSize()
@@ -475,13 +566,23 @@ fun CommitDataSS (
                 },
                 singleLine = true,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                    backgroundColor = Color.Transparent,
-                    cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                    focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-                ),
+                colors = if(emptySpaceTitle.value == true || maxSpaceTitle.value == true){
+                    TextFieldDefaults.textFieldColors(
+                        textColor = Color.Red,
+                        backgroundColor = Color.Transparent,
+                        cursorColor = Color.Red,
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Red
+                    )
+                } else {
+                    TextFieldDefaults.textFieldColors(
+                        textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        backgroundColor = Color.Transparent,
+                        cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
+                    )
+                },
 //                trailingIcon = {
 //                    Icon(
 //                        Icons.Outlined.Error, contentDescription = "",
@@ -516,13 +617,25 @@ fun CommitDataSS (
             singleLine = false,
 //                isError = checkSinopse,
             shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                backgroundColor = Color.Transparent,
-                cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
-                unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
-            )
+            colors =
+            if(emptySpaceResenha.value == true || maxSpaceResenha.value == true ){
+                TextFieldDefaults.textFieldColors(
+                    textColor = Color.Red,
+                    backgroundColor = Color.Transparent,
+                    cursorColor = Color.Red,
+                    focusedIndicatorColor = Color.Red,
+                    unfocusedIndicatorColor = Color.Red
+                )
+            }else{
+                TextFieldDefaults.textFieldColors(
+                    textColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    backgroundColor = Color.Transparent,
+                    cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                    unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
+                )
+
+            }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -542,7 +655,11 @@ fun CommitDataSS (
                                 Log.i("estrela", it.toString())
                                 rating.value = it + 1
                             },
-                        tint = colorResource(R.color.eulirio_purple_text_color_border)
+                        tint = (if(emptySpaceAvaliaton.value){
+                            Color.Red
+                        }else{
+                            colorResource(R.color.eulirio_purple_text_color_border)
+                        })
                     )
                 }
                 repeat(unfilledStars) {
@@ -555,7 +672,11 @@ fun CommitDataSS (
                                 Log.i("estrela", it.toString())
                                 rating.value += it + 1
                             },
-                        tint = colorResource(R.color.eulirio_purple_text_color_border)
+                        tint = (if(emptySpaceAvaliaton.value){
+                            Color.Red
+                        }else{
+                            colorResource(R.color.eulirio_purple_text_color_border)
+                        })
                     )
                 }
             }
@@ -625,9 +746,11 @@ fun TopBarCommitSS(
 
                 Button(
                     onClick = {
-                        if (commit.value != null) CallCommentAPI.postCommentSS(commit.value!!) {
-                            Log.i("resposta api commit", it.toString())
-                            if (it == 200) navController.popBackStack()
+                        if(!emptySpaceTitle.value && !maxSpaceTitle.value && !emptySpaceResenha.value && !maxSpaceResenha.value && !emptySpaceResenha.value){
+                            if (commit.value != null) CallCommentAPI.postCommentSS(commit.value!!) {
+                                Log.i("resposta api commit", it.toString())
+                                if (it == 200) navController.popBackStack()
+                            }
                         }
                     },
                     modifier = Modifier
