@@ -54,6 +54,9 @@ fun GenerateAuthorCard(
     val notSameUser by remember {
         mutableStateOf(autor.id != usuarioID)
     }
+    val followerStateERR by remember {
+        mutableStateOf(true)
+    }
 
     Log.i("mesma pessoa?", notSameUser.toString())
     Log.i("id pessoa", autor.id.toString())
@@ -81,9 +84,9 @@ fun GenerateAuthorCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
-                    verticalAlignment = Alignment.Top
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row() {
+                    Row {
                         Image(
                             rememberAsyncImagePainter(
                                 autor.foto
@@ -120,28 +123,29 @@ fun GenerateAuthorCard(
 
                         Spacer(modifier = Modifier.width(8.dp))
 
-//                        if (followerState) Card(
-//                            modifier = Modifier
-//                                .padding(end = 40.dp)
-//                                .border(
-//                                    .5.dp,
-//                                    colorResource(id = R.color.eulirio_black),
-//                                    RoundedCornerShape(10.dp)
-//                                ),
-//                            backgroundColor = Color.Transparent,
-//                            shape = RoundedCornerShape(10.dp),
-//                            elevation = 0.dp
-//                        ) {
-//                            Text(
-//                                text = "SEGUE VOCÊ",
-//                                modifier = Modifier.padding(12.dp, 1.dp),
-//                                color = colorResource(id = R.color.eulirio_black),
-//                                fontSize = 8.sp,
-//                                fontFamily = MontSerratSemiBold,
-//                                fontWeight = FontWeight.Light,
-//                                textAlign = TextAlign.Center,
-//                            )
-//                        }
+                        if (followerStateERR) Card(
+                            modifier = Modifier
+                                .padding(start = 4.dp, top = 6.dp)
+                                .border(
+                                    .3.dp,
+                                    colorResource(id = com.example.loginpage.R.color.eulirio_black),
+                                    RoundedCornerShape(4.dp)
+                                )
+                            ,
+                            backgroundColor = Color.Transparent,
+                            shape = RoundedCornerShape(10.dp),
+                            elevation = 0.dp
+                        ) {
+                            Text(
+                                text = "SEGUE VOCÊ",
+                                modifier = Modifier.padding(8.dp, 1.dp),
+                                color = colorResource(id = com.example.loginpage.R.color.eulirio_black),
+                                fontSize = 8.sp,
+                                fontFamily = MontSerratSemiBold,
+                                fontWeight = FontWeight.Light,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
                 }
 
