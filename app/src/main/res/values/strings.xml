@@ -118,4 +118,5 @@
     <string name="title_activity_search_page">SearchPage</string>
     <string name="title_activity_follow_page">FollowPage</string>
     <string name="title_activity_post_commit">PostCommit</string>
+    <string name="title_activity_recommendation_page">RecommendationPage</string>
 </resources>
