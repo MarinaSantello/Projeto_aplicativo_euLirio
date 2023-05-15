@@ -35,6 +35,8 @@ import com.example.loginpage.models.Commit
 import com.example.loginpage.models.CommitSS
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.MontSerratBold
+import com.example.loginpage.ui.theme.Spartan
+import com.example.loginpage.ui.theme.SpartanExtraLight
 import kotlinx.coroutines.launch
 import kotlin.math.floor
 import kotlin.math.ceil
@@ -139,8 +141,6 @@ fun CommitData (
     val unfilledStars = (5 - ceil(rating.value.toDouble())).toInt()
 
 
-
-    val context = LocalContext.current
     if(titleState.value.isEmpty()){
         emptySpaceTitle.value = true
         titleFocusRequester.requestFocus()
@@ -187,7 +187,7 @@ fun CommitData (
             .padding(20.dp, 8.dp)
     ) {
         Text(
-            text = "Recomende uma obra",
+            text = "Avalie uma obra",
             fontFamily = MontSerratBold,
             modifier = Modifier
                 .fillMaxWidth()
@@ -355,6 +355,7 @@ fun CommitData (
 
                 Text(
                     text = "Spoilers",
+                    fontFamily = SpartanExtraLight
                 )
             }
         }
@@ -409,7 +410,11 @@ fun TopBarCommit(
                         .width(120.dp),
                     shape = RoundedCornerShape(50.dp)
                 ) {
-                    Text(text = "PUBLICAR")
+                    Text(
+                        text = "PUBLICAR",
+                        style = MaterialTheme.typography.subtitle1,
+                        fontWeight = FontWeight.Black
+                    )
                 }
             }
         },
