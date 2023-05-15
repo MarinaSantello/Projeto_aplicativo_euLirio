@@ -28,5 +28,22 @@ class CallRecommendationAPI {
                 }
             })
         }
+
+        fun getRecommendationByID(idRecommendation: Int, recommendationData: (Recommendation) -> Unit) {
+            val callRecommendation = recommendationCall.getRecommendationByID(idRecommendation)
+
+            callRecommendation.enqueue(object :
+                Callback<List<Recommendation>> {
+                override fun onResponse(call: Call<List<Recommendation>>, response: Response<List<Recommendation>>) {
+                    val recommendation = response.body()!![0]
+
+                    recommendationData.invoke(recommendation)
+                }
+
+                override fun onFailure(call: Call<List<Recommendation>>, t: Throwable) {
+                    //TODO("Not yet implemented")
+                }
+            })
+        }
     }
 }

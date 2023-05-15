@@ -254,7 +254,6 @@ fun RecommendationData(
 
             Row(
                 modifier = Modifier
-                    .padding(bottom = 12.dp)
                     .clickable { switchCheckedState.value = !switchCheckedState.value },
                 verticalAlignment = Alignment.CenterVertically
             ) {
