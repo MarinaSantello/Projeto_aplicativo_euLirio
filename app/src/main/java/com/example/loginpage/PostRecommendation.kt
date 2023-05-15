@@ -1,29 +1,35 @@
 package com.example.loginpage
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,9 +37,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
-import com.example.loginpage.API.recommendation.Recommendation
+import com.example.loginpage.API.recommendation.CallRecommendationAPI
+import com.example.loginpage.models.Recommendation
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
-import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.MontSerratBold
@@ -80,7 +86,12 @@ fun PostRecommendationPage(
         mutableStateOf<Recommendation?>(null)
     }
 
-    recommendation.value = Recommendation("")
+    recommendation.value = Recommendation(
+        conteudo = resenhaState.value,
+        userID = userID,
+        anuncioID = idAnnouncement,
+        spoiler = switchCheckedState.value.toString()
+    )
 
     var announcement by remember {
         mutableStateOf<AnnouncementGet?>(null)
@@ -136,10 +147,12 @@ fun TopBarRecommendation (
                 Button(
                     onClick = {
 //                        if(!emptySpaceTitle.value && !maxSpaceTitle.value && !emptySpaceResenha.value && !maxSpaceResenha.value && !emptySpaceResenha.value){
-//                            if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
-//                                Log.i("resposta api commit", it.toString())
-//                                if (it == 200) navController.popBackStack()
-//                            }
+                            if (recommendation.value != null) CallRecommendationAPI.postRecommendation(
+                                recommendation.value!!
+                            ) {
+                                Log.i("resposta api commit", it.toString())
+                                if (it == 201) navController.popBackStack()
+                            }
 //                        }
                     },
                     modifier = Modifier
@@ -161,6 +174,7 @@ fun TopBarRecommendation (
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RecommendationData(
     resenhaState: MutableState<String>,
@@ -169,6 +183,13 @@ fun RecommendationData(
 ) {
     val resenhaFocusRequester = remember{
         FocusRequester()
+    }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // Solicitar o foco assim que o compositor estiver pronto
+    LaunchedEffect(Unit) {
+        resenhaFocusRequester.requestFocus()
+        keyboardController?.show()
     }
 
     Column(
@@ -204,6 +225,16 @@ fun RecommendationData(
                     fontSize = 16.sp
                 )
             },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    // Executar ação ao pressionar "Done" no teclado
+                    keyboardController?.hide()
+                }
+            ),
             shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
             colors =
             TextFieldDefaults.textFieldColors(
