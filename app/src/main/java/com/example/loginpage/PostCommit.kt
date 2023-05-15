@@ -1,11 +1,16 @@
 package com.example.loginpage
 
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,20 +19,25 @@ import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.loginpage.API.comment.CallCommentAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
@@ -41,28 +51,29 @@ import kotlinx.coroutines.launch
 import kotlin.math.floor
 import kotlin.math.ceil
 
-//class PostCommit : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            LoginPageTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-//                    PostCommitPage(rememberNavController(), 62)
-//                }
-//            }
-//        }
-//    }
-//}
+class PostCommit : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            LoginPageTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    PostCommitPage(rememberNavController(), 62)
+                }
+            }
+        }
+    }
+}
 
 var emptySpaceTitle: MutableState<Boolean> = mutableStateOf(false)
 var maxSpaceTitle: MutableState<Boolean> = mutableStateOf(false)
 var emptySpaceResenha: MutableState<Boolean> = mutableStateOf(false)
 var maxSpaceResenha: MutableState<Boolean> = mutableStateOf(false)
 var emptySpaceAvaliaton: MutableState<Boolean> = mutableStateOf(false)
+var clickButton: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
 fun PostCommitPage(
@@ -116,6 +127,7 @@ fun PostCommitPage(
 
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CommitData (
     titleState: MutableState<String>,
@@ -130,18 +142,24 @@ fun CommitData (
     val sinopseFocusRequester = remember{
         FocusRequester()
     }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     var emptySpaceTitleCheck = remember {
         mutableStateOf(false)
     }
 
+    // Solicitar o foco assim que o compositor estiver pronto
+    LaunchedEffect(Unit) {
+        titleFocusRequester.requestFocus()
+        keyboardController?.show()
+    }
 
 
     val filledStars = floor(rating.value.toDouble()).toInt()
     val unfilledStars = (5 - ceil(rating.value.toDouble())).toInt()
 
 
-    if(titleState.value.isEmpty()){
+    if(titleState.value.isEmpty() && clickButton.value){
         emptySpaceTitle.value = true
         titleFocusRequester.requestFocus()
 
@@ -156,7 +174,7 @@ fun CommitData (
         maxSpaceTitle.value = false
     }
 
-    if(avaliacaoState.value.isEmpty()){
+    if(avaliacaoState.value.isEmpty() && clickButton.value){
         emptySpaceResenha.value = true
         sinopseFocusRequester.requestFocus()
     }else{
@@ -170,11 +188,7 @@ fun CommitData (
         maxSpaceResenha.value = false
     }
 
-    if(rating.value == 0){
-        emptySpaceAvaliaton.value = true
-    }else{
-        emptySpaceAvaliaton.value = false
-    }
+    emptySpaceAvaliaton.value = rating.value == 0 && clickButton.value
 
 
 
@@ -216,6 +230,16 @@ fun CommitData (
                         fontSize = 12.sp
                     )
                 },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        // Executar ação ao pressionar "Done" no teclado
+                        keyboardController?.hide()
+                    }
+                ),
                 singleLine = true,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 colors = if(emptySpaceTitle.value == true || maxSpaceTitle.value == true){
@@ -292,7 +316,7 @@ fun CommitData (
         )
 
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -372,8 +396,8 @@ fun TopBarCommit(
     TopAppBar(
         title = {
             Row(Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
                     onClick = {
@@ -396,6 +420,7 @@ fun TopBarCommit(
 
                 Button(
                     onClick = {
+                        clickButton.value = true
 
                         if(!emptySpaceTitle.value && !maxSpaceTitle.value && !emptySpaceResenha.value && !maxSpaceResenha.value && !emptySpaceResenha.value){
                             if (commit.value != null) CallCommentAPI.postComment(commit.value!!) {
