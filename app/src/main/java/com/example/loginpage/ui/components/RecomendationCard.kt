@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,21 +25,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Recommendation
 import com.example.loginpage.ui.theme.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
 @Composable
-fun generateRecomendationCard(
+fun generateRecommendationCard(
     recomendation: Recommendation,
     navController: NavController
 ){
-
-
-    val filledStars = floor(3.0).toInt()
-    val unfilledStars = (5 - ceil(3.0)).toInt()
-    val halfStar = !(3.0.rem(1).equals(0.0))
+    val context = LocalContext.current
+    val userID = UserIDrepository(context).getAll()[0].idUser
 
     var likeState by remember {
         mutableStateOf(false)
@@ -48,14 +49,25 @@ fun generateRecomendationCard(
         mutableStateOf(false)
     }
 
+    var announcement by remember {
+        mutableStateOf<AnnouncementGet?>(null)
+    }
+
+    CallAnnouncementAPI.getAnnouncement(recomendation.anuncioID, userID) {
+        announcement = it
+    }
+
     Column(
         modifier = Modifier
-            .height(200.dp)
+            .heightIn(min = 200.dp, max = 260.dp)
             .fillMaxWidth()
             .background(Color.White)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(start = 20.dp, end = 20.dp).heightIn(200.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 20.dp, end = 20.dp)
+                .heightIn(200.dp)
 
         ){
             Row(
@@ -99,131 +111,7 @@ fun generateRecomendationCard(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(102.dp)
-            ){
-                Row(
-                    modifier = Modifier.padding(8.dp)
-                ){
-                    Card(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(57.dp),
-                        backgroundColor = Color.Black
-                    ){}
-
-                    Column(
-                        modifier = Modifier.padding(start = 5.dp)
-                    ){
-                        Text(
-                            text = "Nome Leitor",
-                            fontSize = 11.sp,
-                            fontFamily = SpartanBold
-                        )
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.Bottom
-
-                        ){
-                            Text(
-                                text = "Escrito por",
-                                fontSize = 7.sp,
-                                fontFamily = SpartanExtraLight
-                            )
-
-                            Spacer(modifier = Modifier.width(2.dp))
-
-                            Text(
-                                text = "n.sebastian",
-                                fontSize = 8.sp,
-                                fontFamily = SpartanMedium
-                            )
-
-                        }
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        val generos = listOf("Terror", "Ação", "Terror")
-
-                        LazyRow() {
-                            items(generos) {
-                                Card(
-                                    modifier = Modifier
-                                        .height(10.dp)
-                                        .padding(end = 4.dp)
-                                    ,
-                                    backgroundColor = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border),
-                                    shape = RoundedCornerShape(100.dp),
-                                ) {
-                                    Text(
-                                        text = it,
-                                        fontSize = 7.sp,
-                                        fontFamily = MontSerratSemiBold,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier
-                                            .padding(12.dp, 1.dp),
-                                        color = Color.White
-                                    )
-
-                                }
-                            }
-                        }
-
-
-
-                        Column(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.Bottom,
-                                modifier = Modifier.fillMaxSize()
-                            ){
-
-                                repeat(filledStars) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Star,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(20.dp),
-                                        tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                                    )
-                                }
-
-                                if (halfStar) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.StarHalf,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(20.dp),
-                                        tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                                    )
-                                }
-
-                                repeat(unfilledStars) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.StarOutline,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(20.dp),
-                                        tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
-                                    )
-                                }
-                            }
-
-                        }
-
-
-
-                    }
-
-                }
-
-            }
+            if (announcement != null) CardAnnouncementRecommended(announcement!!)
 
             Spacer(modifier = Modifier.height(8.dp))
 

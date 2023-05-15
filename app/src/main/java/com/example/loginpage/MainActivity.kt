@@ -203,6 +203,15 @@ fun Greeting() {
             PostCommitPageSS(navController, shortStoryID)
         }
 
+        composable(
+            "${Routes.RecommendationPost.name}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) {
+            val announcementID = it.arguments!!.getInt("itemId")
+
+            PostRecommendationPage(navController, announcementID)
+        }
+
 //        composable(Routes.PostEbook.name) {
 //            InputDataEbook(navController)
 //        }

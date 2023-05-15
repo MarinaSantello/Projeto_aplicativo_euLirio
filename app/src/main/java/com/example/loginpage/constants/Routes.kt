@@ -24,5 +24,6 @@ enum class Routes {
     Read,
     FollowsPage,
     CommitAnnPost,
-    CommitSSPost
+    CommitSSPost,
+    RecommendationPost
 }

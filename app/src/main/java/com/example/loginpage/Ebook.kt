@@ -570,7 +570,7 @@ fun ShowEbook(
             }
         }
 
-        if (!userAuthor && !announcement.comprado) {
+        if (!userAuthor) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -607,6 +607,32 @@ fun ShowEbook(
                                 textAlign = TextAlign.Center,
                                 fontSize = 28.sp,
                                 fontFamily = Spartan
+                            )
+                        }
+                    }
+
+                    if (announcement.comprado) Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable {
+                                navController.navigate("${Routes.RecommendationPost.name}/$idAnnouncement")
+                            },
+                        shape = RoundedCornerShape(0.dp),
+                        backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
+                        elevation = 0.dp
+                    ) {
+                        Row(
+                            Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.ebook_recommendation).uppercase(),
+                                modifier = Modifier.fillMaxWidth(),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.ExtraLight,
+                                style = MaterialTheme.typography.h2
                             )
                         }
                     }

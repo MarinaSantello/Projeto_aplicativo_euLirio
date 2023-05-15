@@ -41,6 +41,7 @@ import com.example.loginpage.API.recommendation.CallRecommendationAPI
 import com.example.loginpage.models.Recommendation
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.models.AnnouncementGet
+import com.example.loginpage.ui.components.CardAnnouncementRecommended
 import com.example.loginpage.ui.theme.LoginPageTheme
 import com.example.loginpage.ui.theme.MontSerratBold
 import com.example.loginpage.ui.theme.QuickSand
@@ -57,7 +58,7 @@ class PostRecommendation : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    PostRecommendationPage(53, rememberNavController())
+                    PostRecommendationPage(rememberNavController(), 53)
                 }
             }
         }
@@ -66,8 +67,8 @@ class PostRecommendation : ComponentActivity() {
 
 @Composable
 fun PostRecommendationPage(
-    idAnnouncement: Int,
-    navController: NavController
+    navController: NavController,
+    idAnnouncement: Int
 ) {
     val context = LocalContext.current
 
@@ -107,7 +108,7 @@ fun PostRecommendationPage(
         scaffoldState = scaffoldState,
         topBar = { TopBarRecommendation(navController, recommendation) }
     ) {it
-        RecommendationData(resenhaState, switchCheckedState)//, announcement!!)
+        RecommendationData(resenhaState, switchCheckedState, announcement)
     }
 
 }
@@ -179,7 +180,7 @@ fun TopBarRecommendation (
 fun RecommendationData(
     resenhaState: MutableState<String>,
     switchCheckedState: MutableState<Boolean>,
-//    announcement: AnnouncementGet
+    announcement: AnnouncementGet?
 ) {
     val resenhaFocusRequester = remember{
         FocusRequester()
@@ -253,7 +254,7 @@ fun RecommendationData(
 
             Row(
                 modifier = Modifier
-                    .padding(bottom = 240.dp)
+                    .padding(bottom = 12.dp)
                     .clickable { switchCheckedState.value = !switchCheckedState.value },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -275,6 +276,8 @@ fun RecommendationData(
             }
 
         }
+
+        if (announcement != null) CardAnnouncementRecommended(announcement)
     }
 
 
