@@ -2,6 +2,7 @@ package com.example.loginpage
 
 import android.os.Bundle
 import android.provider.MediaStore.Audio.Genres
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,12 +34,13 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.favorite.CallFavoriteAPI
+import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.shortStory.CallShortStory
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.Anuncios
-import com.example.loginpage.models.ShortStoryGet
+import com.example.loginpage.API.visualization.CallVisualizationAPI
+import com.example.loginpage.models.*
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.components.TabsUserStories
@@ -47,6 +49,8 @@ import com.example.loginpage.ui.theme.*
 //import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import kotlin.math.ceil
+import kotlin.math.floor
 
 //class ViewBooks : ComponentActivity() {
 //
@@ -230,10 +234,14 @@ fun TabsFeed(
                     }
                 }
             }
-            2 -> Text(text = "Pequenas Histórias")
+            2 -> {
+
+            }
         }
     }
 }
+
+
 
 
 
