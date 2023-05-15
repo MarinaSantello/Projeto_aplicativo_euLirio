@@ -102,7 +102,7 @@ fun generateRecommendationCard(
             Spacer(modifier = Modifier.height(7.dp))
 
             Text(
-                text = "Olha a resenha ai ó",
+                text = recomendation.conteudo,
                 fontSize = 10.sp,
                 fontFamily = QuickSand,
                 maxLines = 5,
@@ -183,7 +183,7 @@ fun generateRecommendationCard(
                     )
 
                     Text(
-                        text = "3",
+                        text = recomendation.curtidas.qtdeCurtidas.toString(),
                         fontSize = 10.sp,
                         fontFamily = Montserrat2,
                         fontWeight = FontWeight.W500

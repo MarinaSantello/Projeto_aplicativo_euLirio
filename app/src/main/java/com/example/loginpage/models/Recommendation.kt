@@ -9,5 +9,16 @@ data class Recommendation(
     var userID: Int,
     @SerializedName("id_anuncio")
     var anuncioID: Int,
-    var spoiler: String
+    var spoiler: String,
+    @SerializedName("data_hora")
+    var dataHora: String,
+    val curtidas: qtdeCurtidas,
+    var favoritos: qtdeFavoritos
+
+)
+
+
+data class qtdeFavoritos(
+    @SerializedName("quantidade_favoritos")
+    var qtdeFavoritos: Int?
 )
