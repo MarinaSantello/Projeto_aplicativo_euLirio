@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -91,7 +92,9 @@ fun generateRecomendationCard(
             Text(
                 text = "Olha a resenha ai ó",
                 fontSize = 10.sp,
-                fontFamily = QuickSand
+                fontFamily = QuickSand,
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -153,7 +156,7 @@ fun generateRecomendationCard(
                                         .height(10.dp)
                                         .padding(end = 4.dp)
                                     ,
-                                    backgroundColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                    backgroundColor = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border),
                                     shape = RoundedCornerShape(100.dp),
                                 ) {
                                     Text(
