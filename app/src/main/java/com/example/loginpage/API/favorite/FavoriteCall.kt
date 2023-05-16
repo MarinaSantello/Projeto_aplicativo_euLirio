@@ -1,10 +1,7 @@
 package com.example.loginpage.API.favorite
 
 import com.example.loginpage.constants.Constant
-import com.example.loginpage.models.CountFavoriteAnnouncement
-import com.example.loginpage.models.CountFavoriteShortStorie
-import com.example.loginpage.models.FavoriteAnnouncement
-import com.example.loginpage.models.FavoriteShortStorie
+import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -37,9 +34,12 @@ interface FavoriteCall{
     @GET("count-short-stories-favorites/short-storie-id/{id}")
     fun countFavoriteShortStorie(@Path("id") id: Long): Call<CountFavoriteShortStorie>
 
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @POST("favorite-recommendation")
+    fun favoriteRecommendation(@Body Favorite: likeRecommendation): Call<String>
 
-
-
+    @DELETE("unfavorite-recommendation/")
+    fun unfavoriteRecommendation(@Query("recommendationId") recommendationId: Int, @Query("userId") userId: Int): Call<String>
 
 
 }

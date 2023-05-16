@@ -2,6 +2,7 @@ package com.example.loginpage.API.favorite
 
 import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,6 +68,32 @@ class CallFavoriteAPI(){
             return retorno
        }
 
+        fun favoriteRecommendation(favoriteRecommendation: likeRecommendation): List<String>{
+            val callFavoriteRecommendation = favoriteCall.favoriteRecommendation(favoriteRecommendation)
+
+            callFavoriteRecommendation.enqueue(object:
+            Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    retorno = listOf<String>(
+                        response.message().toString(),
+                        response.code().toString()
+                    )
+                    Log.i("respon post", response.code()!!.toString())
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    retorno = listOf<String>(
+                        t.message.toString()
+                    )
+                    Log.i("respon post", t.message.toString())
+                }
+
+            }
+            )
+            return  retorno
+        }
+
+
         //Funçãp para desfavoritar um anuncio
         fun unfavoriteAnnouncement(announcementUnFavorite: FavoriteAnnouncement): List<String> {
             val callunFavoriteAnnouncement = favoriteCall.unFavoriteAnnouncement(announcementUnFavorite)
@@ -117,6 +144,31 @@ class CallFavoriteAPI(){
             }
             )
             return retorno
+        }
+
+        fun unFavoriteRecommendation(recommendationId: Int, userID: Int): List<String> {
+            val callUnFavoriteRecommendation = favoriteCall.unfavoriteRecommendation(recommendationId, userID)
+
+            callUnFavoriteRecommendation.enqueue(object:
+            Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    retorno = listOf<String>(
+                        response.message().toString(),
+                        response.code().toString()
+                    )
+                    Log.i("respon post", response.code()!!.toString())
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    retorno = listOf<String>(
+                        t.message.toString()
+                    )
+                    Log.i("respon post", t.message.toString())
+                }
+
+            }
+            )
+            return  retorno
         }
 
         fun countFavoritesAnnouncement(announcementId: Int, quantidadeFavoritos:(CountFavoriteAnnouncement) -> Unit){

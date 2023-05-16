@@ -3,12 +3,7 @@ package com.example.loginpage.API.like
 import com.example.loginpage.constants.Constant
 import com.example.loginpage.models.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface LikeCall {
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
@@ -35,5 +30,12 @@ interface LikeCall {
 
     @GET("verify-announcement-like")
     fun verifyAnnouncementLike(@Query("announcementID") announcementID: Int, @Query("userId") userID: Int): Call<Boolean>
+
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @POST("like-recommendation")
+    fun likeRecommendation(@Body like: likeRecommendation): Call<String>
+
+    @DELETE("dislike-recommendation/")
+    fun dislikeRecommendation(@Query("recommendationId") recommendationId: Int, @Query("userId") userID: Int): Call<String>
 
 }

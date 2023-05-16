@@ -33,3 +33,11 @@ data class CountShortStorieLikes (
     @SerializedName("quantidade_curtidas")
     var qtdeCurtidas: String
 )
+
+
+data class likeRecommendation(
+    @SerializedName("id_usuario")
+    var idUsuario: Int?,
+    @SerializedName("id_recomendacao")
+    var idRecomendacao: Int?
+)

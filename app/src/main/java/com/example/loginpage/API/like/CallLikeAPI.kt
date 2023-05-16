@@ -97,6 +97,30 @@ class CallLikeAPI() {
             return retorno
         }
 
+        fun likeRecommendation(recommendationLike: likeRecommendation): List<String>{
+            val callLikeRecommendation = likeCall.likeRecommendation(recommendationLike)
+
+            callLikeRecommendation.enqueue(object:
+            Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    retorno = listOf(
+                        response.message().toString(),
+                        response.code().toString()
+                    )
+                    Log.i("respon post", response.code()!!.toString())
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    retorno = listOf<String>(
+                        t.message.toString()
+                    )
+                }
+
+            }
+            )
+            return retorno
+        }
+
         fun dislikeShortStorie(shortStorieDislike: LikeShortStorie): List<String> {
             val callDislikeShortStorie = likeCall.dislikeShortStorie(shortStorieDislike)
 
@@ -124,6 +148,28 @@ class CallLikeAPI() {
             return retorno
         }
 
+
+        fun dislikeRecommendation(recommendationId:Int, userId: Int){
+            val callDislikeRecomendation = likeCall.dislikeRecommendation(recommendationId, userId)
+
+            callDislikeRecomendation.enqueue(object:
+                Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    retorno = listOf(
+                        response.message().toString(),
+                        response.code().toString()
+                    )
+                    Log.i("respon post", response.code()!!.toString())
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    retorno = listOf<String>(
+                        t.message.toString()
+                    )
+                }
+            }
+            )
+        }
 
         fun countAnnouncementLikes(announcementId: Int, qtndLikes: (CountAnnouncementLikes) -> Unit){
             val callCountAnnouncementLike = likeCall.countAnnouncementLikes(announcementId.toLong())
@@ -171,6 +217,10 @@ class CallLikeAPI() {
             }
             )
         }
+
+
+
+
     }
 }
 

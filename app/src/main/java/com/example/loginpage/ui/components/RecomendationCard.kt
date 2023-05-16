@@ -26,9 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.favorite.CallFavoriteAPI
+import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Recommendation
+import com.example.loginpage.models.likeRecommendation
 import com.example.loginpage.ui.theme.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -36,17 +40,26 @@ import kotlin.math.floor
 @Composable
 fun generateRecommendationCard(
     recomendation: Recommendation,
-    navController: NavController
+    navController: NavController,
+    userID: Int
 ){
     val context = LocalContext.current
     val userID = UserIDrepository(context).getAll()[0].idUser
 
     var likeState by remember {
-        mutableStateOf(false)
+        mutableStateOf(recomendation.curtido)
+    }
+
+    var likeCounter by remember{
+        mutableStateOf(recomendation.curtidas.qtdeCurtidas.toString())
     }
 
     var saveState by remember{
-        mutableStateOf(false)
+        mutableStateOf(recomendation.favorito)
+    }
+
+    var saveCounter by remember{
+        mutableStateOf(recomendation.favoritos.qtdeFavoritos.toString())
     }
 
     var announcement by remember {
@@ -126,13 +139,31 @@ fun generateRecommendationCard(
                     modifier = Modifier
                         .padding(end = 12.dp)
                         .clickable {
-                            likeState = !likeState
+                            likeState = !likeState!!
+
+                            if(likeState == true){
+
+                                var likerRecommendation = likeRecommendation(
+                                    idUsuario = userID,
+                                    idRecomendacao = recomendation.id
+                                )
+                                CallLikeAPI.likeRecommendation(likerRecommendation)
+
+                                var addLikeCounter = likeCounter.toInt() + 1
+                                likeCounter = addLikeCounter.toString()
+
+                            }else{
+                                CallLikeAPI.dislikeRecommendation(recomendation.id!!, userID)
+
+                                var removeLikeCounter = likeCounter.toInt() - 1
+                                likeCounter = removeLikeCounter.toString()
+                            }
 
                         }
                 ){
                     Log.i("anuncio get", likeState.toString())
                     //Verificação se o usuário curtiu a publicação
-                    if(likeState){
+                    if(likeState == true){
                         Icon(
                             Icons.Outlined.Favorite,
                             contentDescription = "icone de curtir",
@@ -148,7 +179,7 @@ fun generateRecommendationCard(
                     )
 
                     Text(
-                        text = "12",
+                        text = likeCounter,
                         fontSize = 10.sp,
                         fontFamily = Montserrat2,
                         fontWeight = FontWeight.W500,
@@ -161,14 +192,31 @@ fun generateRecommendationCard(
                     modifier = Modifier
                         .padding(end = 12.dp)
                         .clickable {
-                            saveState = !saveState
+                            saveState = !saveState!!
+
+                            if(saveState == true){
+                                var favoriterRecommendation = likeRecommendation(
+                                    idUsuario = userID,
+                                    idRecomendacao = recomendation.id
+                                )
+
+                                CallFavoriteAPI.favoriteRecommendation(favoriterRecommendation)
+
+                                var addSaveCounter = saveCounter.toInt() + 1
+                                likeCounter = addSaveCounter.toString()
+                            }else{
+                                CallFavoriteAPI.unFavoriteRecommendation(recomendation.id!!, userID)
+
+                                var removeSaveCounter = saveCounter.toInt() - 1
+                                saveCounter = removeSaveCounter.toString()
+                            }
 
 
                         }
                 ){
 
                     //Verificação se o favoritou a publicação
-                    if(saveState){
+                    if(saveState == true){
                         Icon(
                             Icons.Outlined.Bookmark,
                             contentDescription = "icone de favoritar",
@@ -183,7 +231,7 @@ fun generateRecommendationCard(
                     )
 
                     Text(
-                        text = recomendation.curtidas.qtdeCurtidas.toString(),
+                        text = saveCounter,
                         fontSize = 10.sp,
                         fontFamily = Montserrat2,
                         fontWeight = FontWeight.W500
