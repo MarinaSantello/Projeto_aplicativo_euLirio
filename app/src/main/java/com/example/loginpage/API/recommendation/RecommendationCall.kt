@@ -19,4 +19,10 @@ interface RecommendationCall {
 
     @GET("recommendation/id/")
     fun getRecommendationByID(@Query("recommendationId") idRecommendation: Int, @Query("userId") userID: Int): Call<List<Recommendation>>
+
+
+    //Listar as recomendações de quem o usuário segue
+    @GET("recommendations/user-id/{id}")
+    fun getReccomendationByUserId(@Path("id") userID: Int): Call<List<Recommendation>>
+
 }

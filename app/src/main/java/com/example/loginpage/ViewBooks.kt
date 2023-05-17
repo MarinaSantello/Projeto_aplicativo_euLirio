@@ -36,6 +36,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.recommendation.CallRecommendationAPI
 import com.example.loginpage.API.shortStory.CallShortStory
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
@@ -44,6 +45,7 @@ import com.example.loginpage.models.*
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.ShortStorysCard
 import com.example.loginpage.ui.components.TabsUserStories
+import com.example.loginpage.ui.components.generateRecommendationCard
 import com.example.loginpage.ui.theme.*
 //import com.google.accompanist.pager.ExperimentalPagerApi
 //import com.google.accompanist.pager.rememberPagerState
@@ -235,6 +237,29 @@ fun TabsFeed(
                 }
             }
             2 -> {
+                var recomendations by remember {
+                    mutableStateOf(listOf<Recommendation>())
+                }
+
+                var recomendationIsNull by remember {
+                    mutableStateOf(false)
+                }
+
+                CallRecommendationAPI.getRecommendationByUserId(userID){
+                    if(listOf(it).isNullOrEmpty()) recomendationIsNull == true
+                    recomendations = listOf(it)
+                }
+
+                if (recomendationIsNull) Text(text = "Você não possui recomendações no seu feed por enquanto.")
+
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(bottom = bottomBarLength)
+                ) {
+                    items(recomendations) {
+                        generateRecommendationCard(it, navController, userID)
+                    }
+                }
 
             }
         }

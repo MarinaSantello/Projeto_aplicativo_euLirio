@@ -64,7 +64,7 @@ fun CardAnnouncementRecommended(
                 modifier = Modifier.padding(start = 5.dp)
             ){
                 Text(
-                    text = announcement.usuario[0].nomeUsuario,
+                    text = announcement.titulo,
                     fontSize = 11.sp,
                     fontFamily = SpartanBold
                 )

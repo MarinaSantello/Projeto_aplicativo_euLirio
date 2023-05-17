@@ -1,12 +1,14 @@
 package com.example.loginpage.ui.components
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -16,7 +18,9 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,13 +29,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Recommendation
+import com.example.loginpage.models.User
 import com.example.loginpage.models.likeRecommendation
 import com.example.loginpage.ui.theme.*
 import kotlin.math.ceil
@@ -70,6 +77,30 @@ fun generateRecommendationCard(
         announcement = it
     }
 
+    var nameRecommendationUser by remember{
+        mutableStateOf("")
+    }
+
+    var recommendationUserName by remember{
+        mutableStateOf("")
+    }
+
+    var recommendationUserPicture by remember{
+        mutableStateOf("")
+    }
+
+    CallAPI.getUser(recomendation.userID.toLong()!!){
+        nameRecommendationUser = it.nome
+        recommendationUserName = it.userName
+        recommendationUserPicture = it.foto
+    }
+
+    var visibilitySpoiler by remember {
+        mutableStateOf(recomendation.spoiler)
+    }
+
+
+
     Column(
         modifier = Modifier
             .heightIn(min = 200.dp, max = 260.dp)
@@ -88,25 +119,28 @@ fun generateRecommendationCard(
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ){
-                Card(
+                Image(
+                    painter = rememberAsyncImagePainter(recommendationUserPicture),
+                    contentDescription = "foto da pessoa",
                     modifier = Modifier
-                        .height(34.dp)
-                        .width(34.dp),
-                    shape = RoundedCornerShape(100.dp),
-                    backgroundColor = Color.Black
-                ){}
+                        .size(40.dp)
+                        .clip(
+                            CircleShape
+                        ),
+                    contentScale = ContentScale.Crop,
+                    )
 
                 Column(
                     modifier = Modifier.padding(start = 5.dp)
                 ){
                     Text(
-                        text = "Nome Leitor",
+                        text = nameRecommendationUser,
                         fontSize = 12.sp,
                         fontFamily = SpartanBold
                     )
 
                     Text(
-                        text = "Nome Leitor",
+                        text = recommendationUserName,
                         fontSize = 9.sp,
                         fontFamily = SpartanExtraLight
                     )
@@ -114,13 +148,45 @@ fun generateRecommendationCard(
             }
             Spacer(modifier = Modifier.height(7.dp))
 
-            Text(
-                text = recomendation.conteudo,
-                fontSize = 10.sp,
-                fontFamily = QuickSand,
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis
-            )
+            if(visibilitySpoiler == "1") Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(80.dp)
+                    .clickable { visibilitySpoiler = "0" },
+                elevation = 0.dp
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = "Contem Spoiler",
+                        fontFamily = SpartanBold,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Icon(
+                        imageVector = Icons.Outlined.VisibilityOff,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(20.dp),
+                        tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                    )
+
+
+                }
+            }else{
+                Text(
+                    text = recomendation.conteudo,
+                    fontSize = 10.sp,
+                    fontFamily = QuickSand,
+                    maxLines = 5,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
             Spacer(modifier = Modifier.height(6.dp))
 
@@ -203,7 +269,7 @@ fun generateRecommendationCard(
                                 CallFavoriteAPI.favoriteRecommendation(favoriterRecommendation)
 
                                 var addSaveCounter = saveCounter.toInt() + 1
-                                likeCounter = addSaveCounter.toString()
+                                saveCounter = addSaveCounter.toString()
                             }else{
                                 CallFavoriteAPI.unFavoriteRecommendation(recomendation.id!!, userID)
 
