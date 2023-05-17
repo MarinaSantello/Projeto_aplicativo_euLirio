@@ -151,7 +151,7 @@ fun generateRecommendationCard(
             if(visibilitySpoiler == "1") Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(80.dp)
+                    .height(50.dp)
                     .clickable { visibilitySpoiler = "0" },
                 elevation = 0.dp
             ) {
@@ -163,7 +163,7 @@ fun generateRecommendationCard(
                     Text(
                         text = "Contem Spoiler",
                         fontFamily = SpartanBold,
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(2.dp))
@@ -172,7 +172,7 @@ fun generateRecommendationCard(
                         imageVector = Icons.Outlined.VisibilityOff,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(20.dp),
+                            .size(15.dp),
                         tint = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
                     )
 
@@ -190,7 +190,7 @@ fun generateRecommendationCard(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            if (announcement != null) CardAnnouncementRecommended(announcement!!)
+            if (announcement != null) CardAnnouncementRecommended(announcement!!, navController)
 
             Spacer(modifier = Modifier.height(8.dp))
 

@@ -109,7 +109,7 @@ fun PostRecommendationPage(
         scaffoldState = scaffoldState,
         topBar = { TopBarRecommendation(navController, recommendation) }
     ) {it
-        RecommendationData(resenhaState, switchCheckedState, announcement)
+        RecommendationData(resenhaState, switchCheckedState, announcement, navController)
     }
 
 }
@@ -181,7 +181,8 @@ fun TopBarRecommendation (
 fun RecommendationData(
     resenhaState: MutableState<String>,
     switchCheckedState: MutableState<Boolean>,
-    announcement: AnnouncementGet?
+    announcement: AnnouncementGet?,
+    navController: NavController
 ) {
     val resenhaFocusRequester = remember{
         FocusRequester()
@@ -277,7 +278,7 @@ fun RecommendationData(
 
         }
 
-        if (announcement != null) CardAnnouncementRecommended(announcement)
+        if (announcement != null) CardAnnouncementRecommended(announcement, navController)
     }
 
 

@@ -47,7 +47,7 @@ class CallRecommendationAPI {
             })
         }
 
-        fun getRecommendationByUserId(userId: Int, recommendationsData:(Recommendation) -> Unit){
+        fun getRecommendationByUserId(userId: Int, recommendationsData:(List<Recommendation>) -> Unit){
             val callRecommendationsByUserId = recommendationCall.getReccomendationByUserId(userId)
 
             callRecommendationsByUserId.enqueue(object:
@@ -56,7 +56,7 @@ class CallRecommendationAPI {
                     call: Call<List<Recommendation>>,
                     response: Response<List<Recommendation>>
                 ) {
-                    val recommendation = response.body()!![0]
+                    val recommendation = response.body()!!
 
                     recommendationsData.invoke(recommendation)
                 }

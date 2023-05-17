@@ -1,6 +1,8 @@
 package com.example.loginpage.ui.components
 
+import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,12 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.R
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.ui.theme.MontSerratSemiBold
 import com.example.loginpage.ui.theme.SpartanBold
@@ -34,17 +39,23 @@ import kotlin.math.floor
 
 @Composable
 fun CardAnnouncementRecommended(
-    announcement: AnnouncementGet
+    announcement: AnnouncementGet,
+    navController: NavController
 ) {
 
     val filledStars = floor(announcement.avaliacao).toInt()
     val unfilledStars = (5 - ceil(announcement.avaliacao)).toInt()
     val halfStar = !(announcement.avaliacao.rem(1).equals(0.0))
 
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(102.dp)
+            .clickable {
+                navController.navigate("${Routes.Ebook.name}/${announcement.id}")
+            }
     ){
         Row(
             modifier = Modifier.padding(8.dp)
