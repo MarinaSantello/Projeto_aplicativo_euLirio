@@ -16,7 +16,9 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,13 +43,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.favorite.CallFavoriteAPI
+import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.recommendation.CallRecommendationAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.constants.Routes
-import com.example.loginpage.models.AnnouncementGet
-import com.example.loginpage.models.LikeAnnouncement
-import com.example.loginpage.models.Recommendation
-import com.example.loginpage.models.ShortStoryGet
+import com.example.loginpage.models.*
 import com.example.loginpage.ui.theme.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -97,6 +98,7 @@ fun ShowRecommendation(
         idAnnouncement = it.anuncioID
     }
 
+
     var announcement by remember {
         mutableStateOf<AnnouncementGet?>(null)
     }
@@ -106,6 +108,8 @@ fun ShowRecommendation(
 
         userAuthor.value = (it.usuario[0].idUsuario == userID)
     }
+
+
 
     Scaffold(
         modifier = Modifier
@@ -166,57 +170,108 @@ fun ShowRecommendation(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                backgroundColor = colorResource(id = R.color.eulirio_beige_color_background)
-            ) {
+            if(recommendation != null){
+                BottomAppBar(
+                    backgroundColor = colorResource(id = R.color.eulirio_beige_color_background)
+                ) {
 
-                var likeState by remember {
-                    mutableStateOf(recommendation!!.curtido)
-                }
+                    var likeState by remember {
+                        mutableStateOf(recommendation!!.curtido)
+                    }
 
-                var saveState by remember{
-                    mutableStateOf(recommendation!!.favorito)
-                }
+                    var saveState by remember{
+                        mutableStateOf(recommendation!!.favorito)
+                    }
 
-                var quantidadeLikesState by remember{
-                    mutableStateOf(recommendation!!.curtidas!!.qtdeCurtidas)
-                }
+                    var likeCounter by remember{
+                        mutableStateOf(recommendation!!.curtidas!!.qtdeCurtidas.toString())
+                    }
 
-                var quantidadeFavoritosState by remember{
-                    mutableStateOf(recommendation!!.favoritos!!.qtdeFavoritos)
-                }
-
-                Row(
-                    Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ){
-                    Row() {
-                        Icon(
-                            Icons.Outlined.Favorite,
-                            contentDescription = "favorita",
-                            modifier = Modifier
-                                .size(20.dp),
-                            tint = colorResource(id = R.color.eulirio_red)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = quantidadeLikesState.toString(),
-                            fontFamily = QuickSand, fontSize = 16.sp)
+                    var saveCounter by remember{
+                        mutableStateOf(recommendation!!.favoritos!!.qtdeFavoritos.toString())
                     }
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Outlined.Bookmark,
-                            contentDescription = "save",
-                            modifier = Modifier
-                                .size(20.dp),
-                            tint = colorResource(id = R.color.eulirio_yellow_card_background)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = quantidadeFavoritosState.toString(),
-                            fontFamily = QuickSand, fontSize = 16.sp)
+                        Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ){
+                        Row() {
+                            Icon(
+                                if(likeState == false){
+                                    Icons.Outlined.FavoriteBorder
+                                }else{
+                                    Icons.Rounded.Favorite
+                                },
+                                contentDescription = "favorita",
+                                tint = colorResource(id = R.color.eulirio_red),
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clickable {
+                                        likeState = !likeState!!
+
+                                        if(likeState == true){
+
+                                            var likerRecommendation = likeRecommendation(
+                                                idUsuario = userID,
+                                                idRecomendacao = idRecommendation
+                                            )
+                                            CallLikeAPI.likeRecommendation(likerRecommendation)
+
+                                            var addLikeCounter = likeCounter.toInt() + 1
+                                            likeCounter = addLikeCounter.toString()
+
+                                        }else{
+                                            CallLikeAPI.dislikeRecommendation(idRecommendation, userID)
+
+                                            var removeLikeCounter = likeCounter.toInt() - 1
+                                            likeCounter = removeLikeCounter.toString()
+                                        }
+                                    }
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = likeCounter,
+                                fontFamily = QuickSand, fontSize = 16.sp)
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                if(saveState == false){
+                                    Icons.Outlined.BookmarkAdd
+                                }else{
+                                    Icons.Rounded.Bookmark
+                                },
+                                contentDescription = "save",
+                                tint = colorResource(id = R.color.eulirio_yellow_card_background),
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clickable {
+                                        saveState = !saveState!!
+
+                                        if(saveState == true){
+                                            var favoriterRecommendation = likeRecommendation(
+                                                idUsuario = userID,
+                                                idRecomendacao = idRecommendation
+                                            )
+
+                                            CallFavoriteAPI.favoriteRecommendation(favoriterRecommendation)
+
+                                            var addSaveCounter = saveCounter.toInt() + 1
+                                            saveCounter = addSaveCounter.toString()
+                                        }else{
+                                            CallFavoriteAPI.unFavoriteRecommendation(idRecommendation, userID)
+
+                                            var removeSaveCounter = saveCounter.toInt() - 1
+                                            saveCounter = removeSaveCounter.toString()
+                                        }
+                                    }
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = saveCounter,
+                                fontFamily = QuickSand, fontSize = 16.sp)
+                        }
                     }
                 }
             }

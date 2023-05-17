@@ -36,6 +36,7 @@ import com.example.loginpage.API.like.CallLikeAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
+import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.AnnouncementGet
 import com.example.loginpage.models.Recommendation
 import com.example.loginpage.models.User
@@ -106,6 +107,9 @@ fun generateRecommendationCard(
             .heightIn(min = 200.dp, max = 260.dp)
             .fillMaxWidth()
             .background(Color.White)
+            .clickable {
+                navController.navigate("${Routes.Recommendation.name}/${recomendation.id}")
+            }
     ) {
         Column(
             modifier = Modifier
