@@ -2,8 +2,7 @@ package com.example.loginpage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -63,7 +62,7 @@ class RecommendationPage : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShowRecommendation(rememberNavController(), 6)
+                    ShowRecommendation(rememberNavController(), 7)
                 }
             }
         }
@@ -90,7 +89,7 @@ fun ShowRecommendation(
         mutableStateOf<Recommendation?>(null)
     }
 
-    var idAnnouncement = 0
+    var idAnnouncement by remember { mutableStateOf(0) }
 
     CallRecommendationAPI.getRecommendationByID(idRecommendation, userID) {
         recommendation = it
@@ -102,7 +101,7 @@ fun ShowRecommendation(
         mutableStateOf<AnnouncementGet?>(null)
     }
 
-    CallAnnouncementAPI.getAnnouncement(idAnnouncement, userID) {
+    if (recommendation != null) CallAnnouncementAPI.getAnnouncement(idAnnouncement, userID) {
         announcement = it
 
         userAuthor.value = (it.usuario[0].idUsuario == userID)
@@ -168,38 +167,57 @@ fun ShowRecommendation(
         },
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(top = 750.dp)
-                    .width(50.dp),
                 backgroundColor = colorResource(id = R.color.eulirio_beige_color_background)
             ) {
-                Row(){
-                    Icon(
-                        Icons.Outlined.Favorite,
-                        contentDescription = "favorita",
-                        modifier = Modifier
-                            .padding(start = 110.dp, top = 8.dp)
-                            .size(20.dp),
-                        tint = colorResource(id = R.color.eulirio_red)
-                    )
-                    Text(text = "570",
-                        Modifier.padding(top = 8.dp),
-                        fontFamily = QuickSand, fontSize = 16.sp)
 
-                    Spacer(modifier = Modifier.padding(50.dp))
+                var likeState by remember {
+                    mutableStateOf(recommendation!!.curtido)
+                }
 
-                    Icon(
-                        Icons.Outlined.Bookmark,
-                        contentDescription = "save",
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .size(20.dp),
-                        tint = colorResource(id = R.color.eulirio_yellow_card_background)
-                    )
-                    Text(text = "182",
-                        Modifier.padding(top = 8.dp),
-                        fontFamily = QuickSand, fontSize = 16.sp)
+                var saveState by remember{
+                    mutableStateOf(recommendation!!.favorito)
+                }
+
+                var quantidadeLikesState by remember{
+                    mutableStateOf(recommendation!!.curtidas!!.qtdeCurtidas)
+                }
+
+                var quantidadeFavoritosState by remember{
+                    mutableStateOf(recommendation!!.favoritos!!.qtdeFavoritos)
+                }
+
+                Row(
+                    Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceAround
+                ){
+                    Row() {
+                        Icon(
+                            Icons.Outlined.Favorite,
+                            contentDescription = "favorita",
+                            modifier = Modifier
+                                .size(20.dp),
+                            tint = colorResource(id = R.color.eulirio_red)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = quantidadeLikesState.toString(),
+                            fontFamily = QuickSand, fontSize = 16.sp)
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Outlined.Bookmark,
+                            contentDescription = "save",
+                            modifier = Modifier
+                                .size(20.dp),
+                            tint = colorResource(id = R.color.eulirio_yellow_card_background)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = quantidadeFavoritosState.toString(),
+                            fontFamily = QuickSand, fontSize = 16.sp)
+                    }
                 }
             }
         }
@@ -220,6 +238,7 @@ fun RecommendationView(
     navController: NavController,
     bottomBarLength: Dp
 ) {
+
     val filledStars = floor(announcement.avaliacao).toInt()
     val unfilledStars = (5 - ceil(announcement.avaliacao)).toInt()
     val halfStar = !(announcement.avaliacao.rem(1).equals(0.0))
@@ -241,9 +260,11 @@ fun RecommendationView(
     val date = recommendation.dataHora.toString().split("T")[0].split("-")
     val mouth = mouths[(date[1].toInt() - 1)]
 
-    Column() {
-
-        //TopBar no lugar do card
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -251,54 +272,81 @@ fun RecommendationView(
             backgroundColor = colorResource(id = R.color.eulirio_beige_color_background),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Spacer(modifier = Modifier.padding(vertical = 20.dp))
 
-            Column() {
-                Text(
-                    text = announcement.titulo,
-                    fontFamily = SpartanBold,
-                    modifier = Modifier.padding(top = 60.dp, start = 130.dp),
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "Escrito por ${announcement.usuario[0].userName}",
-                    fontFamily = Spartan,
-                    modifier = Modifier.padding(start = 130.dp),
-                    textAlign = TextAlign.Center
+            Row(
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(announcement.capa),
+                    contentDescription = "capa do livro",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(120.dp)
+                        .padding(12.dp)
+                        .clip(RoundedCornerShape(12.dp))
                 )
 
-                val generos = announcement.generos
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = announcement.titulo,
+                        fontFamily = SpartanBold,
+                        textAlign = TextAlign.Center
+                    )
+                    Row() {
+                        Text(
+                            text = "Escrito por ",
+                            fontSize = 12.sp,
+                            fontFamily = SpartanExtraLight,
+                            fontWeight = FontWeight.W500
+                        )
 
-                LazyRow() {
-                    items(generos) {
-                        Card(
-                            modifier = Modifier
-                                .height(10.dp)
-                                .padding(end = 4.dp)
-                            ,
-                            backgroundColor = colorResource(R.color.eulirio_purple_text_color_border),
-                            shape = RoundedCornerShape(100.dp),
-                        ) {
-                            Text(
-                                text = it.nome,
-                                fontSize = 7.sp,
-                                fontFamily = MontSerratSemiBold,
-                                textAlign = TextAlign.Center,
+                        Text(
+                            text = announcement.usuario[0].nomeUsuario,
+                            fontSize = 12.sp,
+                            fontFamily = SpartanMedium
+                        )
+
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    val generos = announcement.generos
+
+                    LazyRow() {
+                        items(generos) {
+                            Card(
                                 modifier = Modifier
-                                    .padding(12.dp, 1.dp),
-                                color = Color.White
-                            )
+                                    .padding(end = 4.dp)
+                                ,
+                                backgroundColor = colorResource(R.color.eulirio_purple_text_color_border),
+                                shape = RoundedCornerShape(100.dp),
+                            ) {
+                                Text(
+                                    text = it.nome.uppercase(),
+                                    fontSize = 10.sp,
+                                    fontFamily = MontSerratSemiBold,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .padding(12.dp, 1.dp),
+                                    color = Color.White
+                                )
 
+                            }
                         }
                     }
                 }
-
             }
 
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp, bottom = 12.dp)
             ){
 
                 repeat(filledStars) {
@@ -333,65 +381,56 @@ fun RecommendationView(
             }
         }
 
-    }
-
-    Spacer(modifier = Modifier.padding(vertical = 30.dp))
-
-    Column(
-        Modifier.height(1000.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            Modifier.padding(16.dp)
         ) {
-            Row (
-                Modifier.clickable {
-                    navController.navigate("${Routes.User.name}/${announcement.usuario[0].idUsuario}")
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(announcement.usuario[0].foto),
-                    contentDescription = "foto da pessoa",
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 8.dp)
-                        .size(40.dp)
-                        .clip(
-                            CircleShape
-                        ),
-                    contentScale = ContentScale.Crop,
-
-
+                Row (
+                    Modifier.clickable {
+                        navController.navigate("${Routes.User.name}/${announcement.usuario[0].idUsuario}")
+                    }
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(announcement.usuario[0].foto),
+                        contentDescription = "foto da pessoa",
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(40.dp)
+                            .clip(
+                                CircleShape
+                            ),
+                        contentScale = ContentScale.Crop,
                     )
 
-                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = announcement.usuario[0].nomeUsuario,
-                        fontSize = 15.sp,
-                        fontFamily = SpartanMedium,
-                        modifier = Modifier.padding(top = 11.dp)
-                    )
-                    Text(
-                        text = "@${announcement.usuario[0].userName}",
-                        fontSize = 12.sp,
-                        fontFamily = Spartan
-                    )
+                    Column() {
+                        Text(
+                            text = announcement.usuario[0].nomeUsuario,
+                            fontSize = 16.sp,
+                            fontFamily = SpartanMedium,
+                            fontWeight = FontWeight(900)
+                        )
+                        Text(
+                            text = "@${announcement.usuario[0].userName}",
+                            fontSize = 12.sp,
+                            fontFamily = Spartan
+                        )
+                    }
                 }
+
+                Text(text = "${date[2]} $mouth ${date[0]}",
+                    fontFamily = SpartanExtraLight,
+                    textAlign = TextAlign.End,
+                    fontSize = 14.sp)
             }
 
-            Text(text = "${date[2]} $mouth ${date[0]}",
-                modifier = Modifier.padding(start = 160.dp),
-                fontFamily = SpartanExtraLight,
-                textAlign = TextAlign.End,
-                fontSize = 14.sp)
-
-            Spacer(modifier = Modifier.padding(vertical = 12.dp) )
-
-            //sinopse
+            //conteudo da resenha
             Text(text = recommendation.conteudo,
                 fontFamily = QuickSand,
                 fontSize = 12.sp
-
             )
         }
     }
