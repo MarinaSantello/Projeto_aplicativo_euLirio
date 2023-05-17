@@ -1259,7 +1259,9 @@ fun TopBarEbook(
                                 .fillMaxHeight()
                                 .width(32.dp)
                                 .clip(RoundedCornerShape(100.dp))
-                                .clickable { },
+                                .clickable {
+
+                                },
                             tint = if (userAuthor) Color.Transparent else colorResource(
                                 id = R.color.eulirio_black
                             )
