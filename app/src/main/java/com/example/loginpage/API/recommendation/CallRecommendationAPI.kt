@@ -1,6 +1,7 @@
 package com.example.loginpage.API.recommendation
 
 import com.example.loginpage.API.user.RetrofitApi
+import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.Recommendation
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,8 +30,8 @@ class CallRecommendationAPI {
             })
         }
 
-        fun getRecommendationByID(idRecommendation: Int, recommendationData: (Recommendation) -> Unit) {
-            val callRecommendation = recommendationCall.getRecommendationByID(idRecommendation)
+        fun getRecommendationByID(idRecommendation: Int, userID: Int, recommendationData: (Recommendation) -> Unit) {
+            val callRecommendation = recommendationCall.getRecommendationByID(idRecommendation, userID)
 
             callRecommendation.enqueue(object :
                 Callback<List<Recommendation>> {
