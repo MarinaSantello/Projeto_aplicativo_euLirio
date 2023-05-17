@@ -88,6 +88,7 @@ fun PostRecommendationPage(
     }
 
     recommendation.value = Recommendation(
+        id = null,
         conteudo = resenhaState.value,
         userID = userID,
         anuncioID = idAnnouncement,

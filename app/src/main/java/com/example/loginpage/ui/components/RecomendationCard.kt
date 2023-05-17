@@ -51,7 +51,7 @@ fun generateRecommendationCard(
     }
 
     var likeCounter by remember{
-        mutableStateOf(recomendation.curtidas.qtdeCurtidas.toString())
+        mutableStateOf(recomendation.curtidas!!.qtdeCurtidas.toString())
     }
 
     var saveState by remember{
@@ -59,7 +59,7 @@ fun generateRecommendationCard(
     }
 
     var saveCounter by remember{
-        mutableStateOf(recomendation.favoritos.qtdeFavoritos.toString())
+        mutableStateOf(recomendation.favoritos!!.qtdeFavoritos.toString())
     }
 
     var announcement by remember {

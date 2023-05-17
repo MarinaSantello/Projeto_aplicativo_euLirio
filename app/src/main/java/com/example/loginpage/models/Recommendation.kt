@@ -12,11 +12,11 @@ data class Recommendation(
     var anuncioID: Int,
     var spoiler: String,
     @SerializedName("data_hora")
-    var dataHora: String,
-    val curtidas: qtdeCurtidas,
-    var favoritos: qtdeFavoritos,
-    var curtido: Boolean?,
-    var favorito: Boolean?
+    var dataHora: String? = null,
+    val curtidas: qtdeCurtidas? = null,
+    var favoritos: qtdeFavoritos? = null,
+    var curtido: Boolean? = null,
+    var favorito: Boolean? = null
 )
 
 
