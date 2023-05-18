@@ -237,13 +237,32 @@ fun UserHomePage(
                                     textAlign = TextAlign.Center,
                                 )
                             }
-//                            Box(
-//                                Modifier.fillMaxWidth(),
-//                                contentAlignment = Alignment.BottomStart
-//                            ) {
-//                            }
 
                             if (navUserID == userID.idUser) Box(
+                                Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.BottomEnd
+                            ) {Card(
+                                modifier = Modifier
+                                    .padding(end = 40.dp)
+                                    .clickable {
+                                        navController.navigate(Routes.UpdateUser.name)
+                                    },
+                                backgroundColor = colorResource(id = R.color.eulirio_black),
+                                shape = RoundedCornerShape(10.dp),
+                                elevation = 0.dp
+                            ) {
+                                Text(
+                                    text = "EDITAR PERFIL",
+                                    modifier = Modifier.padding(16.dp, 2.dp),
+                                    color = Color.White,
+                                    fontSize = 10.sp,
+                                    fontFamily = MontSerratSemiBold,
+                                    fontWeight = FontWeight.Black,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+                            }
+                            else if(followState) Box(
                                 Modifier.fillMaxWidth(),
                                 contentAlignment = Alignment.BottomEnd
                             ) {
@@ -251,98 +270,71 @@ fun UserHomePage(
                                     modifier = Modifier
                                         .padding(end = 40.dp)
                                         .clickable {
-                                            navController.navigate(Routes.UpdateUser.name)
+                                            followState = !followState
+
+                                            CallFollowAPI.unfollowUser(users[0].idUser, navUserID)
+
+                                            followersState -= 1
                                         },
-                                    backgroundColor = colorResource(id = R.color.eulirio_black),
+                                    backgroundColor = Color.Black,
+                                    border = BorderStroke(
+                                        1.dp,
+                                        Color.Black
+                                    ),
                                     shape = RoundedCornerShape(10.dp),
                                     elevation = 0.dp
                                 ) {
                                     Text(
-                                        text = "EDITAR PERFIL",
-                                        modifier = Modifier.padding(16.dp, 2.dp),
-                                        color = Color.White,
+                                        text = "SEGUINDO",
+                                        modifier = Modifier.padding(24.dp, 2.dp),
                                         fontSize = 10.sp,
                                         fontFamily = MontSerratSemiBold,
                                         fontWeight = FontWeight.Black,
                                         textAlign = TextAlign.Center,
+                                        color = Color.White
+
                                     )
                                 }
                             }
-                            else if (followState) Card(
-                                modifier = Modifier
-                                    .padding(end = 40.dp)
-                                    .clickable {
-                                        followState = !followState
-
-                                        CallFollowAPI.unfollowUser(users[0].idUser, navUserID)
-
-                                        followersState -= 1
-                                    },
-                                backgroundColor = Color.Black,
-                                border = BorderStroke(
-                                    1.dp,
-                                    Color.Black
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                elevation = 0.dp
+                            else Box(
+                                Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.BottomEnd
                             ) {
-                                Text(
-                                    text = "SEGUINDO",
-                                    modifier = Modifier.padding(24.dp, 2.dp),
-                                    fontSize = 10.sp,
-                                    fontFamily = MontSerratSemiBold,
-                                    fontWeight = FontWeight.Black,
-                                    textAlign = TextAlign.Center,
-                                    color = Color.White
+                                Card(
+                                    modifier = Modifier
+                                        .padding(end = 40.dp)
+                                        .clickable {
+                                            followState = !followState
 
-                                )
+                                            val authorFollow = Follow(
+                                                idSegue = users[0].idUser,
+                                                idSeguindo = navUserID
+                                            )
+
+                                            CallFollowAPI.followUser(authorFollow)
+
+                                            followersState += 1
+                                        },
+                                    backgroundColor = Color.Transparent,
+                                    border = BorderStroke(
+                                        1.dp,
+                                        Color.Black
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    elevation = 0.dp,
+
+                                    ) {
+                                    Text(
+                                        text = "SEGUIR",
+                                        modifier = Modifier.padding(24.dp, 2.dp),
+                                        fontSize = 10.sp,
+                                        fontFamily = MontSerratSemiBold,
+                                        fontWeight = FontWeight.Black,
+                                        textAlign = TextAlign.Center,
+                                        color = Color.Black
+                                    )
+                                }
                             }
-//                            Box(
-//                                Modifier.fillMaxWidth(),
-//                                contentAlignment = Alignment.BottomEnd
-//                            ) {
-//
-//                            }
-                            else Card(
-                                modifier = Modifier
-                                    .padding(end = 40.dp)
-                                    .clickable {
-                                        followState = !followState
-
-                                        val authorFollow = Follow(
-                                            idSegue = users[0].idUser,
-                                            idSeguindo = navUserID
-                                        )
-
-                                        CallFollowAPI.followUser(authorFollow)
-
-                                        followersState += 1
-                                    },
-                                backgroundColor = Color.Transparent,
-                                border = BorderStroke(
-                                    1.dp,
-                                    Color.Black
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                elevation = 0.dp,
-
-                                ) {
-                                Text(
-                                    text = "SEGUIR",
-                                    modifier = Modifier.padding(24.dp, 2.dp),
-                                    fontSize = 10.sp,
-                                    fontFamily = MontSerratSemiBold,
-                                    fontWeight = FontWeight.Black,
-                                    textAlign = TextAlign.Center,
-                                    color = Color.Black
-                                )
-                            }
-//                            Box(
-//                                Modifier.fillMaxWidth(),
-//                                contentAlignment = Alignment.BottomEnd
-//                            ) {
-//
-//                            }
                         }
 
                     }
