@@ -246,8 +246,8 @@ fun TabsFeed(
                 }
 
                 CallRecommendationAPI.getRecommendationByUserId(userID){
-                    if(it.isNullOrEmpty()) recomendationIsNull == true
-                    recomendations = it
+                    if(it.isNullOrEmpty()) recomendationIsNull = true
+                    else recomendations = it
                 }
 
                 if (recomendationIsNull) Text(text = "Você não possui recomendações no seu feed por enquanto.")

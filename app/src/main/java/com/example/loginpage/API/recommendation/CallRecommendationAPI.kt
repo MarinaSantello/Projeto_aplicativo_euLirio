@@ -1,5 +1,6 @@
 package com.example.loginpage.API.recommendation
 
+import android.util.Log
 import com.example.loginpage.API.user.RetrofitApi
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.models.Recommendation
@@ -47,7 +48,8 @@ class CallRecommendationAPI {
             })
         }
 
-        fun getRecommendationByUserId(userId: Int, recommendationsData:(List<Recommendation>) -> Unit){
+        fun getRecommendationByUserId(userId: Int, recommendationsData:(List<Recommendation>?) -> Unit){
+            Log.i("porra caralho", userId.toString())
             val callRecommendationsByUserId = recommendationCall.getReccomendationByUserId(userId)
 
             callRecommendationsByUserId.enqueue(object:
@@ -56,13 +58,31 @@ class CallRecommendationAPI {
                     call: Call<List<Recommendation>>,
                     response: Response<List<Recommendation>>
                 ) {
-                    val recommendation = response.body()!!
+                    val recommendation = response.body()
 
                     recommendationsData.invoke(recommendation)
                 }
 
                 override fun onFailure(call: Call<List<Recommendation>>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
+                }
+            }
+            )
+        }
+
+        fun deleteRecommendation(idRecommendation: Int, statusCode: (Int) -> Unit){
+            val callRecommendationsByUserId = recommendationCall.deleteRecommendation(idRecommendation)
+
+            callRecommendationsByUserId.enqueue(object:
+                Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val status = response.code()
+
+                    statusCode.invoke(status)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    //TODO("Not yet implemented")
                 }
             }
             )

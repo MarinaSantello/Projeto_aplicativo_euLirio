@@ -104,8 +104,9 @@ fun generateRecommendationCard(
 
     Column(
         modifier = Modifier
-            .heightIn(min = 200.dp, max = 260.dp)
+            .wrapContentHeight()
             .fillMaxWidth()
+            .padding(bottom = 1.dp)
             .background(Color.White)
             .clickable {
                 navController.navigate("${Routes.Recommendation.name}/${recomendation.id}")
@@ -114,9 +115,8 @@ fun generateRecommendationCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp)
-                .heightIn(200.dp)
-
+                .padding(20.dp)
+//                .heightIn(160.dp)
         ){
             Row(
                 verticalAlignment = Alignment.Top,

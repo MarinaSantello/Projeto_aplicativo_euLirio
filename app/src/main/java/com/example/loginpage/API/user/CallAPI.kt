@@ -50,6 +50,7 @@ class CallAPI() {
             return retorno
         }
         fun getUser(userID: Long, userData: (User) -> Unit) {
+            Log.i("user id", userID.toString())
             if (userID.toInt() != 0) {
                 val retrofit = RetrofitApi.getRetrofit() // pegar a instância do retrofit
                 val userCall = retrofit.create(UserCall::class.java) // instância do objeto contact

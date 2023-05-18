@@ -5,6 +5,7 @@ import com.example.loginpage.constants.Constant
 import com.example.loginpage.models.Recommendation
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -24,5 +25,8 @@ interface RecommendationCall {
     //Listar as recomendações de quem o usuário segue
     @GET("recommendations/user-id/{id}")
     fun getReccomendationByUserId(@Path("id") userID: Int): Call<List<Recommendation>>
+
+    @DELETE("recommendation/id/{id}")
+    fun deleteRecommendation(@Path("id") idRecommendation: Int): Call<String>
 
 }

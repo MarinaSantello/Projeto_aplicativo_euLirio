@@ -1,5 +1,7 @@
 package com.example.loginpage
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
@@ -97,6 +99,8 @@ fun ShowRecommendation(
         recommendation = it
 
         idAnnouncement = it.anuncioID
+
+        userAuthor.value = (it.userID == userID)
     }
 
 
@@ -106,11 +110,10 @@ fun ShowRecommendation(
 
     if (recommendation != null) CallAnnouncementAPI.getAnnouncement(idAnnouncement, userID) {
         announcement = it
-
-        userAuthor.value = (it.usuario[0].idUsuario == userID)
     }
 
     val showDialog = remember { mutableStateOf(false) }
+    val showBar = remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -145,7 +148,8 @@ fun ShowRecommendation(
                                 .width(32.dp)
                                 .clip(RoundedCornerShape(100.dp))
                                 .clickable {
-                                    showDialog.value = true
+                                    if(userAuthor.value) showBar.value = !showBar.value
+                                    else showDialog.value = !showDialog.value
                                 },
                             tint = colorResource(id = R.color.eulirio_black)
                         )
@@ -294,6 +298,34 @@ fun ShowRecommendation(
 
     ComplaintCard(showDialog, userID, idRecommendation, 3) {
         if (it) showDialog.value = false
+    }
+
+    if (showBar.value) {
+        val items = listOf("Apagar recomendação")
+        var selectedItem by remember {
+            mutableStateOf(0)
+        }
+
+        DropdownMenu(
+            expanded = showBar.value,
+            onDismissRequest = {
+                showBar.value = false
+            }
+        ) {
+            items.forEachIndexed { index, item ->
+                DropdownMenuItem(
+                    onClick = {
+                        selectedItem = index
+
+                        if (selectedItem == 0) CallRecommendationAPI.deleteRecommendation(idRecommendation) {
+                            if (it == 200) navController.popBackStack()
+                        }
+                    }
+                ) {
+                    Text(text = item)
+                }
+            }
+        }
     }
 }
 
@@ -457,11 +489,11 @@ fun RecommendationView(
             ) {
                 Row (
                     Modifier.clickable {
-                        navController.navigate("${Routes.User.name}/${announcement.usuario[0].idUsuario}")
+                        navController.navigate("${Routes.User.name}/${recommendation.userID}")
                     }
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(announcement.usuario[0].foto),
+                        painter = rememberAsyncImagePainter(""),
                         contentDescription = "foto da pessoa",
                         modifier = Modifier
                             .padding(end = 8.dp)

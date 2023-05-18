@@ -274,18 +274,6 @@ fun EditDataEbook(
         Log.i("uri mobi", uri.toString())
     }
 
-    CallAnnouncementAPI.getAnnouncement(announcementID, userID) {
-//        capaState = it.capa
-//        pdfState = it.pdf
-//        epubState = it.epub
-//        mobiState = it.mobi ?: ""
-////        titleState = it.titulo
-//        priceState = it.preco.toString()
-//        sinopseState = it.sinopse
-//        volumeState = it.volume.toString()
-//        pagesState = it.qunatidadePaginas.toString()
-//        idParentalRatings = it.classificacao[0].idClassificacao!!
-    }
     if (getName(pdfState.value) != "0") pdfName = getName(pdfState.value).split("||")[1]
     if (getName(epubState.value) != "0") epubName = getName(epubState.value).split("||")[1]
     if (getName(mobiState.value) != "0") mobiName = getName(mobiState.value).split("||")[1]
