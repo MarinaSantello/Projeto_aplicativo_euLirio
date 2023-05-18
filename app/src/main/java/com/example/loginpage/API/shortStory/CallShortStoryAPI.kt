@@ -84,9 +84,13 @@ class CallShortStoryAPI {
                     call: Call<List<ShortStoryGet>>,
                     response: Response<List<ShortStoryGet>>
                 ) {
-                    val ss = response.body()!!
+                    val ss = response.body()
 
-                    ShortStoryData.invoke(ss)
+                    if (ss != null) {
+                        ShortStoryData.invoke(ss)
+                    }else{
+                        ShortStoryData.invoke(emptyList())
+                    }
                 }
 
                 override fun onFailure(call: Call<List<ShortStoryGet>>, t: Throwable) {

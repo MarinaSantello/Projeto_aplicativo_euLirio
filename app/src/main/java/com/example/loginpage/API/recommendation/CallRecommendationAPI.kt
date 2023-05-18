@@ -58,7 +58,12 @@ class CallRecommendationAPI {
                 ) {
                     val recommendation = response.body()!!
 
-                    recommendationsData.invoke(recommendation)
+                    if(recommendation != null){
+                        recommendationsData.invoke(recommendation)
+                    }else{
+                        recommendationsData.invoke(emptyList())
+                    }
+
                 }
 
                 override fun onFailure(call: Call<List<Recommendation>>, t: Throwable) {

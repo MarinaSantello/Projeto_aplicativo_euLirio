@@ -90,7 +90,13 @@ class CallAnnouncementAPI() {
                     val announcements = response.body()!!
 
                     Log.i("anuncios usuario", announcements[0].titulo)
-                    announcementsData.invoke(announcements)
+
+                    if(announcements != null){
+                        announcementsData.invoke(announcements)
+                    }else{
+                        announcementsData.invoke(emptyList())
+                    }
+
                 }
 
                 override fun onFailure(call: Call<List<AnnouncementGet>>, t: Throwable) {
