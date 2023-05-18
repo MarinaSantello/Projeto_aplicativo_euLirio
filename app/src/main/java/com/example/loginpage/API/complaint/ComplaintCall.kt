@@ -27,4 +27,10 @@ interface ComplaintCall {
     @POST("report-user/{id}")
     fun reportUser(@Path("id") idUser: Int, @Body complaintUser: ComplaintUser): Call<String>
 
+
+    /* denuncia de recomendacoes */
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @POST("report-recommendation/{id}")
+    fun reportRecommendation(@Path("id") idUser: Int, @Body complaintUser: ComplaintRecommendation): Call<String>
+
 }
