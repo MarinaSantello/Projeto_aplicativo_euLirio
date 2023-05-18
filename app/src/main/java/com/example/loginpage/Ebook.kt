@@ -58,6 +58,7 @@ import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
 import com.example.loginpage.ui.components.AnnouncementCard
 import com.example.loginpage.ui.components.CommentCard
+import com.example.loginpage.ui.components.ComplaintCard
 import com.example.loginpage.ui.theme.*
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
@@ -129,7 +130,10 @@ fun EbookView(
             TopBarEbook(
                 stringResource(R.string.title_ebook),
                 topBarState,
+                userID,
+                idAnnouncement,
                 context,
+                0,
                 userAuthor.value,
                 navController
             )
@@ -1221,12 +1225,17 @@ fun BottomBarEbook(
 fun TopBarEbook(
     title: String,
     topBarState: MutableState<Boolean>,
+    userID: Int,
+    complaintID: Int,
     context: Context,
+    typeComplaint: Int,
     userAuthor: Boolean,
     navController: NavController
 ) {
 
     val coroutineScope = rememberCoroutineScope()
+
+    val showDialog = remember { mutableStateOf(false) }
     AnimatedVisibility(
         visible = topBarState.value,
         modifier = Modifier.background(Color.Red),
@@ -1260,13 +1269,12 @@ fun TopBarEbook(
                                 .width(32.dp)
                                 .clip(RoundedCornerShape(100.dp))
                                 .clickable {
-
+                                    showDialog.value = true
                                 },
                             tint = if (userAuthor) Color.Transparent else colorResource(
                                 id = R.color.eulirio_black
                             )
                         )
-
                     }
                 },
                 navigationIcon = {
@@ -1291,6 +1299,10 @@ fun TopBarEbook(
             )
         }
     )
+
+    ComplaintCard(showDialog, userID, complaintID, typeComplaint) {
+        if (it) showDialog.value = false
+    }
 }
 
 

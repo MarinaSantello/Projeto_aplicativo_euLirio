@@ -49,6 +49,7 @@ import com.example.loginpage.API.recommendation.CallRecommendationAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.*
+import com.example.loginpage.ui.components.ComplaintCard
 import com.example.loginpage.ui.theme.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -109,6 +110,7 @@ fun ShowRecommendation(
         userAuthor.value = (it.usuario[0].idUsuario == userID)
     }
 
+    val showDialog = remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -142,7 +144,9 @@ fun ShowRecommendation(
                                 .fillMaxHeight()
                                 .width(32.dp)
                                 .clip(RoundedCornerShape(100.dp))
-                                .clickable { },
+                                .clickable {
+                                    showDialog.value = true
+                                },
                             tint = colorResource(id = R.color.eulirio_black)
                         )
 
@@ -270,7 +274,10 @@ fun ShowRecommendation(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(text = saveCounter,
-                                fontFamily = QuickSand, fontSize = 16.sp)
+                                modifier = Modifier.padding(8.dp),
+                                fontFamily = QuickSand,
+                                fontSize = 16.sp
+                            )
                         }
                     }
                 }
@@ -283,6 +290,10 @@ fun ShowRecommendation(
             navController,
             it.calculateBottomPadding()
         )
+    }
+
+    ComplaintCard(showDialog, userID, idRecommendation, 3) {
+        if (it) showDialog.value = false
     }
 }
 

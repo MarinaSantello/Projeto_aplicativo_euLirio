@@ -117,7 +117,7 @@ fun ShortStory(
                 )
             },
         scaffoldState = scaffoldState,
-        topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, context, userAuthor, navController) },
+        topBar = { TopBarEbook(stringResource(R.string.title_short_story), topBarState, userID, shortStoryId, context, 1, userAuthor, navController) },
         bottomBar = { if (shortStory != null) BottomBarShortStory(bottomBarState, context, navController, shortStory!!, userID) },
     ) {
         if (shortStory != null) ShowStories(shortStory!!, it.calculateBottomPadding(), navController, context, deleteState)
