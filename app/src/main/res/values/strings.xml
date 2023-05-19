@@ -122,4 +122,5 @@
     <string name="title_activity_post_commit">PostCommit</string>
     <string name="title_activity_recommendation_page">RecommendationPage</string>
     <string name="title_activity_post_recommendation">PostRecommendation</string>
+    <string name="title_activity_purchased_announcements_user">PurchasedAnnouncementsUser</string>
 </resources>

@@ -26,5 +26,6 @@ enum class Routes {
     CommitAnnPost,
     CommitSSPost,
     RecommendationPost,
-    Recommendation
+    Recommendation,
+    PurchasedAnnouncements
 }

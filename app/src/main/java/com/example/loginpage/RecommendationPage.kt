@@ -66,7 +66,7 @@ class RecommendationPage : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ShowRecommendation(rememberNavController(), 7)
+                    ShowRecommendation(rememberNavController(), 15)
                 }
             }
         }
@@ -148,7 +148,7 @@ fun ShowRecommendation(
                                 .width(32.dp)
                                 .clip(RoundedCornerShape(100.dp))
                                 .clickable {
-                                    if(userAuthor.value) showBar.value = !showBar.value
+                                    if (userAuthor.value) showBar.value = !showBar.value
                                     else showDialog.value = !showDialog.value
                                 },
                             tint = colorResource(id = R.color.eulirio_black)
@@ -218,7 +218,7 @@ fun ShowRecommendation(
                                     .clickable {
                                         likeState = !likeState!!
 
-                                        if(likeState == true){
+                                        if (likeState == true) {
 
                                             var likerRecommendation = likeRecommendation(
                                                 idUsuario = userID,
@@ -229,8 +229,11 @@ fun ShowRecommendation(
                                             var addLikeCounter = likeCounter.toInt() + 1
                                             likeCounter = addLikeCounter.toString()
 
-                                        }else{
-                                            CallLikeAPI.dislikeRecommendation(idRecommendation, userID)
+                                        } else {
+                                            CallLikeAPI.dislikeRecommendation(
+                                                idRecommendation,
+                                                userID
+                                            )
 
                                             var removeLikeCounter = likeCounter.toInt() - 1
                                             likeCounter = removeLikeCounter.toString()
@@ -258,18 +261,23 @@ fun ShowRecommendation(
                                     .clickable {
                                         saveState = !saveState!!
 
-                                        if(saveState == true){
+                                        if (saveState == true) {
                                             var favoriterRecommendation = likeRecommendation(
                                                 idUsuario = userID,
                                                 idRecomendacao = idRecommendation
                                             )
 
-                                            CallFavoriteAPI.favoriteRecommendation(favoriterRecommendation)
+                                            CallFavoriteAPI.favoriteRecommendation(
+                                                favoriterRecommendation
+                                            )
 
                                             var addSaveCounter = saveCounter.toInt() + 1
                                             saveCounter = addSaveCounter.toString()
-                                        }else{
-                                            CallFavoriteAPI.unFavoriteRecommendation(idRecommendation, userID)
+                                        } else {
+                                            CallFavoriteAPI.unFavoriteRecommendation(
+                                                idRecommendation,
+                                                userID
+                                            )
 
                                             var removeSaveCounter = saveCounter.toInt() - 1
                                             saveCounter = removeSaveCounter.toString()
@@ -295,17 +303,26 @@ fun ShowRecommendation(
             it.calculateBottomPadding()
         )
 
-        if (showBar.value) {
-            val items = listOf("Apagar recomendação")
-            var selectedItem by remember {
-                mutableStateOf(0)
-            }
+    }
 
+    if (showBar.value) {
+        val items = listOf("Apagar recomendação")
+        var selectedItem by remember {
+            mutableStateOf(0)
+        }
+
+        Box(
+            Modifier.fillMaxSize().background(Color.Gray),
+            contentAlignment = Alignment.TopEnd
+        ) {
             DropdownMenu(
                 expanded = showBar.value,
                 onDismissRequest = {
                     showBar.value = false
-                }
+                },
+                Modifier
+                    .fillMaxWidth(.75f)
+                    .wrapContentHeight()
             ) {
                 items.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -315,14 +332,14 @@ fun ShowRecommendation(
                             if (selectedItem == 0) CallRecommendationAPI.deleteRecommendation(idRecommendation) {
                                 if (it == 200) navController.popBackStack()
                             }
-                        }
+                        },
+//                    modifier = Modifier
                     ) {
                         Text(text = item)
                     }
                 }
             }
         }
-
     }
 
     ComplaintCard(showDialog, userID, idRecommendation, 3) {

@@ -33,7 +33,7 @@ class CallBuyAPI {
         }
 
         fun getPurchasedAnnouncement(userID: Int, announcementsData: (List<AnnouncementGet>?) -> Unit) {
-            var callBuy = buyCall.getPurchasedAnnouncements(userID)
+            val callBuy = buyCall.getPurchasedAnnouncements(userID)
 
             callBuy.enqueue(object :
                 Callback<List<AnnouncementGet>>{

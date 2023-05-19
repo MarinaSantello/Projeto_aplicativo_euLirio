@@ -111,6 +111,10 @@ fun Greeting() {
             UpdatePage(navController)
         }
 
+        composable(Routes.PurchasedAnnouncements.name) {
+            PurchasedAnnouncementsPage(navController)
+        }
+
         composable(
             "${Routes.User.name}/{itemId}",
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })
