@@ -25,6 +25,9 @@ interface SearchCall {
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("/short-stories-by-genres/user-id/{id}")
     fun searchShortStoriesByGenres(@Body genres: Genres, @Path("id") userID: Int): Call<List<ShortStoryGet>>
+    @Headers("Content-Type:${Constant.CONTENT_TYPE}")
+    @POST("filter-short-stories/")
+    fun filterShortStory(@Body genres: Genres, maxValue: String, @Query("userId") userID: Int, @Query("bestRated") bestRated: String, @Query("shortStorieTitle") shortStoryTitle: String): Call<List<ShortStoryGet>>
 
     /* * * * AUTORES * * * */
     @GET("/user/user-name/")

@@ -34,6 +34,7 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Genero
+import com.example.loginpage.models.Genres
 import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
 import com.example.loginpage.ui.components.GenreCard
@@ -155,7 +156,9 @@ fun Pesquisa(
                         onDone = {
                             focusManager.clearFocus()
 
-                            CallSearchaAPI.searchAnnouncementsByName(searchState.value, userID) {
+                            val genresChecked = Genres(null)
+
+                            CallSearchaAPI.filterAnnouncements(genresChecked, "", "", userID, "", searchState.value) {
                                 if (it.isNullOrEmpty()) announcementIsNull.value = true
                                 else {
                                     announcements.value = it

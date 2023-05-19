@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Genres(
     @SerializedName("nome_genero")
-    var nomesGen: List<GenreSearch>
+    var nomesGen: List<GenreSearch>? = null
 )
 
 data class GenreSearch (
