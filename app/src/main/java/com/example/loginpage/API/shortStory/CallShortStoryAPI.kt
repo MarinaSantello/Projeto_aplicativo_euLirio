@@ -34,7 +34,7 @@ class CallShortStoryAPI {
             })
         }
 
-        fun getShortStoriesByGenreUser(userID: Int, ShortStoryData: (List<ShortStoryGet>) -> Unit) {
+        fun getShortStoriesByGenreUser(userID: Int, ShortStoryData: (List<ShortStoryGet>?) -> Unit) {
             val callShortStories = shortStoryCall.getAllShortStoriesByGenreUser(userID)
 
             callShortStories.enqueue(object :
@@ -43,7 +43,8 @@ class CallShortStoryAPI {
                     call: Call<List<ShortStoryGet>>,
                     response: Response<List<ShortStoryGet>>
                 ) {
-                    val shortStories = response.body()!!
+                    val shortStories = response.body()
+
 
                     ShortStoryData.invoke(shortStories)
                 }
@@ -75,7 +76,7 @@ class CallShortStoryAPI {
             })
         }
 
-        fun getShortStoriesByUser (type: Int, userID: Int, ShortStoryData: (List<ShortStoryGet>) -> Unit) {
+        fun getShortStoriesByUser (type: Int, userID: Int, ShortStoryData: (List<ShortStoryGet>?) -> Unit) {
             val callShortStories = if(type == 1) shortStoryCall.getAllShortStoriesByUserActivated(userID) else shortStoryCall.getAllShortStoriesByUserDeactivated(userID)
 
             callShortStories.enqueue(object :
@@ -86,11 +87,8 @@ class CallShortStoryAPI {
                 ) {
                     val ss = response.body()
 
-                    if (ss != null) {
                         ShortStoryData.invoke(ss)
-                    }else{
-                        ShortStoryData.invoke(emptyList())
-                    }
+
                 }
 
                 override fun onFailure(call: Call<List<ShortStoryGet>>, t: Throwable) {

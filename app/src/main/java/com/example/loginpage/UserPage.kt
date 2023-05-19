@@ -82,6 +82,10 @@ fun UserHomePage(
     val users = userIDRepository.getAll()
     val userID = UserID(id = users[0].id, idUser = users[0].idUser)
 
+    var obras by remember {
+        mutableStateOf("")
+    }
+
     var foto by remember {
         mutableStateOf("")
     }
@@ -125,12 +129,14 @@ fun UserHomePage(
         followersState = it.seguidores!!.qtdSeguidores
         followingState = it.qtdSeguindo!!.qtdeSeguindo
         Log.i("seguindo", it.seguindo.toString())
+        obras = it.obras!!.totalObras
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.eulirio_beige_color_background))
+            .verticalScroll(rememberScrollState())
     ) {
         //Card de informações do usuario
         Card(
@@ -359,7 +365,7 @@ fun UserHomePage(
                             .padding(end = 12.dp)
                     ) {
                         Text(
-                            text = "41",
+                            text = obras,
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.h2,
                             fontWeight = FontWeight.Light,
@@ -576,7 +582,7 @@ fun UserHomePage(
 
                     CallAnnouncementAPI.getAnnouncementsByUser(1, navUserID){
                         if(it.isNullOrEmpty()) announcementIsNull == true
-                        announcements = it
+                        else announcements = it
                     }
 
                     if(navUserID == userID.idUser){
@@ -609,7 +615,9 @@ fun UserHomePage(
 
                     CallShortStoryAPI.getShortStoriesByUser(1, navUserID){
                         if(it.isNullOrEmpty()) shortStoryIsNull == true
-                            shortStory = it
+                        else shortStory = it
+
+
                     }
 
                     if (shortStoryIsNull)
@@ -636,8 +644,14 @@ fun UserHomePage(
                         mutableStateOf(false)
                     }
 
+                    var userIdRecommendation = 0
+
+                    CallAPI.getUser(navUserID.toLong()){
+                        if(it.recomendacoes.isNullOrEmpty()) recomendationIsNull = true
+                       else recomendations = it.recomendacoes!!
 
 
+                    }
 
                     if (recomendationIsNull)
                         Text(text =  if(navUserID == userID.idUser){
