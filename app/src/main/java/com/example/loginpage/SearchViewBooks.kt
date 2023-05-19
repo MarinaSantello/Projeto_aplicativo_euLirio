@@ -295,15 +295,17 @@ fun SearchBooks(navController: NavController) {
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            val options = listOf("mais recentes", "mais lidos")
-                            Row() {
+                            val options = listOf("mais recentes", "melhores avaliações")
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceAround
+                            ) {
                                 options.forEach { item ->
                                     Row(
                                         modifier = Modifier.selectable(
                                             selected = selectedValue == item,
                                             onClick = {
                                                 selectedValue = item
-//                                    onSelectionChanged(item)
                                             }
                                         ),
                                         verticalAlignment = Alignment.CenterVertically
@@ -312,10 +314,18 @@ fun SearchBooks(navController: NavController) {
                                             selected = if (options[0] == item && selectedValue.isEmpty()) true else selectedValue == item,
                                             onClick = {
                                                 selectedValue = item
-//                                    onSelectionChanged(item)
-                                            }
+                                            },
+                                            colors = RadioButtonDefaults.colors(
+                                                selectedColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                                unselectedColor = Color.LightGray,
+                                                disabledColor = Color.LightGray
+                                            )
                                         )
-                                        Text(item)
+                                        Text(
+                                            text = item.uppercase(),
+                                            fontWeight = FontWeight.W500,
+                                            fontSize = 12.sp
+                                        )
                                     }
                                 }
                             }

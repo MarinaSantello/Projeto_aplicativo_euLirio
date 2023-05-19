@@ -92,7 +92,8 @@ fun PostRecommendationPage(
         conteudo = resenhaState.value,
         userID = userID,
         anuncioID = idAnnouncement,
-        spoiler = switchCheckedState.value.toString()
+        spoiler = switchCheckedState.value.toString(),
+        usuario = null
     )
 
     var announcement by remember {

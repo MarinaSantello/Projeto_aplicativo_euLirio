@@ -16,7 +16,15 @@ data class Recommendation(
     val curtidas: qtdeCurtidas? = null,
     var favoritos: qtdeFavoritos? = null,
     var curtido: Boolean? = null,
-    var favorito: Boolean? = null
+    var favorito: Boolean? = null,
+    var usuario: List<UserRecommendation>?
+)
+
+data class UserRecommendation (
+    @SerializedName("user_name")
+    var userName: String,
+    var nome: String,
+    var foto: String
 )
 
 

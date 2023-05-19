@@ -494,7 +494,7 @@ fun RecommendationView(
                     }
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(""),
+                        painter = rememberAsyncImagePainter(recommendation.usuario?.get(0)?.foto ?: ""),
                         contentDescription = "foto da pessoa",
                         modifier = Modifier
                             .padding(end = 8.dp)
@@ -507,13 +507,13 @@ fun RecommendationView(
 
                     Column() {
                         Text(
-                            text = announcement.usuario[0].nomeUsuario,
+                            text = recommendation.usuario?.get(0)?.nome ?: "",
                             fontSize = 16.sp,
                             fontFamily = SpartanMedium,
                             fontWeight = FontWeight(900)
                         )
                         Text(
-                            text = "@${announcement.usuario[0].userName}",
+                            text = "@${recommendation.usuario?.get(0)?.userName ?: ""}",
                             fontSize = 12.sp,
                             fontFamily = Spartan
                         )
