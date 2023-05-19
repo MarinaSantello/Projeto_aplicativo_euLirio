@@ -294,38 +294,39 @@ fun ShowRecommendation(
             navController,
             it.calculateBottomPadding()
         )
+
+        if (showBar.value) {
+            val items = listOf("Apagar recomendação")
+            var selectedItem by remember {
+                mutableStateOf(0)
+            }
+
+            DropdownMenu(
+                expanded = showBar.value,
+                onDismissRequest = {
+                    showBar.value = false
+                }
+            ) {
+                items.forEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedItem = index
+
+                            if (selectedItem == 0) CallRecommendationAPI.deleteRecommendation(idRecommendation) {
+                                if (it == 200) navController.popBackStack()
+                            }
+                        }
+                    ) {
+                        Text(text = item)
+                    }
+                }
+            }
+        }
+
     }
 
     ComplaintCard(showDialog, userID, idRecommendation, 3) {
         if (it) showDialog.value = false
-    }
-
-    if (showBar.value) {
-        val items = listOf("Apagar recomendação")
-        var selectedItem by remember {
-            mutableStateOf(0)
-        }
-
-        DropdownMenu(
-            expanded = showBar.value,
-            onDismissRequest = {
-                showBar.value = false
-            }
-        ) {
-            items.forEachIndexed { index, item ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedItem = index
-
-                        if (selectedItem == 0) CallRecommendationAPI.deleteRecommendation(idRecommendation) {
-                            if (it == 200) navController.popBackStack()
-                        }
-                    }
-                ) {
-                    Text(text = item)
-                }
-            }
-        }
     }
 }
 
