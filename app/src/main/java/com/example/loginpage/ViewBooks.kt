@@ -227,7 +227,7 @@ fun TabsFeed(
 
                 //CallShortStoryAPI.getShortStories {
                 CallShortStoryAPI.getShortStoriesByGenreUser(userID) {
-                    shortStory = it
+                    shortStory = it!!
                 }
 
                 LazyColumn(

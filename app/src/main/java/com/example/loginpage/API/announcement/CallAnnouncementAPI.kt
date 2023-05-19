@@ -77,7 +77,7 @@ class CallAnnouncementAPI() {
             })
         }
 
-        fun getAnnouncementsByUser(type: Int, announcementID: Int, announcementsData: (List<AnnouncementGet>) -> Unit) {
+        fun getAnnouncementsByUser(type: Int, announcementID: Int, announcementsData: (List<AnnouncementGet>?) -> Unit) {
             val callAnnouncements = if(type == 1) announcementCall.getAllAnnouncementsByUserActivated(announcementID) else announcementCall.getAllAnnouncementsByUserDeactivated(announcementID)
 
             Log.i("id anuncio", announcementID.toString())
@@ -87,15 +87,9 @@ class CallAnnouncementAPI() {
                     call: Call<List<AnnouncementGet>>,
                     response: Response<List<AnnouncementGet>>
                 ) {
-                    val announcements = response.body()!!
+                    val announcements = response.body()
+                    announcementsData.invoke(announcements)
 
-                    Log.i("anuncios usuario", announcements[0].titulo)
-
-                    if(announcements != null){
-                        announcementsData.invoke(announcements)
-                    }else{
-                        announcementsData.invoke(emptyList())
-                    }
 
                 }
 

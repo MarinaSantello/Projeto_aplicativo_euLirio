@@ -168,7 +168,7 @@ fun TabsUserStories(
                             Log.i("id anuncio $i", announcementsUser[i].id.toString())
 
                             CallAnnouncementAPI.getAnnouncementsByUser(1, userID) {
-                                announcement = it
+                                announcement = it!!
                             }
 //
                             if (announcement.isNotEmpty()) AnnouncementCard(announcement[i], userID, navController, 2, true, true)
@@ -207,7 +207,7 @@ fun TabsUserStories(
                             Log.i("id anuncio $i", shortStoriesUser[i].id.toString())
 
                             CallShortStoryAPI.getShortStoriesByUser(1, userID) {
-                                shortStories = it
+                                shortStories = it!!
                             }
 
                             if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID, true, true)
@@ -296,12 +296,17 @@ fun TabsUserStories(
                         mutableStateOf(listOf<AnnouncementGet>())
                     }
 
+                    var announcementIsNull by remember {
+                        mutableStateOf(false)
+                    }
+
                     if (announcementsUser.isNotEmpty()) Column() {
                         for (i in 0..announcementSize) {
                             Log.i("id anuncio $i", announcementsUser[i].id.toString())
 
                             CallAnnouncementAPI.getAnnouncementsByUser(0, userID) {
-                                announcement = it
+                                if(it.isNullOrEmpty()) announcementIsNull = true
+                                else announcement = it
                             }
 
                             if (announcement.isNotEmpty()) AnnouncementCard(
@@ -346,7 +351,12 @@ fun TabsUserStories(
                             Log.i("id anuncio $i", shortStoriesUser[i].id.toString())
 
                             CallShortStoryAPI.getShortStoriesByUser(0, userID) {
-                                shortStories = it
+                                if(it.isNullOrEmpty()){
+                                    shortStoriesIsNull = true
+                                }else{
+                                    shortStories = it
+                                }
+
                             }
 
                             if (shortStories.isNotEmpty()) ShortStorysCard(shortStories[i], navController, userID, true, true)

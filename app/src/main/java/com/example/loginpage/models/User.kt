@@ -37,7 +37,12 @@ data class User(
 
     var seguidores: QTDSeguidores? = null,
     @SerializedName("qtde_seguindo")
-    var qtdSeguindo: QTDSeguindo? = null
+    var qtdSeguindo: QTDSeguindo? = null,
+
+    var recomendacoes: List<Recommendation>? = null,
+
+    var obras: Obras? = null
+
 ) {
     override fun toString(): String {
         return super.toString()
@@ -69,6 +74,11 @@ data class Tag (
     var idTag: Int = 0,
     @SerializedName("nome_tag")
     var nomeTag: String = ""
+)
+
+data class Obras(
+    @SerializedName("total_obras")
+    var totalObras: String = ""
 )
 
 data class Genero (
