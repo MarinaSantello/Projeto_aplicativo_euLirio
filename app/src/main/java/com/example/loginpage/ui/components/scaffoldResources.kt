@@ -104,11 +104,6 @@ fun TopBar(
                                 .width(40.dp)
                                 .clip(RoundedCornerShape(100.dp))
                         )
-
-//                        Icon(
-//                            Icons.Filled.Menu,
-//                            contentDescription = "Localized description"
-//                        )
                     }
                 },
                 backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_beige_color_background),
@@ -366,6 +361,8 @@ fun DrawerDesign(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
+                            navController.navigate(Routes.PurchasedAnnouncements.name)
+
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
                             }
@@ -377,7 +374,7 @@ fun DrawerDesign(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            Icons.Filled.ShoppingBag,
+                            Icons.Filled.CollectionsBookmark,
                             contentDescription = "Icone de sacola de compras",
                             modifier = Modifier
                                 .padding(end = 10.dp)
@@ -385,7 +382,7 @@ fun DrawerDesign(
                             tint = colorResource(id = com.example.loginpage.R.color.eulirio_black)
                         )
                         Text(
-                            text = "MEUS E-BOOKS",
+                            text = "ESTANTE",
                             fontSize = 16.sp,
                             fontFamily = Montserrat2,
                             color = colorResource(id = com.example.loginpage.R.color.eulirio_black),
@@ -402,9 +399,6 @@ fun DrawerDesign(
                         .clickable {
                             navController.navigate(Routes.UserStories.name)
 
-//                            val intent = Intent(context, UserStories::class.java)
-//
-//                            context.startActivity(intent)
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
                             }
@@ -425,40 +419,6 @@ fun DrawerDesign(
                         )
                         Text(
                             text = "MINHAS OBRAS",
-                            fontSize = 16.sp,
-                            fontFamily = Montserrat2,
-                            color = colorResource(id = com.example.loginpage.R.color.eulirio_black),
-                            fontWeight = FontWeight.Black
-                        )
-                    }
-
-                }
-
-                //Card clicavel para o usuario adquirir a conta premium
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            coroutineScope.launch {
-                                scaffoldState.drawerState.close()
-                            }
-                        },
-                    backgroundColor = colorResource(id = com.example.loginpage.R.color.eulirio_light_yellow_background),
-                    elevation = 0.dp
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Filled.WorkspacePremium,
-                            contentDescription = "Icone de premium",
-                            modifier = Modifier
-                                .padding(end = 10.dp)
-                                .height(50.dp),
-                            tint = colorResource(id = com.example.loginpage.R.color.eulirio_black)
-                        )
-                        Text(
-                            text = "LÍRIO PLUS",
                             fontSize = 16.sp,
                             fontFamily = Montserrat2,
                             color = colorResource(id = com.example.loginpage.R.color.eulirio_black),

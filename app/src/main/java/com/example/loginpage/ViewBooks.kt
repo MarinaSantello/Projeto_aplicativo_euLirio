@@ -109,6 +109,9 @@ fun ShowBooks(
 
             //Layout das publicacoes lidas
             6 -> TabsUserPubLidas(userID, bottomBarLength, navController)
+
+            //Layout dos livros comprados
+            7 -> PurchasedAnnouncementsView(userID, bottomBarLength, navController)
         }
     }
 

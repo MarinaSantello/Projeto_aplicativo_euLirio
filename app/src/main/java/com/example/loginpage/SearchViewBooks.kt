@@ -445,7 +445,7 @@ fun SearchBooks(navController: NavController) {
                         Button(onClick = {
                             val genresChecked = Genres(genres)
 
-                            CallSearchaAPI.filterAnnouncements(genresChecked, if (minValue.isEmpty()) "0" else minValue.replace(',', '.'), maxValue.replace(',', '.'), userID.idUser) {
+                            CallSearchaAPI.filterAnnouncements(genresChecked, if (minValue.isEmpty()) "0" else minValue.replace(',', '.'), maxValue.replace(',', '.'), userID.idUser, if (selectedValue == "melhores avaliacoes") "true" else "", searchState.value) {
                                 if (it.isNullOrEmpty()) announcementIsNull.value = true
                                 else {
                                     announcements.value = it
