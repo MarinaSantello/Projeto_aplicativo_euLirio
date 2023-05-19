@@ -157,7 +157,6 @@ fun Pesquisa(
                             focusManager.clearFocus()
 
                             val genresChecked = Genres(null)
-
                             CallSearchaAPI.filterAnnouncements(genresChecked, "", "", userID, "", searchState.value) {
                                 if (it.isNullOrEmpty()) announcementIsNull.value = true
                                 else {
