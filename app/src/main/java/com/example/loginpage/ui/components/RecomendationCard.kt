@@ -1,5 +1,6 @@
 package com.example.loginpage.ui.components
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,6 +48,7 @@ import com.example.loginpage.ui.theme.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun generateRecommendationCard(
     recomendation: Recommendation,
@@ -184,13 +187,32 @@ fun generateRecommendationCard(
 
                 }
             }else{
+
+                var textOverflow by remember { mutableStateOf(false) }
+
+
                 Text(
                     text = recomendation.conteudo,
                     fontSize = 10.sp,
                     fontFamily = QuickSand,
                     maxLines = 5,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = {textLayoutResult ->
+                        textOverflow = textLayoutResult.hasVisualOverflow
+                    }
                 )
+                if(textOverflow){
+                    Text(
+                        text = "Ver Mais",
+                        fontSize = 12.sp,
+                        fontFamily = SpartanBold,
+                        color = colorResource(com.example.loginpage.R.color.eulirio_purple_text_color_border)
+                    )
+                }
+
+
+
+
             }
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -212,7 +234,7 @@ fun generateRecommendationCard(
                         .clickable {
                             likeState = !likeState!!
 
-                            if(likeState == true){
+                            if (likeState == true) {
 
                                 var likerRecommendation = likeRecommendation(
                                     idUsuario = userID,
@@ -223,7 +245,7 @@ fun generateRecommendationCard(
                                 var addLikeCounter = likeCounter.toInt() + 1
                                 likeCounter = addLikeCounter.toString()
 
-                            }else{
+                            } else {
                                 CallLikeAPI.dislikeRecommendation(recomendation.id!!, userID)
 
                                 var removeLikeCounter = likeCounter.toInt() - 1
@@ -265,7 +287,7 @@ fun generateRecommendationCard(
                         .clickable {
                             saveState = !saveState!!
 
-                            if(saveState == true){
+                            if (saveState == true) {
                                 var favoriterRecommendation = likeRecommendation(
                                     idUsuario = userID,
                                     idRecomendacao = recomendation.id
@@ -275,7 +297,7 @@ fun generateRecommendationCard(
 
                                 var addSaveCounter = saveCounter.toInt() + 1
                                 saveCounter = addSaveCounter.toString()
-                            }else{
+                            } else {
                                 CallFavoriteAPI.unFavoriteRecommendation(recomendation.id!!, userID)
 
                                 var removeSaveCounter = saveCounter.toInt() - 1
