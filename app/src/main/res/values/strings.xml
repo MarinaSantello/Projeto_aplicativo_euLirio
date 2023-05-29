@@ -123,4 +123,5 @@
     <string name="title_activity_recommendation_page">RecommendationPage</string>
     <string name="title_activity_post_recommendation">PostRecommendation</string>
     <string name="title_activity_purchased_announcements_user">PurchasedAnnouncementsUser</string>
+    <string name="title_activity_dashboard_page">DashboardPage</string>
 </resources>
