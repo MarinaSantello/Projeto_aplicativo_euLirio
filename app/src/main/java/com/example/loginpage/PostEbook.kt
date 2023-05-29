@@ -114,7 +114,7 @@ fun PostDataEbook(navController: NavController) {
         mutableStateOf(listOf<Classificacao>())
     }
     var idParentalRatings by remember {
-        mutableStateOf(13)
+        mutableStateOf(1)
     }
 
     var showDialog by remember {

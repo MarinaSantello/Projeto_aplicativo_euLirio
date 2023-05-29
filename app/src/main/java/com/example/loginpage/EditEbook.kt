@@ -70,7 +70,7 @@ var pagesState: MutableState<String> = mutableStateOf("")
 var pdfState: MutableState<String> = mutableStateOf("")
 var epubState: MutableState<String> = mutableStateOf("")
 var mobiState: MutableState<String> = mutableStateOf("")
-var idParentalRatings: MutableState<Int> = mutableStateOf(13)
+var idParentalRatings: MutableState<Int> = mutableStateOf(1)
 var statusState: MutableState<Int?> = mutableStateOf(null)
 
 fun addDataAnnouncement(userID: Int, announcementID: Int): Unit {
@@ -636,7 +636,7 @@ fun EditDataEbook(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = parentalRatings[idParentalRatings.value - 13].classificacao,
+                            text = parentalRatings[idParentalRatings.value].classificacao,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(4.dp, 10.dp)
                         )
