@@ -199,7 +199,8 @@ fun UpdatePage(
 
         Card(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             backgroundColor = colorResource(id = R.color.eulirio_yellow_card_background),
             shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)
         ) {
@@ -347,7 +348,7 @@ fun UpdatePage(
                         TextField(
                             value = biographyState,
                             modifier = Modifier
-                                .heightIn(160.dp)
+                                .heightIn(160.dp, 240.dp)
                                 .fillMaxWidth(),
                             onValueChange = {
                                 biographyState = it
@@ -493,7 +494,9 @@ fun UpdatePage(
                         )
 
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(136.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.Bottom
                         ) {
@@ -898,5 +901,3 @@ fun UpdatePage(
         }
     }
 }
-
-
