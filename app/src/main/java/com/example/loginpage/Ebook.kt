@@ -32,6 +32,7 @@ import androidx.compose.ui.input.key.Key.Companion.Calendar
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ import com.example.loginpage.API.cart.CallCartAPI
 import com.example.loginpage.API.comment.CallCommentAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.stripe.CallStripeAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
 import com.example.loginpage.SQLite.dao.repository.UserIDrepository
@@ -193,6 +195,10 @@ fun ShowEbook(
     }
 
     var quantidadeViewsState by remember {
+        mutableStateOf("")
+    }
+
+    var urlStripeState by remember{
         mutableStateOf("")
     }
 
@@ -641,6 +647,9 @@ fun ShowEbook(
                         }
                     }
 
+
+
+                    //Para efetuar a compra do anuncio
                     if (!announcement.carrinho) Card(
                         modifier = Modifier
                             .fillMaxSize()
@@ -661,6 +670,22 @@ fun ShowEbook(
 
                                     navController.navigate("${Routes.Ebook.name}/${announcement?.id}")
                                 }
+
+
+
+//                                var idAnnounceToBuy = IdBuy(
+//                                    id = announcement.id!!
+//                                )
+//
+//                                val buyAtStripe = BuyAnnouncement(
+//                                  idAnuncio = idAnnounceToBuy
+//                                )
+//
+//                                CallStripeAPI.buyAnnouncementStripe(userID, buyAtStripe){
+//                                    Log.i("url", it.url)
+//                                    urlStripeState = it.url
+//
+//                                }
 
                             },
                         shape = RoundedCornerShape(0.dp),
@@ -685,7 +710,6 @@ fun ShowEbook(
                 }
             }
         }
-
 
 //        Spacer(modifier = Modifier.padding(vertical = 20.dp))
 

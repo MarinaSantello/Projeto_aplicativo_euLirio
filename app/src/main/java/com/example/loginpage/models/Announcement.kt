@@ -101,3 +101,16 @@ data class CountAnnouncementSales (
     @SerializedName("quantidade_compras")
     var qtdeCompras: String
 )
+
+data class BuyAnnouncement(
+    @SerializedName("id_anuncio")
+    var idAnuncio: List<IdBuy>
+
+)
+data class IdBuy(
+    var id: Int
+)
+
+
+
+

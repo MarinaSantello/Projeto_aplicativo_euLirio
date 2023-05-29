@@ -70,6 +70,8 @@ class CallFollowAPI() {
             return retorno
         }
 
+
+
         fun getFollowers(userID: Int, currentUser: Int, followersData: (List<UserFollow>?) -> Unit) {
             Log.i("pesquisado", userID.toString())
             Log.i("pesquisando", currentUser.toString())
