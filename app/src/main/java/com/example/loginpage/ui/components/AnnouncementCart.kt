@@ -86,7 +86,7 @@ fun AnnouncementCart(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.fillMaxWidth()) {
-                    val files = listOf("PDF", "ePUB", if (announcement.mobi != "null") "MOBI" else "",)
+                    val files = listOf("PDF", "ePUB", if (announcement.mobi != "undefined") "MOBI" else "",)
 
                     Text(text = announcement.titulo,
                         fontFamily = SpartanBold,

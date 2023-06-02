@@ -15,4 +15,5 @@ interface CallStripe {
     @POST("intent-buy/user-id/{id}")
     fun callUrlStripe(@Path("id") userID: Int, @Body AnnouncementId: BuyAnnouncement): retrofit2.Call<UrlStripe>
 
+
 }

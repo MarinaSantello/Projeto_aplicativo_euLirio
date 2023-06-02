@@ -1,13 +1,17 @@
 package com.example.loginpage
 
+import android.app.appsearch.AppSearchResult.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -51,6 +55,7 @@ import com.example.loginpage.API.cart.CallCartAPI
 import com.example.loginpage.API.comment.CallCommentAPI
 import com.example.loginpage.API.favorite.CallFavoriteAPI
 import com.example.loginpage.API.like.CallLikeAPI
+import com.example.loginpage.API.recommendation.CallRecommendationAPI
 import com.example.loginpage.API.stripe.CallStripeAPI
 import com.example.loginpage.API.user.CallAPI
 import com.example.loginpage.API.visualization.CallVisualizationAPI
@@ -581,6 +586,30 @@ fun ShowEbook(
         }
 
         if (!userAuthor) {
+
+            var stripeId by remember {
+                mutableStateOf("")
+            }
+
+            val resultLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == RESULT_OK) {
+                }
+
+                navController.navigate(Routes.PurchasedAnnouncements.name)
+
+                val confirmBuy = BuyConfirm(
+                    anuncioID = idAnnouncement!!,
+                    userID = userID!!,
+                    stripeID = stripeId
+                )
+
+                CallBuyAPI.confirmBuyAnnouncement(confirmBuy){
+
+                }
+            }
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -655,12 +684,11 @@ fun ShowEbook(
                             .fillMaxSize()
                             .clickable {
                                 val buy = Buy(
-                                    anuncioID = idAnnouncement!!,
-                                    userID = userID
+                                    anuncioID = idAnnouncement!!
                                 )
 
-                                CallBuyAPI.buyAnnouncement(buy) {
-                                    if (it == 201) Toast
+                                CallBuyAPI.buyAnnouncement(userID, buy) {
+                                    if (!it.url.isNullOrEmpty()) Toast
                                         .makeText(
                                             context,
                                             "Compra realizada.",
@@ -668,9 +696,14 @@ fun ShowEbook(
                                         )
                                         .show()
 
-                                    navController.navigate("${Routes.Ebook.name}/${announcement?.id}")
-                                }
+                                    val urlIntent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(it.url)
+                                    )
 
+                                    stripeId = it.intentId
+                                    resultLauncher.launch(urlIntent)
+                                }
 
 
 //                                var idAnnounceToBuy = IdBuy(
@@ -1051,6 +1084,28 @@ fun BottomBarEbook(
 ) {
     val context = LocalContext.current
 
+    var stripeId by remember {
+        mutableStateOf("")
+    }
+
+    val resultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+        }
+
+        navController.navigate(Routes.PurchasedAnnouncements.name)
+
+        val confirmBuy = BuyConfirm(
+            anuncioID = idAnnouncement!!,
+            userID = userID!!,
+            stripeID = stripeId
+        )
+        CallBuyAPI.confirmBuyAnnouncement(confirmBuy){
+
+        }
+    }
+
     var idAnuncio = 0
 
     idAnnouncement?.let {
@@ -1202,20 +1257,27 @@ fun BottomBarEbook(
                                 .fillMaxSize()
                                 .clickable {
                                     val buy = Buy(
-                                        anuncioID = idAnnouncement!!,
-                                        userID = userID
+                                        anuncioID = idAnnouncement!!
                                     )
 
-                                    CallBuyAPI.buyAnnouncement(buy) {
-                                        if (it == 201) Toast
-                                            .makeText(
-                                                context,
-                                                "Compra realizada.",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
+                                    CallBuyAPI.buyAnnouncement(userID, buy) {
+                                        if (!it.url.isNullOrEmpty()) {
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    "Compra realizada.",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
 
-                                        navController.navigate("${Routes.Ebook.name}/${announcement?.id}")
+                                            val urlIntent = Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse(it.url)
+                                            )
+
+                                            stripeId = it.intentId
+                                            resultLauncher.launch(urlIntent)
+                                        }
                                     }
                                 },
                             shape = RoundedCornerShape(0.dp),
