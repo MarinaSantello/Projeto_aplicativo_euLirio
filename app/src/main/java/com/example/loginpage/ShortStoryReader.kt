@@ -109,7 +109,7 @@ fun ScreenBuilder(
             },
         scaffoldState = scaffoldState,
         topBar = {
-            TopBar(shortStory, context, navController)
+            TopBar(shortStory, navController)
         },
         bottomBar = {
             BottomBar(shortStory)
@@ -126,40 +126,39 @@ fun ScreenBuilder(
         }
     }
 }
-@Composable
-fun PageRender(htmlText: String) {
-    var likeState by remember {
-        mutableStateOf(false)
-    }
-
-    var saveState by remember {
-        mutableStateOf(false)
-    }
-
-    var viewState by remember {
-        mutableStateOf(false)
-    }
-
-    Column(
-        Modifier
-            .fillMaxSize()
-//            .zIndex(0f)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        visibility.value = !visibility.value
-                    }
-                )
-            },
-    ) {
-    }
-
-}
+//@Composable
+//fun PageRender(htmlText: String) {
+//    var likeState by remember {
+//        mutableStateOf(false)
+//    }
+//
+//    var saveState by remember {
+//        mutableStateOf(false)
+//    }
+//
+//    var viewState by remember {
+//        mutableStateOf(false)
+//    }
+//
+//    Column(
+//        Modifier
+//            .fillMaxSize()
+////            .zIndex(0f)
+//            .pointerInput(Unit) {
+//                detectTapGestures(
+//                    onTap = {
+//                        visibility.value = !visibility.value
+//                    }
+//                )
+//            },
+//    ) {
+//    }
+//
+//}
 
 @Composable
 fun TopBar(
     shortStory: ShortStoryGet,
-    context: Context,
     navController: NavController
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -181,7 +180,7 @@ fun TopBar(
                             Text(
                                 text = stringResource(R.string.title_short_story).uppercase(),
                                 modifier = Modifier
-                                    .fillMaxWidth(.82f),
+                                    .fillMaxWidth(),
 //                                .padding(end = 44.dp),
                                 color = colorResource(id = R.color.eulirio_black),
                                 textAlign = TextAlign.Center,
@@ -189,16 +188,16 @@ fun TopBar(
                                 fontSize = 20.sp
                             )
 
-                            Icon(
-                                Icons.Rounded.MoreVert,
-                                contentDescription = "botao de menu",
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 20.dp)
-                                    .fillMaxSize(.9f)
-                                    .clip(RoundedCornerShape(100.dp))
-                                    .clickable { },
-                                tint = colorResource(id = R.color.eulirio_black)
-                            )
+//                            Icon(
+//                                Icons.Rounded.MoreVert,
+//                                contentDescription = "botao de menu",
+//                                modifier = Modifier
+//                                    .padding(start = 8.dp, end = 20.dp)
+//                                    .fillMaxSize(.9f)
+//                                    .clip(RoundedCornerShape(100.dp))
+//                                    .clickable { },
+//                                tint = colorResource(id = R.color.eulirio_black)
+//                            )
                         }
                     },
                     navigationIcon = {
@@ -363,6 +362,9 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                             )
                                             CallLikeAPI.likeShortStorie(shortStorieLike)
 
+                                            var newUnViewConvert = quantidadeLikesState.toInt() + 1
+                                            quantidadeLikesState = newUnViewConvert.toString()
+
                                         } else {
 
                                             var shortStorieUnLike = LikeShortStorie(
@@ -370,12 +372,10 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                                 idUsuario = userID
                                             )
                                             CallLikeAPI.dislikeShortStorie(shortStorieUnLike)
-                                        }
 
-                                        CallLikeAPI.countShortStoriesLikes(shortStory.id!!) {
-                                            quantidadeLikesState = it.qtdeCurtidas
+                                            var newUnViewConvert = quantidadeLikesState.toInt() - 1
+                                            quantidadeLikesState = newUnViewConvert.toString()
                                         }
-
                                     }
                             ) {
 
@@ -421,6 +421,9 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                             CallFavoriteAPI.unfavoriteShortStorie(
                                                 favoriteShortStorieUnCheck
                                             )
+
+                                            var newUnViewConvert = quantidadeFavoritosState.toInt() - 1
+                                            quantidadeFavoritosState = newUnViewConvert.toString()
                                         } else {
                                             val favoriteShortStorieCheck = FavoriteShortStorie(
                                                 idHistoriaCurta = shortStory.id!!,
@@ -429,10 +432,9 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                             CallFavoriteAPI.favoriteShortStorie(
                                                 favoriteShortStorieCheck
                                             )
-                                        }
 
-                                        CallFavoriteAPI.countFavoritesShortStories(shortStory.id!!) {
-                                            quantidadeFavoritosState = it.qtdeFavoritos
+                                            var newUnViewConvert = quantidadeFavoritosState.toInt() + 1
+                                            quantidadeFavoritosState = newUnViewConvert.toString()
                                         }
                                     }
                             ) {
@@ -474,6 +476,9 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                             )
                                             CallVisualizationAPI.unViewShortStorie(unViewShortStorie)
 
+                                            var newUnViewConvert = quantidadeViewsState.toInt() - 1
+                                            quantidadeViewsState = newUnViewConvert.toString()
+
                                         } else {
                                             val viewShortStorie = VisualizationShortStorie(
                                                 idHistoriaCurta = shortStory.id!!,
@@ -481,9 +486,8 @@ fun BottomBar(shortStory: ShortStoryGet) {
                                             )
                                             CallVisualizationAPI.viewShortStorie(viewShortStorie)
 
-                                        }
-                                        CallVisualizationAPI.countViewShortStorie(shortStory.id!!){
-                                            quantidadeViewsState = it.qtdeLidos
+                                            var newUnViewConvert = quantidadeViewsState.toInt() + 1
+                                            quantidadeViewsState = newUnViewConvert.toString()
                                         }
                                     }
                             ) {

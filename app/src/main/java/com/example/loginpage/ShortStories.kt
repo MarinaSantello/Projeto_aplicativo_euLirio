@@ -515,7 +515,7 @@ fun ShowStories(
 
         Column (
             Modifier
-                .heightIn(500.dp)
+                .heightIn(550.dp)
                 .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = bottomBarLength)
         ) {
             Row (
@@ -583,9 +583,10 @@ fun ShowStories(
             }
 
             //sinopse
-            Column(modifier = Modifier. padding(15.dp)) {
+            Column(modifier = Modifier. padding(8.dp)) {
                 Text(
                     text = shortStory.sinopse,
+                    fontSize = 14.sp,
                     fontFamily = QuickSand,
                     textAlign = TextAlign.Justify,
                     modifier = Modifier.padding(8.dp)

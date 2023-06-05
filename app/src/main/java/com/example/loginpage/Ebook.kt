@@ -748,7 +748,7 @@ fun ShowEbook(
 
         Column(
             Modifier
-                .heightIn(500.dp)
+                .heightIn(550.dp)
                 .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = bottomBarLength)
 //                .verticalScroll(rememberScrollState())
         ) {
@@ -932,9 +932,9 @@ fun ShowEbook(
 
                 Text(
                     text = announcement.sinopse,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     fontFamily = QuickSand,
-                    modifier = Modifier.padding(start = 12.dp)
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp)
 
                 )
                 Spacer(modifier = Modifier.height(20.dp))
