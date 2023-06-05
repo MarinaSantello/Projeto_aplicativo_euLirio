@@ -363,7 +363,6 @@ fun SearchBooks(navController: NavController) {
                                 verticalAlignment = Alignment.Bottom,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 16.dp)
                             ) {
                                 TextField(
                                     value = minValue,
@@ -394,7 +393,14 @@ fun SearchBooks(navController: NavController) {
                                     ),
                                     modifier = Modifier
                                         .width(120.dp)
-                                        .padding(end = 12.dp)
+                                        .padding(end = 12.dp),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        textColor = Color.Black,
+                                        backgroundColor = Color.Transparent,
+                                        cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                        focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
+                                    )
                                 )
 
                                 TextField(
@@ -430,6 +436,13 @@ fun SearchBooks(navController: NavController) {
                                         onDone = {
                                             focusManager.clearFocus()
                                         }
+                                    ),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        textColor = Color.Black,
+                                        backgroundColor = Color.Transparent,
+                                        cursorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                        focusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border),
+                                        unfocusedIndicatorColor = colorResource(id = R.color.eulirio_purple_text_color_border)
                                     )
                                 )
                             }
@@ -445,8 +458,9 @@ fun SearchBooks(navController: NavController) {
                     ) {
                         Button(onClick = {
                             val genresChecked = Genres(genres)
+                            Log.i("hmkk", selectedValue)
 
-                            CallSearchaAPI.filterAnnouncements(genresChecked, if (minValue.isEmpty()) "0" else minValue.replace(',', '.'), maxValue.replace(',', '.'), userID.idUser, if (selectedValue == "melhores avaliacoes") "true" else "", searchState.value) {
+                            CallSearchaAPI.filterAnnouncements(genresChecked, if (minValue.isEmpty()) "0" else minValue.replace(',', '.'), maxValue.replace(',', '.'), userID.idUser, if (selectedValue == "melhores avaliações") "true" else "", searchState.value) {
                                 if (it.isNullOrEmpty()) announcementIsNull.value = true
                                 else {
                                     announcements.value = it
@@ -456,7 +470,7 @@ fun SearchBooks(navController: NavController) {
                                 menuState.value = !menuState.value
                             }
 
-                            CallSearchaAPI.filterShortStory(genresChecked, userID.idUser, if (selectedValue == "melhores avaliacoes") "true" else "", searchState.value) {
+                            CallSearchaAPI.filterShortStory(genresChecked, userID.idUser, if (selectedValue == "melhores avaliações") "true" else "", searchState.value) {
                                 if (it.isNullOrEmpty()) shortStoryIsNull.value = true
                                 else {
                                     shortStories.value = it
@@ -531,6 +545,7 @@ fun TopBarSearch(
                                     color = Color.Black,
                                     shape = RoundedCornerShape(20.dp)
                                 )
+                                .clip(RoundedCornerShape(20.dp))
                         ) {
                             TextField(
                                 value = searchState.value,
@@ -590,7 +605,8 @@ fun TopBarSearch(
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedIndicatorColor = Color.Transparent
                                 ),
-                                textStyle = TextStyle(fontSize = 8.sp)
+                                textStyle = TextStyle(fontSize = 8.sp),
+                                shape = RoundedCornerShape(20.dp)
 
                             )
 
@@ -728,7 +744,7 @@ fun TabsFeedSearch(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text(
-                        text = "Não existem livros com esse nome.",
+                        text = "Não existem livros com esse nome ou gênero.",
                         textAlign = TextAlign.Center,
                         fontFamily = MontSerratBold
                     )
@@ -749,7 +765,7 @@ fun TabsFeedSearch(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text(
-                        text = "Não existem pequenas histórias com esse nome.",
+                        text = "Não existem pequenas histórias com esse nome ou gênero.",
                         textAlign = TextAlign.Center,
                         fontFamily = MontSerratBold
                     )

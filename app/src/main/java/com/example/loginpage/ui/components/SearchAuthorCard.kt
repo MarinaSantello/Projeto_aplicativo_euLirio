@@ -109,7 +109,10 @@ fun GenerateAuthorCard(
                             Text(
                                 text = autor.nome,
                                 fontFamily = SpartanBold,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth(.4f),
+                                maxLines = 1
                             )
 
                             Spacer(modifier = Modifier.height(2.dp))

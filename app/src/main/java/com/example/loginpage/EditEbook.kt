@@ -622,9 +622,6 @@ fun EditDataEbook(
             }
 
             if (parentalRatings.isNotEmpty()) Box (Modifier.padding(top = 8.dp)) {
-                val hmkk = parentalRatings[idParentalRatings.value - 1].classificacao
-                Log.i("hmkk", hmkk)
-
                 Card(modifier = Modifier
                     .clickable { expanded = true }
                     .fillMaxWidth(),

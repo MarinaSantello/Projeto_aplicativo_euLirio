@@ -2,6 +2,7 @@ package com.example.loginpage.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -64,17 +65,22 @@ fun GenerateGenresCards(onChecked: (Boolean, Int) -> Unit){
         ) {
 
             repeat(rows) { rowIndex ->
+                var checkGenre by rememberSaveable() {
+                    mutableStateOf(false)
+                }
+
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            checkGenre = !checkGenre
+
+                            onChecked.invoke(checkGenre, generos[rowIndex].idGenero)
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     (rowIndex * 3..(rowIndex * 3) + 2).forEachIndexed { colIndex, itemIndex ->
                         if (itemIndex < generos.size) {
-                            var checkGenre by rememberSaveable() {
-                                mutableStateOf(false)
-                            }
-
                             Row(
                                 modifier = Modifier.weight(1f),
                                 verticalAlignment = Alignment.CenterVertically,
