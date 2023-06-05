@@ -8,8 +8,8 @@ import retrofit2.http.*
 interface SearchCall {
 
     /* * * * ANUNCIOS * * * */
-    @GET("announcements/announcement-title/")
-    fun searchAnnouncementsByName(@Query("announcementTitle") announcementTitle: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
+//    @GET("announcements/announcement-title/")
+//    fun searchAnnouncementsByName(@Query("announcementTitle") announcementTitle: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
     @GET("announcements/genre-name/")
     fun searchAnnouncementsByGenre(@Query("genreName") genreName: String, @Query("userId") userID: Int): Call<List<AnnouncementGet>>
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
@@ -27,7 +27,7 @@ interface SearchCall {
     fun searchShortStoriesByGenres(@Body genres: Genres, @Path("id") userID: Int): Call<List<ShortStoryGet>>
     @Headers("Content-Type:${Constant.CONTENT_TYPE}")
     @POST("filter-short-stories/")
-    fun filterShortStory(@Body genres: Genres, maxValue: String, @Query("userId") userID: Int, @Query("bestRated") bestRated: String, @Query("shortStorieTitle") shortStoryTitle: String): Call<List<ShortStoryGet>>
+    fun filterShortStory(@Body genres: Genres, @Query("userId") userID: Int, @Query("bestRated") bestRated: String, @Query("shortStorieTitle") shortStoryTitle: String): Call<List<ShortStoryGet>>
 
     /* * * * AUTORES * * * */
     @GET("/user/user-name/")

@@ -96,7 +96,7 @@ fun TabsUserPubFavoritas(
     //= rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
-    val tabs = listOf("Livros", "Pequenas Histórias", "Recomendações")
+    val tabs = listOf("Livros", "Pequenas Histórias")
 
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -109,7 +109,7 @@ fun TabsUserPubFavoritas(
             tabs.forEachIndexed { index, title ->
                 Tab(
                     text = {
-                        val icons = listOf(Icons.Outlined.MenuBook, Icons.Outlined.FormatAlignCenter, Icons.Outlined.LocalLibrary)
+                        val icons = listOf(Icons.Outlined.MenuBook, Icons.Outlined.FormatAlignCenter)
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -130,14 +130,8 @@ fun TabsUserPubFavoritas(
                     },
                     selectedContentColor = colorResource(id = R.color.eulirio_purple_text_color_border),
                     unselectedContentColor = Color.Black,
-//                    selected = tabIndex.currentPage == index,
                     selected = tabIndex == index,
                     onClick = { tabIndex = index },
-//                    onClick = {
-//                        coroutineScope.launch {
-//                            tabIndex.animateScrollToPage(index)
-//                        }
-//                    },
                 )
             }
         }
@@ -205,7 +199,6 @@ fun TabsUserPubFavoritas(
                     }
                 }
             }
-            2 -> Text(text = "Recomendacoes")
         }
     }
 }

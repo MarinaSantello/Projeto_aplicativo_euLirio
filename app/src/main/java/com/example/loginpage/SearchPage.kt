@@ -34,6 +34,7 @@ import com.example.loginpage.SQLite.dao.repository.UserIDrepository
 import com.example.loginpage.SQLite.model.UserID
 import com.example.loginpage.constants.Routes
 import com.example.loginpage.models.Genero
+import com.example.loginpage.models.GenreSearch
 import com.example.loginpage.models.Genres
 import com.example.loginpage.resources.BottomBarScaffold
 import com.example.loginpage.resources.DrawerDesign
@@ -70,6 +71,8 @@ class SearchPage : ComponentActivity() {
 @Composable
 fun SearchPage(navController: NavController) {
 
+    val menuState = remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
@@ -102,7 +105,7 @@ fun SearchPage(navController: NavController) {
 //
 //        drawerGesturesEnabled = true,
     ) {it
-        Pesquisa(navController, userID.idUser)
+        Pesquisa(navController, menuState, userID.idUser)
     }
 
     if (!fabState.value) ButtonsPost(navController, context, 72.dp, fabState) {
@@ -113,6 +116,7 @@ fun SearchPage(navController: NavController) {
 @Composable
 fun Pesquisa(
     navController: NavController,
+    menuState: MutableState<Boolean>,
     userID: Int
 ) {
 
@@ -165,7 +169,7 @@ fun Pesquisa(
                                 }
                             }
 
-                            CallSearchaAPI.searchShortStoriesByName(searchState.value, userID) {
+                            CallSearchaAPI.filterShortStory(genresChecked, userID, "", searchState.value) {
                                 if (it.isNullOrEmpty()) shortStoryIsNull.value = true
                                 else {
                                     shortStories.value = it
@@ -245,17 +249,35 @@ fun Pesquisa(
                 items = genres
             ) {gen ->
                 GenreCard(gen, colorResource(id = R.color.eulirio_purple_text_color_border), false){
-                    if (it) CallSearchaAPI.searchPubByGenre(gen.nomeGenero, userID) { announcementGets, shortStoryGets ->
-                        if (announcementGets.isNullOrEmpty()) announcementIsNull.value = true
-                        else {
-                            announcements.value = announcementGets
-                            announcementIsNull.value = false
+                    if (it) {
+                        CallSearchaAPI.filterAnnouncements(
+                            Genres(listOf(GenreSearch(gen.nomeGenero))),
+                            "",
+                            "",
+                            userID,
+                            "",
+                            ""
+                        ) {ann ->
+                            if (ann.isNullOrEmpty()) announcementIsNull.value = true
+                            else {
+                                announcements.value = ann
+                                announcementIsNull.value = false
+                            }
+
+                            menuState.value = !menuState.value
                         }
 
-                        if (shortStoryGets.isNullOrEmpty()) shortStoryIsNull.value = true
-                        else {
-                            shortStories.value = shortStoryGets
-                            shortStoryIsNull.value = false
+                        CallSearchaAPI.filterShortStory(
+                            Genres(listOf(GenreSearch(gen.nomeGenero))),
+                            userID,
+                            "",
+                            ""
+                        ) {ss ->
+                            if (ss.isNullOrEmpty()) shortStoryIsNull.value = true
+                            else {
+                                shortStories.value = ss
+                                shortStoryIsNull.value = false
+                            }
                         }
 
                         searchState.value = gen.nomeGenero

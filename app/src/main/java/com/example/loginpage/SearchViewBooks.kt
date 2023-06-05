@@ -77,7 +77,6 @@ import kotlinx.coroutines.launch
 //}
 
 var bottomBarState: MutableState<Boolean> = mutableStateOf(true)
-var menuState: MutableState<Boolean> = mutableStateOf(false)
 var searchState: MutableState<String> = mutableStateOf("")
 var announcements: MutableState<List<AnnouncementGet>> = mutableStateOf(listOf())
 var announcementIsNull: MutableState<Boolean> = mutableStateOf(false)
@@ -88,6 +87,8 @@ var authorsIsNull: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
 fun SearchBooks(navController: NavController) {
+
+    val menuState = remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -107,7 +108,7 @@ fun SearchBooks(navController: NavController) {
         modifier = Modifier
             .fillMaxSize(),
         scaffoldState = scaffoldState,
-        topBar = { TopBarSearch(userID, scaffoldState, topBarState, fabVisibility, tabIndex) },
+        topBar = { TopBarSearch(userID, scaffoldState, topBarState, fabVisibility, menuState, tabIndex) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             if (fabState.value && fabVisibility.value) {
@@ -455,7 +456,7 @@ fun SearchBooks(navController: NavController) {
                                 menuState.value = !menuState.value
                             }
 
-                            CallSearchaAPI.searchShortStoriesByGenres(genresChecked, userID.idUser) {
+                            CallSearchaAPI.filterShortStory(genresChecked, userID.idUser, if (selectedValue == "melhores avaliacoes") "true" else "", searchState.value) {
                                 if (it.isNullOrEmpty()) shortStoryIsNull.value = true
                                 else {
                                     shortStories.value = it
@@ -488,6 +489,7 @@ fun TopBarSearch(
     scaffoldState: ScaffoldState,
     state: MutableState<Boolean>,
     fabVisibility: MutableState<Boolean>,
+    menuState: MutableState<Boolean>,
     tabIndex: MutableState<Int>
 ) {
 
@@ -552,10 +554,8 @@ fun TopBarSearch(
                                     onDone = {
                                         focusManager.clearFocus()
 
-                                        CallSearchaAPI.searchAnnouncementsByName(
-                                            searchState.value,
-                                            userID.idUser
-                                        ) {
+                                        val genresChecked = Genres(null)
+                                        CallSearchaAPI.filterAnnouncements(genresChecked, "", "", userID.idUser, "", searchState.value) {
                                             if (it.isNullOrEmpty()) announcementIsNull.value = true
                                             else {
                                                 announcements.value = it
@@ -563,10 +563,7 @@ fun TopBarSearch(
                                             }
                                         }
 
-                                        CallSearchaAPI.searchShortStoriesByName(
-                                            searchState.value,
-                                            userID.idUser
-                                        ) {
+                                        CallSearchaAPI.filterShortStory(genresChecked, userID.idUser, "", searchState.value) {
                                             if (it.isNullOrEmpty()) shortStoryIsNull.value = true
                                             else {
                                                 shortStories.value = it
