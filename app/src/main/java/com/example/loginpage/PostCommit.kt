@@ -521,7 +521,7 @@ fun CommitDataSS (
 
 
     val context = LocalContext.current
-    if(titleState.value.isEmpty()){
+    if(titleState.value.isEmpty() && clickButton.value){
         emptySpaceTitle.value = true
         titleFocusRequester.requestFocus()
 
@@ -536,7 +536,7 @@ fun CommitDataSS (
         maxSpaceTitle.value = false
     }
 
-    if(avaliacaoState.value.isEmpty()){
+    if(avaliacaoState.value.isEmpty() && clickButton.value) {
         emptySpaceResenha.value = true
         sinopseFocusRequester.requestFocus()
     }else{
@@ -550,11 +550,7 @@ fun CommitDataSS (
         maxSpaceResenha.value = false
     }
 
-    if(rating.value == 0){
-        emptySpaceAvaliaton.value = true
-    }else{
-        emptySpaceAvaliaton.value = false
-    }
+    emptySpaceAvaliaton.value = rating.value == 0 && clickButton.value
 
 
 
