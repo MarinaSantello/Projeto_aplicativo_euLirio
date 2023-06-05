@@ -39,6 +39,24 @@ class CallBuyAPI {
             })
         }
 
+        fun buyAnnouncementsByCarrinho(idUser: Int, listAnnouncement: BuyAnnouncement, urlData: (UrlStripe) -> Unit){
+            val callBuyAnnouncementsByCarrinho = buyCall.buyAnnouncementsCarrinho(idUser, listAnnouncement)
+
+            callBuyAnnouncementsByCarrinho.enqueue(object:
+            Callback<UrlStripe>{
+                override fun onResponse(call: Call<UrlStripe>, response: Response<UrlStripe>) {
+                    val status = response.body()!!
+
+                    urlData.invoke(status)
+                }
+                override fun onFailure(call: Call<UrlStripe>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            }
+            )
+        }
+
+
         fun confirmBuyAnnouncement(buyInfos: BuyConfirm, receiveData:(StripeConfirmed) -> Unit){
             val callConfirmBuy = buyCall.confirmBuyAnnouncement(buyInfos)
 
@@ -63,7 +81,28 @@ class CallBuyAPI {
             )
         }
 
+        fun confirmBuyAnnouncementsCarrinho(idConfirm:ConfirmBuyCarrinho, receiveData: (StripeConfirmed) -> Unit){
+            val callConfirmBuyAnnouncementCarrinho = buyCall.confirmBuyAnnouncementsCarrinho(idConfirm)
 
+            callConfirmBuyAnnouncementCarrinho.enqueue(object:
+                Callback<StripeConfirmed>{
+                override fun onResponse(
+                    call: Call<StripeConfirmed>,
+                    response: Response<StripeConfirmed>
+                ) {
+                    val status = response.body()!!
+
+                    receiveData.invoke(status)
+
+                    Log.i("Nice Compra no carrinho irmão", response.code()!!.toString())
+                }
+
+                override fun onFailure(call: Call<StripeConfirmed>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            }
+            )
+        }
 
         fun getPurchasedAnnouncement(userID: Int, announcementsData: (List<AnnouncementGet>?) -> Unit) {
             val callBuy = buyCall.getPurchasedAnnouncements(userID)

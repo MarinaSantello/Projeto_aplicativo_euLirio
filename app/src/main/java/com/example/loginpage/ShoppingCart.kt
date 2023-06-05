@@ -1,11 +1,16 @@
 package com.example.loginpage
 
+import android.app.appsearch.AppSearchResult.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -45,6 +50,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.loginpage.API.announcement.CallAnnouncementAPI
+import com.example.loginpage.API.buy.CallBuyAPI
 import com.example.loginpage.API.cart.CallCartAPI
 import com.example.loginpage.API.shortStory.CallShortStoryAPI
 import com.example.loginpage.API.user.CallAPI
@@ -107,6 +113,11 @@ fun ShowItemsCart(
     bottomBarLength: Dp,
     navController: NavController
 ) {
+
+    var stripeId by remember {
+        mutableStateOf("")
+    }
+
     val context = LocalContext.current
 
     var tabIndex by remember { mutableStateOf(0) }
@@ -159,6 +170,32 @@ fun ShowItemsCart(
                 var cartIsNull by remember {
                     mutableStateOf(false)
                 }
+
+                val resultLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult()
+                ) { result ->
+                    if (result.resultCode == RESULT_OK) {
+                    }
+
+                    val data = IdBuyStripe(
+                        id = stripeId
+                    )
+
+                    val dataConfirm = ObjectBuy(
+                        objeto = data
+                    )
+
+                    val buyCarrinho = ConfirmBuyCarrinho(
+                        data = dataConfirm
+                    )
+
+                    CallBuyAPI.confirmBuyAnnouncementsCarrinho(buyCarrinho){
+
+                    }
+
+                    navController.navigate(Routes.PurchasedAnnouncements.name)
+                }
+
 
                 CallCartAPI.getItemsCart(userID) {
                     if (it == null) cartIsNull = true
@@ -250,11 +287,18 @@ fun ShowItemsCart(
                                         announcements += CartItems(element.anuncioID)
                                     }
 
-                                    val buyItems = Cart(
+                                    val buyItemsCart = BuyAnnouncement(
                                         idAnuncio = announcements
                                     )
-                                    CallCartAPI.buyItemsCart(userID, buyItems) {
-                                        Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+
+                                    CallBuyAPI.buyAnnouncementsByCarrinho(userID, buyItemsCart){
+                                        val urlIntent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(it.url)
+                                        )
+
+                                        stripeId = it.intentId
+                                        resultLauncher.launch(urlIntent)
                                     }
                                 },
                                     modifier = Modifier

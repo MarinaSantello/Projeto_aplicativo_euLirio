@@ -104,12 +104,10 @@ data class CountAnnouncementSales (
 
 data class BuyAnnouncement(
     @SerializedName("id_anuncio")
-    var idAnuncio: List<IdBuy>
+    var idAnuncio: List<CartItems>
 
 )
-data class IdBuy(
-    var id: Int
-)
+
 
 
 

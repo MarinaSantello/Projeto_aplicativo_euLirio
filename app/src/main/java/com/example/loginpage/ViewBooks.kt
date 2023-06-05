@@ -225,10 +225,17 @@ fun TabsFeed(
                     mutableStateOf(listOf<ShortStoryGet>())
                 }
 
+                var shortStoryIsNull by remember {
+                    mutableStateOf(false)
+                }
+
                 //CallShortStoryAPI.getShortStories {
                 CallShortStoryAPI.getShortStoriesByGenreUser(userID) {
-                    shortStory = it!!
+                   if(it.isNullOrEmpty()) shortStoryIsNull = true
+                    else shortStory = it
                 }
+
+                if (shortStoryIsNull) Text(text = "Você não possui historias curtas no seu feed por enquanto.")
 
                 LazyColumn(
                     state = scrollState,
