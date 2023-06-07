@@ -989,18 +989,6 @@ fun EditDataEbook(
                     .fillMaxWidth()
                     .height(40.dp)
                     .clickable {
-//                        if (capaUri != null) {
-//                        } else capaCheck = true
-
-//                        if (pdfUri != null) {
-//                        } else pdfCheck = true
-
-//                        if (epubUri != null) {
-//                        } else epubCheck = true
-//
-//                        if (mobiUri != null) {
-//                        } else mobiCheck = true
-
                         //Verificação se o titulo está vazio
                         if (titleState.value.isEmpty()) {
                             checkTitle = true
