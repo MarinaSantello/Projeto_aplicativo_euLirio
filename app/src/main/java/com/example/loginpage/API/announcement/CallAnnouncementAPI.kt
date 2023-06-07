@@ -45,9 +45,9 @@ class CallAnnouncementAPI() {
                     response: Response<List<AnnouncementGet>>
                 ) {
 
-                    val announcement = response.body()!![0]
+                    val announcement = response.body()?.get(0)
 
-                    announcementData.invoke(announcement)
+                    if (announcement != null) announcementData.invoke(announcement)
 
                 }
 
@@ -124,6 +124,7 @@ class CallAnnouncementAPI() {
             Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     val status = response.code()
+                    Log.i("apagar", status.toString())
 
                     statusCode.invoke(status)
                 }
