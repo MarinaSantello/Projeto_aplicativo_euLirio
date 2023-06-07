@@ -17,20 +17,21 @@ fun BarChart(
     star: Int,
     percent: Double
 ) {
-    val widthInDp = with(LocalDensity.current) { percent.dp }
-
     Row (
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(text = "$star" + if (star > 1) " estrelas" else " estrela",
+        Text(
+            text = "$star" + if (star > 1) " estrelas" else " estrela",
+            modifier = Modifier
+                .width(62.dp),
             fontFamily = SpartanExtraLight
         )
 
         Box(
             modifier = Modifier
                 .width(200.dp)
-                .height(20.dp)
+                .height(16.dp)
                 .padding(start = 8.dp)
                 .background(
                     colorResource(id = R.color.eulirio_grey_background),
@@ -55,7 +56,7 @@ fun BarChart(
         Text(text = "$percent%",
             modifier = Modifier
                 .width(52.dp)
-                .padding(start = 8.dp))
+        )
 
     }
 }

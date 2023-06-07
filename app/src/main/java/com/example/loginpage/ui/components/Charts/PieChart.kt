@@ -70,9 +70,9 @@ fun PieChart(
         animationPlayed = true
     }
 
-    Column(
+    Row(
         modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Box(
             modifier = androidx.compose.ui.Modifier.size(animateSize.dp),
@@ -80,7 +80,7 @@ fun PieChart(
         ){
             Canvas(
                 modifier = androidx.compose.ui.Modifier
-                    .size(radiusDuter * 2f)
+                    .size(radiusDuter * 1.2f)
                     .rotate(animateRotation)
             ){
                 floatValue.forEachIndexed{index, value ->
@@ -112,7 +112,7 @@ fun DetailsPieChart(
 ){
     Column(
         modifier = androidx.compose.ui.Modifier
-            .padding(top = 60.dp)
+            .padding(top = 20.dp)
             .fillMaxWidth()
     ) {
 
@@ -130,12 +130,11 @@ fun DetailsPieChart(
 @Composable
 fun DetailsPieChartItem(
     data: Pair<String, Int>,
-    height: Dp = 45.dp,
     color: Color
 ){
     Surface(
         modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 30.dp),
+            .padding(vertical = 8.dp, horizontal = 30.dp),
         color = Color.Transparent
     ) {
         Row(
@@ -149,7 +148,7 @@ fun DetailsPieChartItem(
                         color = color,
                         shape = RoundedCornerShape(10.dp)
                     )
-                    .size(height),
+                    .size(36.dp),
 
                 )
 
@@ -158,14 +157,14 @@ fun DetailsPieChartItem(
                     modifier = Modifier.padding(start = 15.dp),
                     text = data.first,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 22.sp,
+                    fontSize = 18.sp,
                     color = Color.Black
                 )
                 Text(
                     modifier = Modifier.padding(start = 15.dp),
-                    text = data.second.toString(),
+                    text = "${data.second}%",
                     fontWeight = FontWeight.Medium,
-                    fontSize = 22.sp,
+                    fontSize = 16.sp,
                     color = Color.Gray
                 )
             }

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarHalf
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -25,25 +26,24 @@ import kotlin.math.floor
 
 @Composable
 fun DashCommentCard(
+    avaliacao: Double,
+    charts: List<Double>
 ) {
-    val avaliacao = 3.2
-    val charts = listOf(12.5, 75.4, 0.5, 1.6, 5.0)
-
     val filledStars = floor(avaliacao).toInt()
     val unfilledStars = (5 - ceil(avaliacao)).toInt()
     val halfStar = !(avaliacao.rem(1).equals(0.0))
 
-    Card(
-        modifier = Modifier.wrapContentSize()
-    ) {
-
-    }
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         //Sistema de avaliação
-        Row() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             repeat(filledStars) {
                 Icon(
                     imageVector = Icons.Outlined.Star,
@@ -74,26 +74,21 @@ fun DashCommentCard(
                 )
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Text(text = "(${avaliacao})".replace('.', ','))
-
         }
 
         Text(
-            text = "ytfh de 5,0",
-            modifier = Modifier.padding(start= 16.dp,  top = 14.dp),
+            text = "$avaliacao de 5,0",
             fontFamily = SpartanBold,
-            fontSize = 20.sp
+            fontSize = 18.sp
         )
 
     }
 
-    Spacer(Modifier.height(20.dp))
+    Spacer(Modifier.height(16.dp))
 
     for (i in charts.indices) {
-        BarChart(star = 3, percent = charts[i])
+        BarChart(star = 5 - i, percent = charts[i])
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(8.dp))
     }
 }

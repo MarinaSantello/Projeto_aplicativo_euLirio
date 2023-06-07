@@ -11,24 +11,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.loginpage.models.Dias
 import kotlin.math.ceil
 
 
 @Composable
 fun CreateLineChart (
     maxValue: Int,
-    dates: List<String>,
+    dates: List<Dias>,
     percent: List<Double>
 ) {
-    val maxChartValue = ((maxValue/5) + 1) * 5
-    val step = maxChartValue/5
-    var value = maxChartValue
+//    val maxChartValue = ((maxValue/5) + 1) * 5
+    val step = maxValue/5
+    var value = maxValue
     var height = 20
 
     var width = 200
 
     var htmlFontStyle =
-        "<body>\n" +
+        "<div>\n" +
                 "    <div class=\"slds-p-top--medium\">\n" +
                 "        <div>\n" +
                 "            <svg version=\"1.2\" class=\"quiz-graph\">\n" +
@@ -44,7 +45,24 @@ fun CreateLineChart (
                 "                <g class=\"x-labels\">\n"
 
     for (i in dates.indices) {
-        htmlFontStyle += "<text x=\"$width\" y=\"530\">${dates[i]}</text>\n"
+        val mouths = listOf(
+            "Jan.",
+            "Fev.",
+            "Mar.",
+            "Abr.",
+            "Mai.",
+            "Jun.",
+            "Jul.",
+            "Ago.",
+            "Set.",
+            "Out.",
+            "Nov.",
+            "Dez."
+        )
+        val date = dates[i].dataCompra.split("T")[0].split("-")
+        val mouth = mouths[(date[1].toInt() - 1)]
+
+        htmlFontStyle += "<text x=\"$width\" y=\"530\">${date[2]} $mouth</text>\n"
 
         width += 100
     }
@@ -104,42 +122,38 @@ fun CreateLineChart (
                 "            </svg>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
-                "\n" +
                 "    <style>\n" +
                 "        .quiz-graph {\n" +
                 "            height: 570px;\n" +
                 "            width: 100%;\n" +
                 "        }\n" +
-                "\n" +
                 "        .quiz-graph .x-labels {\n" +
                 "            text-anchor: middle;\n" +
-                "        }\n" +
-                "\n" +
+                "            font-size: 24px;\n" +
+                "        }" +
                 "        .quiz-graph .y-labels {\n" +
                 "            text-anchor: end;\n" +
+                "            font-size: 24px;\n" +
                 "        }\n" +
-                "\n" +
                 "        .quiz-graph .quiz-graph-grid {\n" +
                 "            stroke: #ccc;\n" +
                 "            stroke-dasharray: 0;\n" +
                 "            stroke-width: 1;\n" +
                 "        }\n" +
-                "\n" +
                 "        .label-title {\n" +
                 "            text-anchor: middle;\n" +
                 "            text-transform: uppercase;\n" +
-                "            font-size: 24px;\n" +
+                "            font-size: 48px;\n" +
                 "            margin: 12px;" +
-                "            fill: gray;\n" +
+                "            fill: #1E1E1E;\n" +
                 "        }\n" +
-                "\n" +
                 "        .quiz-graph-dot, .quiz-graph-start-dot{\n" +
                 "            fill: #381871;\n" +
                 "            stroke-width: 2;\n" +
                 "            stroke: white;\n" +
                 "        }\n" +
                 "    </style>\n" +
-                "</body>"
+                "</div>"
 
     WebViewComponent(htmlCode = htmlFontStyle)
 }
