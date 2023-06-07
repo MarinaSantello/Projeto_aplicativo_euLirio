@@ -65,24 +65,24 @@ fun GenerateGenresCards(onChecked: (Boolean, Int) -> Unit){
         ) {
 
             repeat(rows) { rowIndex ->
-                var checkGenre by rememberSaveable() {
-                    mutableStateOf(false)
-                }
-
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            checkGenre = !checkGenre
-
-                            onChecked.invoke(checkGenre, generos[rowIndex].idGenero)
-                        },
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     (rowIndex * 3..(rowIndex * 3) + 2).forEachIndexed { colIndex, itemIndex ->
                         if (itemIndex < generos.size) {
+                            var checkGenre by rememberSaveable() {
+                                mutableStateOf(false)
+                            }
+
                             Row(
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier.weight(1f)
+                                    .clickable {
+                                        checkGenre = !checkGenre
+
+                                        onChecked.invoke(checkGenre, generos[itemIndex].idGenero)
+                                    },
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Start
                             ) {
@@ -115,14 +115,4 @@ fun GenerateGenresCards(onChecked: (Boolean, Int) -> Unit){
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
 }
