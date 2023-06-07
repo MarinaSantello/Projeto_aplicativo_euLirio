@@ -508,6 +508,8 @@ fun CommitDataSS (
     avaliacaoState: MutableState<String>,
     switchCheckedState: MutableState<Boolean>,
 ) {
+    clickButton.value = false
+
     //Focus Requesters
     val titleFocusRequester = remember{
         FocusRequester()
