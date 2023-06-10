@@ -209,7 +209,20 @@ fun TabsFeed(
                     else announcements = it
                 }
 
-                if (announcementIsNull) Text(text = "Você não possui livros no seu feed por enquanto.")
+                if (announcementIsNull){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Text(
+                            text = "Não existem livros em seu feed por enquanto.",
+                            textAlign = TextAlign.Center,
+                            fontFamily = MontSerratBold
+                        )
+                    }
+                }
 
                 else LazyColumn(
                     state = scrollState,
@@ -235,7 +248,20 @@ fun TabsFeed(
                     else shortStory = it
                 }
 
-                if (shortStoryIsNull) Text(text = "Você não possui historias curtas no seu feed por enquanto.")
+                if (shortStoryIsNull) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Text(
+                            text = "Não existem histórias curtas em seu feed por enquanto.",
+                            textAlign = TextAlign.Center,
+                            fontFamily = MontSerratBold
+                        )
+                    }
+                }
 
                 LazyColumn(
                     state = scrollState,
@@ -260,7 +286,20 @@ fun TabsFeed(
                     else recomendations = it
                 }
 
-                if (recomendationIsNull) Text(text = "Você não possui recomendações no seu feed por enquanto.")
+                if (recomendationIsNull){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Text(
+                            text = "Não existem recomendações em seu feed por enquanto.",
+                            textAlign = TextAlign.Center,
+                            fontFamily = MontSerratBold
+                        )
+                    }
+                }
 
                 LazyColumn(
                     state = scrollState,

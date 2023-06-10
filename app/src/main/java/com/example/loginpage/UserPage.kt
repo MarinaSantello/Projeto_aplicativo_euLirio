@@ -620,14 +620,25 @@ fun UserHomePage(
 
                     }
 
-                    if (shortStoryIsNull)
 
-                        Text(text =  if(navUserID == userID.idUser){
-                            "Você não possui historias curtas no seu feed por enquanto."
+                    if (shortStoryIsNull){
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Text(
+                                text =  if(navUserID == userID.idUser){
+                                "Você não possui historias curtas no seu feed por enquanto."
                         }else{
                             "Este usuario não possui historias curtas em seu feed por enquanto"
+
+                        },
+                                textAlign = TextAlign.Center,
+                                fontFamily = MontSerratBold)
                         }
-                    )
+                    }
                     else{
                         for(item in shortStory){
                             ShortStorysCard(item, navController, navUserID, true, true)
@@ -654,12 +665,24 @@ fun UserHomePage(
                     }
 
                     if (recomendationIsNull)
-                        Text(text =  if(navUserID == userID.idUser){
-                            "Você não possui recomendações no seu feed por enquanto."
-                        }else{
-                            "Este usuario não possui recomendações em seu feed por enquanto"
+                    {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Text(
+                                text =  if(navUserID == userID.idUser){
+                                "Você não possui recomendações no seu feed por enquanto."
+                                }else{
+                                    "Este usuario não possui recomendações no seu feed por enquanto."
+
+                                },
+                                textAlign = TextAlign.Center,
+                                fontFamily = MontSerratBold)
                         }
-                        )
+                    }
                     else{
                         for(item in recomendations){
                             generateRecommendationCard(item, navController, navUserID)
